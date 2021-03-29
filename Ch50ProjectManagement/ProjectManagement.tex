@@ -1,0 +1,142 @@
+% !TEX root =  ../FinalReport.tex
+
+\chapter{Project Management}
+\label{sec:ProjectManagement}
+
+\section{Software Development Methodology}
+Plan-driven solutions depend on a rigid specification being completed before development\cite{modules:CS261}, which does not fit with the more abstract goals of the visualization portion.
+Additionally some of the main advantages of plan-driven approaches only apply when introducing new team members and handling large teams.
+Neither scenario applies here, as only one person is undertaking active development.
+
+For these reasons, an Agile approach was taken with a development cycle completing every two weeks.
+The goals for each development cycle were documented using Trello\cite{tool:Trello}.
+It was planned that the supervisor would be contacted every week with the current status of the project and the progress made in the current cycle.
+These contacts would either take place over e-mail if there were no pressing questions to ask, and otherwise take place on Microsoft Teams\cite{tool:MicrosoftTeams}.
+Unfortunately for the first few weeks this did not happen, as other work was vying for attention and preventing project work from taking place.
+This has been resolved in Week 5, and there is now frequent email correspondence.
+
+\section{Project Timeline}
+The project was split into multiple tasks to schedule it effectively.
+These tasks are scheduled on both a Gantt Chart in \cref{fig:project schedule gantt}, and as a table in \cref{tab:project schedule table}.
+The timeline has been well followed, and this schedule has been left unchanged from the Specification. 
+Note that over the Christmas break no work is scheduled, this is to allow time on the other courseworks the researcher will have due over that period.
+
+Also note that the development of the visualization and optimization of the simulation are scheduled concurrently - this is to account for the fact that some strides in visualization may require extra optimizations to run in real-time.
+Both of these blocks end on Week 22, where development is then completely focused on the presentation.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{FinalReport/cs311_gantt_chart.svg.pdf}
+    \caption{Project Schedule as a Gantt Chart}
+    \label{fig:project schedule gantt}
+\end{figure}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l|c|c}
+    \textbf{Task} & \textbf{Start Week} & \textbf{End Week} \\
+    \hline
+    Spec & 1 & 3 \\
+    CFD Research & 3 & 12 \\
+    Initial Simulation Porting & 3 & 5 \\
+    Basic Visualization & 5 & 9 \\
+    Progress Report & 6 & 9 \\
+    Visualization Research & 12 & 18 \\
+    Visualization Development & 15 & 22 \\
+    Simulation Optimization & 15 & 22 \\
+    Presentation & 22 & 24 \\
+    Final Report & 9 & 32 \\
+    \end{tabular}
+    \caption{Project Schedule Tasks}
+    \label{tab:project schedule table}
+\end{table}
+
+\section{Tools}
+\label{sec:ProjManagementTools}
+\verb|gcc 9+|\cite{tool:Gcc9} is used to compile the program.
+This version has stable support for the C++14 and C++17 standards\cite{tool:GccCxxStatus}, allowing modern techniques to be used in the program.
+CMake\cite{tool:Cmake} is used to handle building the program source files.
+Versions 3.8 and up support CUDA as a first-class language\cite{tool:CmakeCUDAFirstClass}, which simplifies the compilation process.
+The CLion IDE\cite{tool:CLion} is used on the researcher's personal machine, as the researcher is familiar with the other IDEs in this family.
+If DCS machines are used, GNU Emacs\cite{tool:Emacs} will be used to edit files instead.
+
+Git\cite{tool:Git} is used for source control, synchronized to a private GitHub\cite{tool:GitHub} repository to avoid data loss.
+\LaTeX{}\cite{tool:Latex} is used to create the various reports and non-program deliverables required by the project, which are hosted on Overleaf\cite{tool:Overleaf} so they can be accessed on Windows and Linux without an installed \LaTeX{} environment.
+ 
+%Trello
+Trello\cite{tool:Trello} is used to track bugs and upcoming features in each development cycle.
+Google Drive\cite{tool:GoogleDrive} is used to host other documents, i.e. scanned notes, that have been generated during development.
+
+\section{Risk Management}
+As the project continues, there are risks that may impede progress and even prevent the project from succeeding.
+Being aware of these risks allows them to be predicted ahead of time, avoided, or in the worst case mitigated once they arrive.
+Risk can be calculated with the following equation, where Severity and Likelihood are graded between 1 and 5.
+\begin{equation*}
+    Risk = Severity * Likelihood
+\end{equation*}
+
+Some of these risks have been encountered, including a new risk (Other Pressures) which was not accounted for in the Specification.
+Thankfully this risk did not cause a large delay.
+
+\subsection{Misscheduling}
+It is possible that the features outlined in \cref{sec:Requirements} are too great to be implemented in the allotted time.
+In that case, the quality of work may have to be reduced to meet deadlines, or the schedule may need to be changed.
+This is especially relevant to the Visualization portion of the project, which cannot be fully scheduled yet.
+
+\textbf{Risk} = 2 * 2 = 4
+
+\textbf{Avoidance:}
+Previous projects should be used as a yardstick to predict how long implementing features will take, and inform the schedule.
+As new Visualization features are discussed, the impact on timing they each have should be considered.
+
+\textbf{Contingency:}
+The scope of the project could be reduced to allow the report to be completed in time.
+A ``code freeze'' will be implemented close to the presentation deadline to ensure enough time is spent polishing the presentation and report.
+
+\subsection{Other Pressures}
+While the project schedule may have been well estimated based on the work required for the project, the amount of work required for other modules may be larger than expected.
+This manifested in Term 1, where the researcher took more modules than usual. 
+Additionally, the removal of in-person lectures due to COVID-19 led to a lack of overall structure, which made organizing the other work more difficult.
+
+\textbf{Risk} = 2 * 1 = 2
+
+\textbf{Avoidance:}
+A more balanced set of modules between Term 1 and Term 2 could have helped resolve this, however on the other side of the coin the researcher now has fewer modules in Term 2 so this is unlikely to happen again.
+Next term the researcher will try to maintain a schedule for working on other module content, which should make up for a lack of in-person lectures.
+
+\textbf{Contingency:}
+As before, the scope of the project could be reduced to allow the report to be completed in time.
+If module work is taking more time than expected by week 20, the code freeze could be pulled forwards to week 20 or 21 to spend more time on the presentation.
+
+
+\subsection{Loss of Hardware Access}
+As noted in \cref{sec:Requirements_HardwareSoftware}, a GPU is required for the project to be tested and developed.
+Currently, the main development environment used is the researcher's personal computer, which has a suitable GPU.
+However, if this computer breaks down or is stolen, there is no readily available alternate environment.
+Under normal circumstances the Department of Computer Science labs would be used instead, as they also have suitable GPUs, but the current virus situation prevents this.
+
+\textbf{Risk} = 5 * 1 = 5
+
+\textbf{Avoidance:}
+Not possible.
+
+\textbf{Contingency:}
+Student insurance could be used to purchase a new GPU/computer if it is stolen.
+Failing this, the DCS clusters could be used, but these will likely have high contention from other students who need to use GPUs remotely.
+
+\subsection{Illness}
+It is always prudent to consider the possibility that the stakeholders may fall ill and be unable to work on the project for some time.
+This is exacerbated by the current situation with COVID-19, making potential illnesses more dangerous than usual.
+
+This risk manifested during Week 7, and delayed work on the project by three days.
+However the bulk of the current work had been completed by that point, and mostly other modules were affected.
+
+\textbf{Risk} = 4 * 2 = 8
+
+\textbf{Avoidance:}
+Not possible.
+
+\textbf{Contingency:}
+The schedule would need to be changed to account for lack of time spent working.
+Some requirements may need to be reduced or removed entirely.
+

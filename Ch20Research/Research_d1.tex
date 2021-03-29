@@ -1,0 +1,79 @@
+% !TEX root =  ../FinalReport.tex
+
+\chapter{Research}
+\label{sec:Research} 
+
+% \todocite{} INTRO
+
+% Broad starting point - CFD as a whole
+
+% Next point - original CFD code from book
+% Impact of book?
+
+% This is just as broad tbh
+
+% First point - CFD
+% Start of CFD
+% Mention book \cite{book:griebel1998numerical} TODO FOR PROGRESS REPORT
+
+\section{Optimization}
+One of the first papers on optimizing a CFD simulation was released in 1995\cite{paper:1995CfdOpt:1383209}.
+%\todocite{https://ieeexplore.ieee.org/document/1383209/}.
+This paper considered the effect of automatic compiler parallelization and optimization of a full CFD program, and the steps a programmer must take to guide the compiler i.e. avoiding false sharing.
+The program only executed on the CPU, as General Purpose GPU computing (GPGPU) had not yet taken hold.
+%  paper on optimizing CFD both automatically and manually (all CPU, no GPU)
+
+% GPU computation and visualization found in () in 2004. This used GPU fragment shaders for computations, instead of a dedicated "compute" pipeline, as such pipelines were only exposed in 2007 with CUDA (OpenGL got compute shaders in 4.3 (2012), DirectX got DirectCompute 1.x in (2009), OpenCL came out in 2009.
+GPGPU was first used for CFD simulations in 2004 with this paper\cite{paper:2004CfdGPU:10.1109/SC.2004.26}.
+% \todocite{https://dl.acm.org/doi/10.1109/SC.2004.26}.
+This used the ``fragment shading'' stage of the GPU rendering pipeline to perform the computation, as standalone ``compute'' pipelines were only exposed by APIs from 2007 onwards.
+% \todocite{} the fragment shader stage?
+Such APIs include CUDA (2007)\cite{tool:CUDAProgrammingV1}, OpenCL (2008)\cite{tool:OpenCL1.0PressRelease}, DirectX's DirectCompute (2009)\cite{tool:DirectComputePresentation}, and OpenGL 4's compute shaders (2012)\cite{tool:OpenGLComputeShaderExt}.
+% TODO - OpenGL compute extensions may have existed before this.
+%This simulation included a visualization that was rendered offline based on the final state.
+
+%Lots of study into GPGPU CFD computation w/out visualization from 2007 onwards (look in references for https://dl.acm.org/doi/10.1007/s11227-013-1015-7 for examples)
+Since 2007, using GPGPU for CFD has become a large topic of study, as investigated in detail by \cite{paper:GPGPUSummary:10.1007/s11227-013-1015-7}.
+While the concept of accelerating a fluid simulation on the GPU is not new, much of the novelty of our optimizations will stem from the interaction between the simulation and the other systems at work.
+As an example, if the simulation were to be modifiable with user input, introducing this new data and updating the boundary conditions in an efficient manner becomes a new problem.
+
+% However this 
+
+% Novelty of this comes from this code being an archetype of CFD, any approach used here can be extended to further simulations easily
+
+% Applying these optimizations in 2D, however as the book states this method is trivially extensible to 3D and we believe this should be the case for optimizaitons as well
+
+\section{Visualization}
+%Earliest found instance of interactive visualizaion is (https://dl.acm.org/doi/10.5555/509740.509745) in 2002. Did not use the GPU for any computation.
+One of the earliest CFD interactive visualizations was in 2002, which had a simulation running slower than real time on a separate computer to the real-time visualization\cite{paper:2002vis:10.5555/509740.509745}.
+%\todocite{https://dl.acm.org/doi/10.5555/509740.509745}
+Decoupling the simulation speed from the visualization speed allowed for high framerates to be achieved for the user interface, however any changes made from the user interface had a delay of 0.5 seconds before being reflected in the simulation.
+
+% TODO
+% Many scientific visualizations of fluid flow exist already.
+% To name two examples, streak lines are commonly used for visualizing velocities in a still image\todocite{}, and colored smoke is used to visualize airflow on moving objects in videos\todocite{}.
+To name two examples, streak lines and fluid colors are used for visualizing fluid flow\cite{video:AutodeskFlowDesign}.
+These methods are perfectly fine for those who understand what these elements mean, i.e. what the colors represent, and what the optimal airflow would look like.
+However, for those unfamiliar with the simulation these methods can be difficult to understand.
+
+This project aims to develop new visualization techniques for two-dimensional simulations that are more intuitive than the current offerings, that can be extended to three dimensions easily.
+Using high-speed rendering APIs like Vulkan\cite{tool:Vulkan} will allow these visualizations to be made even more complex while maintaining high speeds.
+
+% However novelty in the visualization space not pursued.
+
+% Introduction of Vulkan allows for more efficient rendering, which can be made more complex than before.
+
+
+
+% TODO
+    % CFD Phases Recap
+    % Reductions
+        % Solved problem
+    % Red-Black splitting/handling?
+    % Memory Management? better for design/implementation
+    % GPGPUSummary cites texture memory, "global memory" for transferring between CPU and GPU and stuff-  all obsolete
+    % Memory coalescing
+    % "Liu et al. [65] provideda more detailed analysis of red-black SOR implemented on GPUs"
+    % Liu J, Ma Z, Li S, Zhao Y (2011) A GPU accelerated red-black SOR algorithm for computational fluiddynamics problems. Adv Mat Res 320:335–340
+    % GPGPUSummary did 1) coalescing, 2) separate arrays, 3) calculated residual per-block instead of per-thread
+    

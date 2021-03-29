@@ -1,0 +1,71 @@
+\begin{figure}[ht]
+    \centering
+    \begin{center}
+    \lstset{language=bash,
+    numbers=none,
+    keywordstyle=[2]\color{red},
+    keywords=[2]{INACCURATE,IMPRECISE},
+    keywordstyle=[3]\color{green},
+    keywords=[3]{ACCURATE,PRECISE}
+    }
+    % \lstset{language=bash,
+    % linewidth=0.5\linewidth
+    % % keywordstyle=[2]\color{red},
+    % % keywords=[2]{INACCURATE,IMPRECISE},
+    % % keywordstyle=[3]\color{green},
+    % % keywords=[3]{ACCURATE,PRECISE}
+    % }
+    % \subcaptionbox{Comparison of equal states}[0.5\linewidth]{\begin{frame}[fragile]\end{frame}}
+    %[xleftmargin=-0.2\textwidth]
+\begin{subfigure}{0.4\textwidth}\begin{lstlisting}
+Velocity X:
+    Sq. Error Mean:     0     ACCURATE
+    Sq. Error Std. Dev: 0     PRECISE
+Velocity Y:
+    Sq. Error Mean:     0     ACCURATE
+    Sq. Error Std. Dev: 0     PRECISE
+Pressure:
+    Sq. Error Mean:     0     ACCURATE
+    Sq. Error Std. Dev: 0     PRECISE\end{lstlisting}%
+    \caption{Comparison of Equal States}%
+\end{subfigure}%
+\hspace{0.02\textwidth}
+\begin{subfigure}{0.5\textwidth}\begin{lstlisting}[]
+Velocity X:
+    Sq. Error Mean:     0.0233842     INACCURATE
+    Sq. Error Std. Dev: 0.0996487     IMPRECISE
+Velocity Y:
+    Sq. Error Mean:     0.00566354    INACCURATE
+    Sq. Error Std. Dev: 0.0139529     IMPRECISE
+Pressure:
+    Sq. Error Mean:     0.0214799     INACCURATE
+    Sq. Error Std. Dev: 0.0511252     IMPRECISE\end{lstlisting}%
+\caption{Comparison of Unequal States}%
+\end{subfigure}
+\end{center}
+% Velocity X:
+%         Sq. Error Mean:                   0     ACCURATE
+%         Sq. Error Std. Dev:               0     PRECISE
+% Velocity Y:
+%         Sq. Error Mean:                   0     ACCURATE
+%         Sq. Error Std. Dev:               0     PRECISE
+% Pressure:
+%         Sq. Error Mean:                   0     ACCURATE
+%         Sq. Error Std. Dev:               0     PRECISE
+    
+%     \subcaptionbox{Comparison of unequal states%
+%     }[0.5\linewidth]{\begin{lstlisting}
+% Velocity X:
+%         Sq. Error Mean:           0.0233842     INACCURATE
+%         Sq. Error Std. Dev:       0.0996487     IMPRECISE
+% Velocity Y:
+%         Sq. Error Mean:          0.00566354     INACCURATE
+%         Sq. Error Std. Dev:       0.0139529     IMPRECISE
+% Pressure:
+%         Sq. Error Mean:           0.0214799     INACCURATE
+%         Sq. Error Std. Dev:       0.0511252     IMPRECISE
+% \end{lstlisting}}
+    
+    \caption{Examples outputs from the comparison tool.}
+    \label{fig:example_comparisons}
+\end{figure}

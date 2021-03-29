@@ -1,0 +1,30 @@
+% !TEX root =  ../FinalReport.tex
+
+\chapter{Testing}
+\label{sec:Testing} 
+In order to measure the degree of success a project achieves, testing must be performed to verify the behaviour of the program is correct.
+Building tests also allows further development of the program to easily identify when new bugs are introduced.
+% The tests proposed in this section have been implemented for these purposes.
+This section proposes potential effective tests, and documents the results of tests already performed since they were described in the Specification.
+
+
+\section{Unit Testing}
+The separate phases of the simulation are effective units of code.
+They could be automatically tested individually, or individual units could be swapped out for known working versions in order to pinpoint bugs found in wider tests.
+The latter method has been used for debugging during the simulation implementation.
+
+The \texttt{makeinput} (\cref{req:GenerateState}), \texttt{compare} (\cref{req:Compare}), and \texttt{renderppm} program modes can also be tested as individual units with input/expected output combinations.
+These tests have not yet been implemented, but are planned as an extension.\label{sec:TestsForSubcommands}
+
+\section{Integration Testing}
+The ``headless mode'' outlined in \cref{req:HeadlessSim} has functioned as an integration test for all of the simulation phases.
+Initially the CPU Simple and Optimized backends (\cref{sec:DesignBackends}) were added and tested against the original ACA program\cite{modules:CS257Coursework} and the submitted coursework\cite{modules:aca257submission} using the provided testing tools.
+The Compare mode (\cref{req:Compare}) was then implemented and tested against the ACA testing tools to ensure it's behaviour was correct.
+The Optimized Adapted and CUDA backends (\cref{sec:DesignBackends}) were then added and compared to the required output to ensure that any deviations were small.\footnote{Because the simulation operates on single-precision floating point numbers, small changes to orders of operation or compiler optimizations could introduce small discrepancies at the bit level.}
+
+While the visualization cannot be tested without some simulation data to visualize, that data does not necessarily need to be continuously simulated.
+Static simulation states may be created in order to test separate parts of the visualization, or multiple parts at once.\label{sec:TestsForViz}
+
+\section{Overall Testing}
+The ``visualization mode'' from \cref{req:VizSim} should function as a full system test of the simulation with the visualization.
+Assuming the headless simulations are accurate, there should be a negligible difference in results from a visualized simulation.

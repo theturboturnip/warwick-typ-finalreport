@@ -1,0 +1,34 @@
+\begin{figure}[ht]
+    \centering
+    \lstset{
+ language=c++
+}
+    \lstset{
+ morekeywords={constexpr,nullptr},
+    keywordstyle=[2]\color{blue},
+    keywords=[2]{OriginalOptimized,CudaUnified2DArray,std,unique_ptr,ISimVulkanTickedRunner,vk}
+    % literate=
+    %         *{\{}{{\textcolor{myblue}{\{}}}{1}
+}%[language=c++]
+\lstset{linewidth=1.15\linewidth,xleftmargin=-.075\linewidth}
+%[float,caption={An example of conditionally supporting CUDA based on a preprocessor directive.}]
+\begin{lstlisting}
+switch(backendType) {
+    case Null:
+        return SimFixedTimeRunner<NullSimulation, Host2DAllocator>();
+    case CpuSimple:
+        return SimFixedTimeRunner<CpuSimpleSimBackend, Host2DAllocator>();
+    case CpuOptimized:
+        return SimFixedTimeRunner<CpuOptimizedSimBackend, Host2DAllocator>();
+    case CpuAdapted:
+        return SimFixedTimeRunner<CpuOptimizedAdaptedSimBackend, Host2DAllocator>();
+#if CUDA_ENABLED
+    case CUDA:
+        return SimFixedTimeRunner<CudaBackendV1<true>, CudaUnified2DAllocator>();
+#endif
+    default:
+        FATAL_ERROR("Enum val %d doesn't have an ISimFixedTimeRunner!\n", backendType);
+}\end{lstlisting}
+    \caption{An example of conditionally supporting CUDA based on a preprocessor directive.}
+    \label{fig:ConditionalCUDA}
+\end{figure}

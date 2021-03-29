@@ -1,0 +1,28 @@
+\chapter{Future Plans}
+\label{sec:FuturePlansAppendix}
+Throughout this paper multiple possible extensions were discussed.
+This does not cover possible optimizations, but instead non-essential updates to the program or surrounding content that could provide benefit.
+They are collected here.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l|c}
+        Extension & Referenced In \\
+        \hline
+        Alternate Boundary Values for Pressure & \cref{ext:PressureValues} \\
+        Re-adding the Residual Phase & \cref{sec:OptimizationReAddingResidual} \\
+        Updating the Simulation State File Format & \cref{sec:FileFormat} \\
+        Parallel Simulation \& Rendering & \cref{sec:DesignBetterScheduling} \\
+        Unit Tests for \texttt{makeinput}, \texttt{compare} & \cref{sec:TestsForSubcommands} \\
+        Tests for Different Visualization Scenarios & \cref{sec:TestsForViz} \\
+    \end{tabular}
+    \caption{Possible Extensions}
+    \label{tab:PossibleExtensions}
+\end{table}
+% Possible Extensions
+% - The book[19] states an alternate solution where epsilon set to 1 at all times and pres-sure values on boundaries are copied from adjacent fluid squares. This apparently stops noncontinuous starting velocities from producing nonphysical pressure values.
+% - GPU Vectorization
+% - Residual Phase
+% - Updating file format
+% - Testing makeinput, compare
+% - Visualization testing

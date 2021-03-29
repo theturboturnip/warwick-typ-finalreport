@@ -1,0 +1,130 @@
+\newcommand{\deltaT}[0]{$\delta{}t$}
+\newcommand{\deltaX}[0]{$\delta{}x$}
+\newcommand{\deltaY}[0]{$\delta{}y$}
+
+\section{An Example Simulation Tick}
+% Cite book(cite) as inspiration for CFD code
+The 1998 book ``Numerical simulation in fluid dynamics : a practical introduction''\cite{book:griebel1998numerical} defines a basic structure for a discrete simulated timestep (a.k.a. a ``tick'') and provides a sample guide to implementing it in Fortran or C.
+To the best of the author's knowledge this was used as the base of the ACA coursework, and continues to be the base of this project.
+This section will explain the general structure of the simulation as defined in \cite{book:griebel1998numerical}.
+
+% Note the kind of simulation - incompressible laminar flow?
+% Also define Reynolds number, it comes up in places
+% The simulation is intended to simulate ``laminar flow of viscous, incompressible fluids''\cite{book:griebel1998numerical}.
+% This has a few implications:
+% \begin{itemize}
+%     \item The fluid is viscous, which means the internal friction forces are non-negligible. This is as opposed to a gaseous fluid which has n
+%     \item The flow is \textit{laminar}, not \textif{turbulent}, which means 
+% \end{itemize}
+
+% 1/2 paragraphs on the grid structure
+The simulation (when in 2D) solves for three variables: horizontal velocity, vertical velocity, and pressure.
+These variables are represented by $u$, $v$, and $p$ respectively.
+At timestep $\#n$, they may be shown as $u^{(n)}, v^{(n)}, p^{(n)}$.
+To discretize these values, they are evaluated at points on a staggered grid\todocite{Figure}.
+\todomark{explain how the variables are staggered}
+Staggering the variables in this manner avoids oscillation caused by odd-even decoupling\todocite{https://www.cfd-online.com/Wiki/Staggered_grid, Harlow, F. H. and Welch, J. E. (1965), "Numerical calculation of time-dependent viscous incompressible flow of fluid with free surface", Phys. Fluids. 8, 2182. }.
+\todomark{This could also be solved by colocated grids?}\todocite{}
+It is important to note the variables $u,v$ represent the current velocity of the fluid within each grid space, \textbf{not} the velocity of the grid cells themselves.
+The grid does not move at any point during the simulation.
+
+The grids are indexed by $i$ in the x-direction and $j$ in the y-direction.
+To allow for derivatives to be accurately calculated for cells on the edges of the grid, boundary cells are added around each grid.\todomark{TODO figure}
+For a finite domain of size $(imax, jmax)$ this leads to a final grid size of $(imax + 1)$ by $(jmax + 1)$, where valid values fall in the ranges %
+%$1 \leq i \leq imax$, $1 \leq j \leq jmax$
+$i \in \{1..imax\}$, $j \in \{1..jmax\}$.
+The physical dimensions of each grid space are represented by \deltaX{}, \deltaY{}.
+
+The derivatives of $u$ and $v$ can then be calculated by finding the centered differences\todocite{}.
+\begin{equation}
+    \left[\frac{\partial{u}}{\partial{x}}\right]_{i,j} := \frac{u_{i,j}-u_{i-1,j}}{\delta{x}},%
+    \left[\frac{\partial{v}}{\partial{y}}\right]_{i,j} := \frac{v_{i,j}-v_{i,j-1}}{\delta{y}}
+\end{equation}
+% TODO multicolumn
+% \begin{multicols}{2}
+%   \begin{equation}
+%     a=b
+%   \end{equation}\break
+%   \begin{equation}
+%     b=c
+%   \end{equation}
+% \end{multicols}
+The partial derivatives for pressure $\partial{p}/\partial{x}, \partial{p}/\partial{y}$ are found in the same way.
+The remaining derivatives, including second derivatives and $\partial{uv}/\partial{x}, \partial{uv}/\partial{y}$, can also be discretized by taking the difference across midpoints of their respective dimensions (see \todocite{book or [Hirt et al. 1975]}).
+%
+
+\subsection{Timestep Calculation}
+% TODO read up more and check back lol
+As the derivatives are calculated between adjacent grid points, it is impossible to accurately simulate a timestep where fluid moves between non-adjacent grid cells \todomark{Figure?}.%[Peyret&Taylor,1983]or[Roache,1976].Anadaptivestepsizecontrolbasedonthesestabilityconditionsis usedin[Tome&McKee,1994].
+% The simulation cannot accurately solve a timestep in which particles move completely over a cell (see Figure \todocite{}).
+To prevent this issue the timestep \deltaT{} is calculated from the fluid velocities to make this impossible.
+\begin{equation}
+    \delta{t} = \tau min\left(
+        \frac{Re}{2}\left(
+            \frac{1}{\delta{x}^2} + \frac{1}{\delta{y}^2}
+        \right)^-1,
+        \frac{\delta{x}}{|u_max|},
+        \frac{\delta{y}}{|v_max|}
+    \right)
+\end{equation}
+
+Because the new velocities may increase from $u_max$ and $v_max$, the safety factor $\tau \in [0, 1]$ is used to ensure the timestep is large enough to account for it.\todomark{Is this right?}
+
+\subsection{Tentative Velocity}
+The final values of $u$ and $v$ are defined as \todomark{COMPLETE EQ}
+\begin{equation}
+\begin{aligned}
+    u^{(n+1)} &= u^{(n)} + \delta{t}\left[\frac{1}{Re}\left(\right)\right] ETC (see page 48). \\
+    v^{(n+1)} &= v^{(n)} + etc.
+\end{aligned}
+\end{equation}
+However, as these depend on the partial derivatives of $p^{(n+1)}$, which itself depends on velocity, they cannot be solved analytically.
+In order to iteratively find $p$ the variables $f$ and $g$, for horizontal and vertical ``tentative velocity'', are introduced.\todomark{DEFINE f,g}
+\begin{equation}
+\begin{aligned}
+    f^{(n)} := etc \\
+    g^{(n)} := etc
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+    u^{(n+1)} = f^{(n)} - \delta{t}\frac{\partial{p^{(n+1)}}}{\partial{x}} \\
+    v^{(n+1)} = g^{(n)} - \delta{t}\frac{\partial{p^{(n+1)}}}{\partial{y}}
+    \label{eq:uv_modified}
+\end{aligned}
+\end{equation}
+
+\subsection{Solving the Poisson Equation with SOR}
+% Two phases - calculating the RHS, then solving
+For continuity to be achieved, the final velocity values must fulfil
+\begin{equation}
+    \frac{\partial{u^{(n+1)}}}{\partial{x}} + \frac{\partial{v^{(n+1)}}}{\partial{y}} = 0
+\end{equation}
+This means that the total amount of fluid entering a cell in tick $n+1$ is equal to the amount of fluid leaving, which must be the case otherwise the amount of fluid per cell wouldn't be constant and the fluid would be \textbf{compressed}.
+
+Substituting the formulae in \autoref{eq:uv_modified} into this relation and rearranging gives
+\begin{equation}
+    \frac{\partial^2{p^{(n+1)}}}{\partial{x^2}} + \frac{\partial^2{p^{(n+1)}}}{\partial{y^2}} = \frac{1}{\delta{t}}\left(\frac{\partial{f^{(n)}}}{\partial{x}} + \frac{\partial{g^{(n)}}}{\partial{y}}\right)
+\end{equation}
+The right hand side of this equation is constant for timestep $n$, so can be precalculated and assigned to its own variable $rhs$
+\begin{equation}
+rhs := \frac{1}{\delta{t}}\left(\frac{\partial{f^{(n)}}}{\partial{x}} + \frac{\partial{g^{(n)}}}{\partial{y}}\right)
+\end{equation}
+\begin{equation}
+\frac{\partial^2{p^{(n+1)}}}{\partial{x^2}} + \frac{\partial^2{p^{(n+1)}}}{\partial{y^2}} = rhs
+\end{equation}
+
+Once rhs is found the remaining second-order differential equation can be solved using Red/Black Successive Over-Relaxation SOR.
+In this method, the grid is split into red and black squares with a checkerboard pattern\todomark{figure}.
+First the values at red squares are updated, which depend only on the black squares.
+Then, the black squares are updated, which depend only on the red squares.
+\todomark{An explanation of what SOR does, how it works, how residual calculations work.}
+
+\subsection{Final Velocity Calculations}
+% Update Velocity, applyBoundaryConditions
+Once the final values of $p$ have been calculated the velocity values $u,v$ can be found with \autoref{eq:uv_modified}.
+The boundary conditions for velocity must also be applied \todomark{DESCRIBE THEM}.
+
+
+% TODO - tick pipeline figure
+% TODO - find like 5 citations here at least

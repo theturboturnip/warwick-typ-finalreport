@@ -1,0 +1,55 @@
+\subsection{Previous Work}
+\label{research:prev_work}
+As work on CFD progressed some optimizations were developed that change the simulation pipeline and provide an overall speedup.
+Some of these were adapted into my ACA coursework submission\cite{modules:aca257submission}, which this project is based on, and carry over into the CUDA version.
+
+
+Given the definition of $\beta$ in \cref{eq:poisson_beta}, the value of $\beta_{i,j}$ does not change over the course of the simulation and so can be precalculated before the simulation starts.
+Additionally if it can be guaranteed that for every boundary square $p = 0$, which can be done either by never updating their pressure values or by updating them with $\beta_{i,j} = 0$, then $\epsilon_{i,j}$ doesn't need to be evaluated during the simulation at all.
+These optimizations increased the runtime speed of the Poisson evaluation by 2.24x\footnote{The $\beta$ precalculation increased speed by 1.4x, and the removal of $\epsilon$ increased speed by 1.6x.\cite{modules:aca257submission}}, and they have been kept in the CUDA program.
+
+The book states an alternate solution where $\epsilon$ is set to 1 at all times and pressure values on boundaries are copied from adjacent fluid squares\cite{book:griebel1998numerical}.
+This apparently stops noncontinuous starting velocities from producing nonphysical pressure values.
+\label{ext:PressureValues}
+
+% 1 on red/black
+% The example implementation and the ACA implementation both use Red-Black Successive Over-Relaxation (SOR).
+% Red-black SOR was first used to solve a system of linear equations on vector and parallel computersystems by Adams and Ortega [1], although introduced earlier (e.g., by Young [119]). Liu et al. [65] provideda more detailed analysis of red-black SOR implemented on GPUs
+% NOTE - the Liu et al. there is a pretty close project
+
+% In this method, the grid is split into red and black squares with a checkerboard pattern\todomark{figure}.
+% First the values at red squares are updated, which depend only on the black squares.
+% Then, the black squares are updated, which depend only on the red squares.
+As stated in \cref{sec:SimulationPoisson}, red/black SOR is used to iteratively solve the Poisson equation.
+% The red and black operations can be performed in parallel, but in both the ACA coursework and the CUDA program this has not been done\footnote{It has also been marked as a potential extension}.
+In the initial ACA coursework the values ($f$, $g$, $p$, $rhs$) for red and black data were stored in the same arrays.
+This was problematic as data of the same color was never contiguous, and any iteration looking for just red values would get a cache line with both colors, leading to half of each cache line being wasted.
+To fix this, red and black data is split into separate arrays before starting the Poisson solver.
+This has been carried over into the CUDA implementation.
+
+% Parallelization i.e. Vectorization, OpenMP?
+% "The ACA coursework used OpenMP to provide thread-level parallelization in kernels, which is automatically provided when using a GPU."
+The ACA solution used OpenMP\cite{OpenMPHomeOpenMP} to automatically parallelize the Poisson solver (and other program elements) by column.
+That is, each thread was given a group of columns to process.
+This was not needed in the CUDA version as each GPU kernel is implicitly parallelized over many GPU threads.
+
+The ACA solution included optimizations exploiting properties of the original code, such as floating point precision, to speed up calculations while producing identical results.
+These optimizations include using fused multiply-add\cite{Muller2010TheInstruction} in some places (but not all), precalculating divisions with double-precision floats, and skipping the residual calculation phase altogether.
+As this project is focused on improving upon the accuracy of the ACA submission, instead of producing bit-identical results, these optimizations have generally not been implemented into the CUDA program.\footnote{The CUDA program still lacks a residual phase, but this is planned to be implemented later.\label{sec:OptimizationReAddingResidual}}
+
+% Paragraph on ACA-specific (FMA tricks, removing divisions, residual removal)
+% "Other courseworks specifically tied to the ACA coursework were"...
+
+%% ACA Recap(cite)
+%% - Residual removal. (probably needs to be reversed)
+%% - beta precalc (check if somewhere/ in book)
+%% - mathematical optimization to remove branches (check if in book)
+%% - FMA trickery (cite FMA properties)
+%% - red/black rearranging (defo mentioned in top level paper, find citation from that)
+%% - vectorization AVX/SSE (can most likely cite something here)
+%%     - Note that 8-vector was tested,but 4-vector was faster
+%% - removing divisions (maybe?)
+%% - OpenMP (irrelevant here but can provide a citation? and should be noted because it provides parallelism which is then replaced by the GPU)
+
+
+% TODO - tick pipeline figure with ACA additions (ex. r/b splitting)

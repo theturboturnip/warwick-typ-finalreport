@@ -1,0 +1,57 @@
+% !TEX root =  ../FinalReport.tex
+
+\chapter{Introduction}
+\label{sec:Introduction} 
+\todomark{Intro to scientific codes - something about general modelling of natural pheonomena?}
+% TODO - focus on scientific codes?
+% TODO - note that we use numerical solutions, not analytical ones. We don't solve the Navier Stokes equations directly.
+Computational Fluid Dynamics (CFD) programs are programs that simulate fluid flow in some form, usually using the Navier-Stokes equations.
+%\todocite{}.
+
+These fluid simulations have a variety of uses,
+including in aerodynamics,
+%\todocite{},
+weather simulations,
+%\todocite{},
+and in the entertainment industry (albeit with a focus on artistic input rather than physical accuracy\cite{article:FluidDynamicsOnBigScreen}).
+
+These cases generally do not require simulations at interactive speeds, except for cases found in the games industry.
+While the games industry does use fluid simulation\cite{paper:GameFluidSummary:medveckyreal}, many uses do not precisely integrate the Navier-Stokes equations but approximates them \cite{paper:StableFluids:10.1145/311535.311548} using a Lagrangian method.
+An exception to this is \cite{presentation:RealtimeFluidSimTombRaider}, which uses a Jacobi solver for the Navier-Stokes equations. This is used to simulate character interaction with different substances floating on the water surface\cite{presentation:RealtimeFluidSimTombRaider}, not to simulate large blocks of water.
+By and large, interactive speeds and precise simulation for large fields are not pursued together.
+
+\section{Motivation}
+The Advanced Computer Architecture coursework last year presented a fluid simulation and tasked the students with optimizing it for a 6-core Intel i5-8500 CPU\cite{modules:CS257Coursework}.
+The original code ran very slowly, taking 80 seconds to simulate 10 seconds of time. % or 8x faster?
+After optimizations, the code simulated 10 seconds of time in just 1.26 seconds, 64x faster than the original and 7.9x faster than real time.
+
+However the simulation purposefully limited itself in some aspects, such as iteration count for an equation solver, which prevented it from converging to an accurate solution for the test data.
+Students were also explicitly prevented from accelerating the simulation using a GPU, which could have made it much faster as each simulation phase is embarrassingly parallel.
+
+Another limitation was that the simulation state could only be visualized once the full simulation had completed,
+instead of in real time, even though the final simulation was fast enough.
+This made the results much more difficult to understand, especially for people who don't understand the underlying code or mathematics.
+%and required a separate binary to generate the image.
+%This prevented mistakes from being seen quickly
+
+\section{Project Aims}
+The goal of this project is to port the simulation to the GPU.
+This should provide a large speedup, which we aim to exploit in two ways:
+\begin{easylist}[enumerate]
+    & Increasing the simulation detail to produce sensible results, by
+    && Increasing iteration count.
+    && Increasing the pixel resolution of the simulation.
+    & Intuitively visualizing the simulation in real time.
+\end{easylist}
+%Requires implementation of X, Y, and Z
+%\todocite{} DO SOME THING HERE
+
+To this end the simulation will be implemented in CUDA, and the visualization will be rendered in real time using Vulkan.
+
+\section{Stakeholders}
+The main stakeholders continue to be the researcher and the project supervisor.
+They are both invested into the project due to their own personal interest in the project, and in the case of the researcher the effect this project has on final year grades.
+% Me
+% Matt Leeke
+% People who will use the simualtion?
+

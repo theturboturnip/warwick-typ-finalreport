@@ -1,0 +1,30 @@
+\begin{figure}[ht]
+    \centering
+    \lstset{language=c++,
+    morekeywords={constexpr},
+    keywordstyle=[2]\color{blue},
+    keywords=[2]{OriginalOptimized,CudaUnified2DArray}
+    % literate=
+    %         *{\{}{{\textcolor{myblue}{\{}}}{1}
+}%[language=c++]
+    \begin{lstlisting}
+if constexpr (UnifiedMemoryForExport) {
+    // The buffer is Unified Memory, so use it directly
+    OriginalOptimized::splitToRedBlack(p.joined.as_cpu(),
+                                       p_buffered.red.as_cpu(),
+                                       p_buffered.black.as_cpu(),
+                                       imax, jmax);
+} else {
+    // The buffer is not unified memory, 
+    // so create a new Unified memory buffer and copy the data in,
+    // then use that instead.
+    CudaUnified2DArray<float, true> p_unified(unifiedAlloc.get(), matrix_size);
+    p_unified.memcpy_in(p.joined);
+    OriginalOptimized::splitToRedBlack(p_unified.as_cpu(),
+                                       p_buffered.red.as_cpu(),
+                                       p_buffered.black.as_cpu(),
+                                       imax, jmax);
+}\end{lstlisting}
+    \caption{An example of conditionally changing code based on memory type.}
+    \label{fig:TemplatedMemoryUsage}
+\end{figure}

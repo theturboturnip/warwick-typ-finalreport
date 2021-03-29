@@ -1,0 +1,116 @@
+\documentclass[]{article}
+
+\usepackage{turnipwordcount}
+
+% (1) choose a font that is available as T1
+% for example:
+\usepackage{lmodern}
+% (2) specify encoding
+% Blatantly stolen from ACM style
+\usepackage[T1]{fontenc}
+% Note that the order in which packages are loaded matters,
+% and the correct order depends on the LaTeX engine used.
+% See https://github.com/borisveytsman/acmart/issues/402
+% and https://github.com/borisveytsman/acmart/issues/410
+\usepackage{bera}% optional: just to have a nice mono-spaced font
+\usepackage[libertine]{newtxmath}
+\usepackage[tt=false]{libertine}
+\setmonofont[StylisticSet=3]{inconsolata}
+% (3) load symbol definitions
+\usepackage{textcomp}
+
+
+\usepackage{amsmath} %For both in-line and equation mode
+\numberwithin{equation}{section} %Numbering of our equations per section
+% % Better forall spacing
+\let\oldforall\forall
+\let\forall\undefined
+\DeclareMathOperator{\forall}{\oldforall}
+\usepackage{breqn} % For long equation breaking
+\usepackage{bm}
+
+\usepackage{algorithm}
+\usepackage{algorithmic} %Algorithm styles, need to be nested for the example shown
+\usepackage{fancyhdr} %For our headers
+\usepackage{graphicx} %Inserting images
+\usepackage{lipsum}  %Blank text fill, delete me when finished
+\usepackage{setspace} %Spacing on the front page for crest and titles
+\usepackage[]{fncychap} % Styles can be Sonny, Lenny, Glenn, Conny, Rejne, Bjarne and Bjornstrup
+\usepackage[hyphens]{url} %Deals with hyphens in urls to make them clickable
+\usepackage{xcolor} %Great if you want coloured text
+\usepackage{tabularx}
+\usepackage{siunitx}
+\usepackage{subcaption}
+
+% BibLaTeX
+\usepackage{turnipcite}
+\addbibresource{mendeley_references.bib}
+% \addbibresource{FinalReport/mendeley_export.bib}
+\addbibresource{FinalReport/typ_FinalReport.bib}
+
+\usepackage{markdown}
+
+%This will tell the compiler to do the header style, page and spacing between the header and text
+\fancyhf{}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.2pt}
+
+
+% Used for customized list prefixes i.e. F-1 for functional requirement 1
+\usepackage{enumitem}
+% Define F-requirements list, where items are listed and referenced as Fi or Fi.j
+\newlist{reqF}{enumerate}{2}
+\setlist[reqF,1]{label=\textbf{F\arabic*},ref={F\arabic*}}
+\setlist[reqF,2]{label*=\textbf{.\arabic*},ref={F\arabic{reqFi}.\arabic*}}
+% Define NF-requirements list in same fashion
+\newlist{reqNF}{enumerate}{2}
+\setlist[reqNF,1]{label=\textbf{NF\arabic*},ref={NF\arabic*}}
+\setlist[reqNF,2]{label*=\textbf{.\arabic*},ref={NF\arabic{reqNFi}.\arabic*}}
+\usepackage[ampersand]{easylist}
+% \usepackage{labels4easylist}
+
+\usepackage{pgfgantt}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\usepackage{turniptodo}
+\usepackage{turniphighlighting}
+% \usepackage{quotewarning}
+\usepackage{wrapfig}
+
+%KEEP THIS ONE LAST it's quite buggy, it allows you to click on links within the pdf and web links without changing the colour. The mouse cursor simply changes its icon to indicate to the user. Great tool - still awkward
+% \usepackage{varioref}
+\usepackage[hidelinks,
+            unicode,
+            pdfauthor={Samuel Stark - u1800081},
+            pdftitle={CS351 Final Report},
+            pdfsubject={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation}]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+\crefname{reqFi}{Requirement}{Requirements}
+\crefname{reqNFi}{Requirement}{Requirements}
+
+\usepackage[header, title]{appendix}
+\usepackage{pdfpages}
+
+\linespread{1.25}
+
+\begin{document}
+
+\newcommand{\chapterwordcount}[1]{#1 & \quickwordcount{#1} \\}
+
+\begin{tabular}{lc}
+    Chapter & Word Count \\
+    \chapterwordcount{FinalReport/Ch10Introduction/Introduction}
+    \chapterwordcount{FinalReport/Ch20Research/Research}
+    \chapterwordcount{FinalReport/Ch30EthicalSocialLegal/EthicalSocialLegal}
+    \chapterwordcount{FinalReport/Ch40Reqs/Requirements}
+    \chapterwordcount{FinalReport/Ch42Design/Design}
+    \chapterwordcount{FinalReport/Ch48Implementation/Implementation}
+    \chapterwordcount{FinalReport/Ch50ProjectManagement/ProjectManagement}
+    \chapterwordcount{FinalReport/Ch60Testing/Testing}
+    \chapterwordcount{FinalReport/Ch70Conclusion/Conclusion}
+\end{tabular}
+
+
+\end{document}
