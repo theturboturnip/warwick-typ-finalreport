@@ -13,7 +13,7 @@ However there were still multiple choices of compute backend:
     \item OpenCL\cite{tool:OpenCL1.0PressRelease} is an ``Open Standard for Parallel Programming of Heterogeneous Systems''\cite{TheKhronosGroupOpenCLInc}.
     \item CUDA\cite{tool:CUDA} is a closed-source library for running parallel code on NVIDIA GPUs.
     \item OpenGL has Compute Shaders\cite{tool:OpenGLComputeShaderExt} which can execute computations outside of the graphics pipeline.
-    \item Vulkan also has Compute capability\cite{KhronosVulkanGuide}, similar in function to OpenGL.
+    \item Vulkan also has Compute capability\cite{TheKhronosGroupVulkanGuide}, similar in function to OpenGL.
 \end{itemize}
 To decide on the compute backend to use, an interoperability matrix was drawn (\cref{fig:LibraryChoices}) to show which libraries could share data without copying it between buffers.
 As the researcher was already experienced with Vulkan, and the more granular control it provides would be beneficial to performance, Vulkan was selected as the rendering backend.
