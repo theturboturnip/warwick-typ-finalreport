@@ -1,6 +1,18 @@
 \begin{figure}[ht]
     \centering
-\begin{cppcode}
+    \lstset{
+ language=c++
+}
+    \lstset{
+ morekeywords={constexpr,nullptr},
+    keywordstyle=[2]\color{blue},
+    keywords=[2]{OriginalOptimized,CudaUnified2DArray,std,unique_ptr,ISimVulkanTickedRunner,vk}
+    % literate=
+    %         *{\{}{{\textcolor{myblue}{\{}}}{1}
+}%[language=c++]
+\lstset{linewidth=1.15\linewidth,xleftmargin=-.075\linewidth}
+%[float,caption={An example of conditionally supporting CUDA based on a preprocessor directive.}]
+\begin{lstlisting}
 switch(backendType) {
     case Null:
         return SimFixedTimeRunner<NullSimulation, Host2DAllocator>();
@@ -16,7 +28,7 @@ switch(backendType) {
 #endif
     default:
         FATAL_ERROR("Enum val %d doesn't have an ISimFixedTimeRunner!\n", backendType);
-}\end{cppcode}
-\caption{An example of conditionally supporting CUDA based on a preprocessor directive.}
+}\end{lstlisting}
+    \caption{An example of conditionally supporting CUDA based on a preprocessor directive.}
     \label{fig:ConditionalCUDA}
 \end{figure}

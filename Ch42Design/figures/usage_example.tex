@@ -1,12 +1,11 @@
 \begin{figure}[ht]
     \centering
-    \begin{lstlisting}[language=bash]
+    \begin{bashcode}
 # Create an input file based on simple_layout with a size of 1x2 metres
 ./sim_cuda makeinput ./simple_layout.png 1 2 ./initial.bin
 
 # Run it in headless mode for 10 seconds
-./sim_cuda fixedtime --backend=cuda ./fluid.json ./initial.bin 10 \
-                        -o ./output_after_10.bin
+./sim_cuda fixedtime --backend=cuda ./fluid.json ./initial.bin 10  -o ./output_after_10.bin
 
 # Compare it to the expected output
 ./sim_cuda compare ./output_after_10.bin ./expected_after_10.bin
@@ -16,7 +15,7 @@
 
 # Try visualizing it in real-time
 ./sim_cuda run --backend=cuda ./fluid.json ./initial.bin
-\end{lstlisting}
+\end{bashcode}
     \caption{Example usage of the simulation program}
     \label{fig:BashExampleUsage}
 \end{figure}
