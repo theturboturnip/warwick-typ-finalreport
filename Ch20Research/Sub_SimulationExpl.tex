@@ -45,7 +45,7 @@ This grid is indexed by $i$ in the x-direction and $j$ in the y-direction.
 It is important to note the variables $u,v$ represent the current velocity of the fluid within each grid space, \textbf{not} the velocity of the grid cells themselves.
 The grid does not move at any point during the simulation.
 
-\input{FinalReport/Ch20Research/figures/staggered_grid}
+\input{Ch20Research/figures/staggered_grid}
 
 Each of the variables is located at a different position on the grid cell.
 Horizontal velocity $u_{i,j}$ is at the midpoint of the right cell edge, vertical velocity $v_{i,j}$ is at the midpoint of the top cell edge, and pressure $p_{i,j}$ is at the midpoint of the cell.
@@ -210,7 +210,7 @@ where $\epsilon_{i,j}^{\{N,S,E,W\}}$ represents the boundary squares (shown here
 \end{equation}
 
 
-\input{FinalReport/Ch20Research/figures/checkerboard}
+\input{Ch20Research/figures/checkerboard}
 Over the whole grid, this results in a linear system of equations over the inputs $p_{i,j} \forall i \in \{1..i_{max}\}, j \in \{1..j_{max}\}$.
 These can be decoupled by partitioning $p$ into red and black squares by a checkerboard pattern (see \cref{fig:redblack_checkerboard}).
 As each individual cell only depends on the adjacent values, iterations of Successive Over-Relaxation (SOR) can be performed on red and black in turn to reach a final value\footnote{This could equally be done without partitioning $p$, but the partitioning splits the SOR into separate phases which can then be parallelized. Normal SOR cannot be parallelized\cite{Adams1982AMS}.}\cite{young1971iterative}:

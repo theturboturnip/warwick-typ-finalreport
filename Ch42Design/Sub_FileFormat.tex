@@ -8,7 +8,7 @@ This includes the Reynolds number, the timestep safety factor, and the maximum i
 They are stored in a JSON format to be human-readable, are reusable for different simulation states, and can be easily edited by the end user.
 An example is shown in \cref{fig:FluidParamsExample}.
 
-\input{FinalReport/Ch42Design/figures/example_fluidparams}
+\input{Ch42Design/figures/example_fluidparams}
 
 \subsection{Simulation State}
 Data unique to an individual state such as simulation resolution, physical size, and velocity fields are stored in a binary format reused from the ACA project.
@@ -16,7 +16,7 @@ As the data is much more sensitive to individual modifications\footnote{i.e. cha
 Additionally the binary format is much smaller than any text-based format, which helps as the volume of data stored is much larger than that stored in the fluid parameters.
 
 
-% \input{FinalReport/Ch42Design/figures/binary_fileformat}
+% \input{Ch42Design/figures/binary_fileformat}
 % The structure of the binary format is shown in \cref{fig:BinaryFileFormat}.
 There is no magic string at the start of the file, which may be introduced in a new version.
 The header consists of a pair of unsigned 32-bit integers specifying the resolution of the simulation, and a pair of 32-bit floating point numbers specifying the physical dimensions of the simulation.

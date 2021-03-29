@@ -17,13 +17,13 @@ These subcommands are:\label{sec:DesignSubcommands}
 Splitting the program into subcommands was inspired by Git\cite{tool:Git}, and avoids creating separate binaries for each operation.
 Each subcommand can be configured with command-line options conforming to POSIX standard\cite{IEEE2018UtilityConventions}.
 Examples of using the program are in \cref{fig:BashExampleUsage}.
-\input{FinalReport/Ch42Design/figures/usage_example}
+\input{Ch42Design/figures/usage_example}
 
 \section{Generating Inputs}
 The \texttt{makeinput} subcommand allows input simulation states to be generated from image files.
 Each pixel of the input image represents a cell of the grid, including padding cells\footnote{This can allow the padding cells to be fluids rather than boundaries, which is incorrect. In the future this will be changed to add padding cells once the image is parsed.}, where non-black pixels are denoted as boundary cells and are fluid cells otherwise.
 The example in \cref{fig:ExampleMakeinput} shows an example file which creates a rectangular obstacle, and the visualization of the generated state.
-\input{FinalReport/Ch42Design/figures/example_makeinput}
+\input{Ch42Design/figures/example_makeinput}
 
 Velocities and pressure in every cell are currently set to constant default values.
 For velocities, this is \SI{1}{m/s} east, equal to the default flow of incoming fluid, which may cause issues with correctness.
@@ -36,7 +36,7 @@ This means the only significant point is that the pressure is equal over all cel
 This may be inconsistent with the nonzero velocities mentioned above, which is another reason to zero them out instead.
 
 
-\input{FinalReport/Ch42Design/Sub_FileFormat}
+\input{Ch42Design/Sub_FileFormat}
 
 \section{Simulation Backends}
 To allow easy comparisons between CPU and GPU simulations the program contains multiple simulation backends which can be requested when running a headless simulation\footnote{The realtime visualization currently only supports the CUDA-based backend, violating \cref{req:GPUCapable}.}.
@@ -52,7 +52,7 @@ The headless simulation uses a \texttt{--backend} command line option to allow t
 Currently the only modification present in the CPU Optimized Adapted backend is the removal of double-precision floating point logic, which is not present on the GPU for speed concerns.
 However once the GPU introduces residual checking for the iterative solver, or any other major changes to the pipeline, they will be introduced into this backend to ensure a like-for-like comparison.
 
-\input{FinalReport/Ch42Design/Sub_VisualizationPipeline}
+\input{Ch42Design/Sub_VisualizationPipeline}
 
 \section{Comparison Heuristics}
 In the comparison subcommand heuristics are used to judge if one simulation is accurate and precise with respect to the other.
@@ -72,4 +72,4 @@ The tolerance for the mean was derived from an expected error magnitude of $\pm 
 It is assumed that the standard deviation should always be smaller than the mean, so the tolerance for standard deviation is also $10^{-14}$.
 \todopending{More examination of this? Square error always >0 => if std.dev > mean then distribution cannot be normal? Prob wait for full report}
 
-\input{FinalReport/Ch42Design/figures/example_comparisons}
+\input{Ch42Design/figures/example_comparisons}

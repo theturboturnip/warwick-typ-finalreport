@@ -5,7 +5,7 @@
 
 \section{Library Selection}
 \label{sec:LibrarySelection}
-\input{FinalReport/Ch48Implementation/figures/compat_matrix}
+\input{Ch48Implementation/figures/compat_matrix}
 CUDA and Vulkan had already been highlighted in the Specification as likely choices of backends, but to be complete other backends were also considered.
 As the simulation would have to run on DCS systems (\cref{reqN:DCSCompile}), and thus run on Linux, the only possible GPU rendering backends were OpenGL and Vulkan.
 However there were still multiple choices of compute backend:
@@ -46,7 +46,7 @@ The list of regular C++ source files and CUDA source files are maintained separa
 When building the \texttt{sim\_cuda} target the preprocessor macro \texttt{CUDA\_ENABLED} is defined throughout all source files, including the C++ files.
 This allows support for CUDA backends in C++ code (i.e. as selectable options on the command-line) to be conditionally enabled without maintaining two copies of the relevant source files.
 In \cref{fig:ConditionalCUDA} (which has been amended for brevity), the switch statement only contains a case for CUDA if the directive is set, triggering a fatal error otherwise.
-\input{FinalReport/Ch48Implementation/figures/conditional_cuda}
+\input{Ch48Implementation/figures/conditional_cuda}
 
 
 \subsection{Shader Build Infrastructure} % Fits in with the build system vibe
@@ -77,7 +77,7 @@ To avoid this, a templated smart-pointer class \texttt{CUDAUnified2DArray<class 
 This automatically frees the memory when possible, and provides \texttt{as_gpu()} and \texttt{as_cpu()} functions which the programmer uses to access the data.
 C++ \texttt{static_assert} and \texttt{if constexpr} logic is used to create a compilation error when non-Unified memory is accessed through \texttt{as_cpu()}, preventing the issue from ever occurring.
 
-\input{FinalReport/Ch48Implementation/figures/templated_memory_usage}
+\input{Ch48Implementation/figures/templated_memory_usage}
 The CUDA backend itself is also templated on whether it is being run with Vulkan-exported memory.
 This allows simulation code to detect whether the memory would be CPU-accessible or not, and take action accordingly.
 In \cref{fig:TemplatedMemoryUsage}, this is used to conditionally copy data into a Unified Memory buffer so that it can be used with a part of the algorithm that has not yet been implemented on the GPU.
@@ -86,4 +86,4 @@ This logic uses \texttt{if constexpr}, so all branches are eliminated at compile
 
 \section{Current Status}
 \label{sec:ImplementationCurrentStatus}
-\input{FinalReport/Ch48Implementation/Sub_CurrentStatus}
+\input{Ch48Implementation/Sub_CurrentStatus}

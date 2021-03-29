@@ -16,7 +16,7 @@ It then dispatches the GUI thread again, waits for the render to finish and then
 \Cref{fig:CurrentSwimlane} shows the scheduling in more detail.
 The GUI work can execute anywhere within the dashed lines and still not delay the final draw.
 Note that the GPU is always doing useful work, and there are no bubbles.
-\input{FinalReport/Ch42Design/figures/thread_usage}
+\input{Ch42Design/figures/thread_usage}
 
 
 Currently it is assumed that the rendering of one frame and the simulation of the next frame cannot happen in parallel.

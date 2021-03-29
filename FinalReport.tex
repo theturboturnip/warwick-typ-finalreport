@@ -44,8 +44,8 @@
 % BibLaTeX
 \usepackage{turnipcite}
 \addbibresource{mendeley_references.bib}
-% \addbibresource{FinalReport/mendeley_export.bib}
-\addbibresource{FinalReport/typ_FinalReport.bib}
+% \addbibresource{mendeley_export.bib}
+\addbibresource{typ_FinalReport.bib}
 
 \usepackage{markdown}
 
@@ -101,24 +101,24 @@
 %Lets begin the document, some chapters have examples in to give you an idea 
 \begin{document}
 
-\include{FinalReport/Preamble/Frontpage}
-\include{FinalReport/Preamble/Abstract}
-\include{FinalReport/Preamble/Acknowledgements}
-%\include{FinalReport/Preamble/Abbreviations}
-\include{FinalReport/Preamble/Contents}
-\include{FinalReport/Preamble/Lists}
-\include{FinalReport/Preamble/ChapterMods}
+\include{Preamble/Frontpage}
+\include{Preamble/Abstract}
+\include{Preamble/Acknowledgements}
+%\include{Preamble/Abbreviations}
+\include{Preamble/Contents}
+\include{Preamble/Lists}
+\include{Preamble/ChapterMods}
 
-% \include{FinalReport/Ch00Preface/Preface}
-\include{FinalReport/Ch10Introduction/Introduction}
-\include{FinalReport/Ch20Research/Research}
-\include{FinalReport/Ch30EthicalSocialLegal/EthicalSocialLegal}
-\include{FinalReport/Ch40Reqs/Requirements}
-\include{FinalReport/Ch42Design/Design}
-\include{FinalReport/Ch48Implementation/Implementation}
-\include{FinalReport/Ch50ProjectManagement/ProjectManagement}
-\include{FinalReport/Ch60Testing/Testing}
-\include{FinalReport/Ch70Conclusion/Conclusion}
+% \include{Ch00Preface/Preface}
+\include{Ch10Introduction/Introduction}
+\include{Ch20Research/Research}
+\include{Ch30EthicalSocialLegal/EthicalSocialLegal}
+\include{Ch40Reqs/Requirements}
+\include{Ch42Design/Design}
+\include{Ch48Implementation/Implementation}
+\include{Ch50ProjectManagement/ProjectManagement}
+\include{Ch60Testing/Testing}
+\include{Ch70Conclusion/Conclusion}
 
 % Bibliography
 \todopending{Remove chapter number}
@@ -128,6 +128,6 @@
 
 % Appendices
 \pagebreak
-\input{FinalReport/Ch99Appendices/Appendices}
+\input{Ch99Appendices/Appendices}
 
 \end{document}
