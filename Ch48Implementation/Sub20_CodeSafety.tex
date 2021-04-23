@@ -1,0 +1,160 @@
+\section{Code Safety}\label{sec:Impl:CodeSafety}
+No program is faultless, and when faults manifest during execution it's important to ensure they have a minimal effect on their surroundings.
+This program includes many means of detecting errors both at compile-time and run-time to ensure its dependability.
+
+The G++ flag \texttt{-Wall} enables many warnings that are emitted at compile-time if potential errors are detected.
+Unlike some other languages (i.e. Verilog) these warnings are generally reliable and it is feasible to build a C++ program that compiles without any warnings.
+To ensure this the \texttt{-Werror} flag is added to upgrade these warnings to compilation errors, ensuring a program which compiles will be warning-free\footnote{Some warnings, such as those from \texttt{-Wextra} and those relating to unused variables and parameters, are usually benign so weren't upgraded.}.
+
+Runtime errors are detected with a set of C++ macros that check if required conditions are met.
+As there is no liveness requirement for the program, failure triggers an immediate program exit to avoid errors propagating through the system.
+The \texttt{DASSERT} family of macros are included only in Debug builds, and the \texttt{FATAL\_ERROR} family of macros test both in Release and Debug.
+Both families print a message including the file and line of code which triggered the error, and any other relevant debug information.
+These families are also integrated with the \texttt{CHECKED\_CUDA} and \texttt{CHECKED\_VULKAN} macro families, which surround CUDA/Vulkan function calls and check the returned error codes.
+An example is shown in \cref{fig:ImplAssertions}.
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \begin{minted}{cpp}
+if (value == unexpected) {
+    FATAL_ERROR(
+        "Unexpected Value %d\n",
+        value
+    );
+}
+// equivalent to
+FATAL_ERROR_IF(
+    value == unexpected,
+    ...
+);
+// or
+FATAL_ERROR_UNLESS(
+    value != unexpected,
+    ...
+);
+
+// Same, but only fails in Debug builds
+DASSERT(value != unexpected);
+        \end{minted}
+        \caption{Example of assertion macros}
+    \end{subfigure}%
+    \begin{subfigure}{0.49\textwidth}
+        \begin{minted}{cpp}
+cudaError_t error = cudaDeviceSynchronize();
+FATAL_ERROR_IF(error != cudaSuccess);
+// Equivalent to
+CHECKED_CUDA(cudaDeviceSynchronize());
+
+auto result = vkDeviceWaitIdle();
+FATAL_ERROR_IF(result != vk::Result::eSuccess);
+// Equivalent to
+CHECKED_VULKAN(vkDeviceWaitIdle());
+        \end{minted}
+        \caption{Example of API failure safety macros}
+    \end{subfigure}
+    \caption{Examples of error safety via macros}
+    \label{fig:ImplAssertions}
+\end{figure}
+
+The final tool for error detection is the Vulkan Validation Layer.
+This is a standard Vulkan extension which checks each Vulkan call to ensure the Vulkan specification (\todocite{VulkanSpec}) isn't violated.
+These checks are very in-depth, and are a must-have when debugging visualization errors.
+The base Vulkan functions don't do this error checking for efficiency's sake, and the program disables these layers in Release mode for the same reason.
+
+\subsection{Smart Resource Classes}
+All memory allocations, CUDA objects, and Vulkan objects follow the same allocate/release pattern.
+They are not destroyed automatically when they go out of scope, but must be released manually.
+This is an error-prone process, as a programmer may forget which resources need to be released or try to release a resource twice.
+
+\begin{figure}
+    \centering
+    \begin{cppcode}
+// Manual handling
+{
+    auto* semaphore = new Semaphore();
+    // do things with semaphore...
+    delete semaphore;
+}
+
+// Automatic handling
+{
+    std::unique_ptr<Semaphore> semaphore = std::make_unique<Semaphore>();
+    // do things with semaphore...
+    // automatically deleted
+}
+    \end{cppcode}
+    \caption{Example of memory management with C++ standard classes}
+    \label{fig:ImplUniquePtr}
+\end{figure}
+
+Smart resource classes alleviate this by tying the resource lifetime to a C++ object, using the object \emph{destructor} to release the resource.
+The prime example of this is \mintinline{cpp}{std::unique_ptr<T>}, which holds a \mintinline{cpp}{T*} object and \mintinline{cpp}{free()}-s it when the object leaves scope (\cref{fig:ImplUniquePtr}).
+However this does not easily map to other deletion methods, and the pointer adds an unwanted extra level of indirection.
+\texttt{vulkan.hpp}, included in the Vulkan SDK, includes similar classes for each type of Vulkan resource, but still requires a lot of boilerplate to initially create objects\footnote{Vulkan objects require a full CreateInfo struct to create, rather than taking function arguments.}.
+In some cases it's also more convenient to store multiple resources together, such as a buffer and the device memory it uses, which cannot be directly achieved with either method.
+To solve these problems custom smart resource classes are implemented, for individual resources and for aggregates, with more convenient constructors.
+\todomark{List them in an appendix}
+
+These smart classes are affected by C++ copy/move semantics.
+C++ allows objects to be copied with a copy-constructor, or moved with a move-constructor.
+The resource objects should not be copyable as it would become unclear which copy would be responsible for destroying the resource.
+The copy-constructor can be deleted to prevent this, but the move-constructor is useful for transferring ownership e.g. from a resource factory to the person using the resource.
+When an object is moved, the original version should forget the data it's holding and give it to the new object.
+However the default move constructor generated by C++ will just copy the data across if the data is \textit{TriviallyCopyable}\todocite{cppref TriviallyCopyable copied instead of moved}, which is true for pointers and all CUDA handles.
+To avoid manually creating move-constructors, which is error-prone, the \mintinline{cpp}{ForgetOnMove<T>} class wraps these values and automatically forgets them when the move-constructor is invoked.
+The final result is shown in \cref{fig:ForgetOnMoveEx}: a clean, easy, and safe method of implementing new smart resource classes.
+% Detecting and mitigating these faults and errors is an important part of effective programming, 
+\begin{figurepage}
+\begin{figure}
+    \centering
+    \begin{cppcode}
+// Doesn't use ForgetOnMove<>
+class ComplexWrapper {
+    void* memoryPointer;
+    
+    // Constructor
+    ComplexWrapper(size_t memorySize) {
+        // Allocate memory
+    }
+    // Destructor
+    ~ComplexWrapper() {
+        if (memoryPointer != nullptr) {
+            // Free memory
+        }
+    }
+    
+    // Copy constructor - deleted
+    ComplexWrapper(const ComplexWrapper&) = delete;
+    // Move constructor - complicated
+    ComplexWrapper(ComplexWrapper&& movedFrom) {
+        this->memoryPointer = movedFrom.memoryPointer;
+        movedFrom.memoryPointer = nullptr;
+    }
+};
+
+// Uses ForgetOnMove<>, is simpler
+class SimpleWrapper {
+    ForgetOnMove<void*> memoryPointer;
+    
+    // Constructor as before
+    SimpleWrapper(size_t memorySize) {
+        // Allocate memory
+    }
+    // Destructor as before, but checks if the memoryPointer is present
+    ~SimpleWrapper() {
+        if (memoryPointer.has_value()) {
+            // Free memory
+        }
+    }
+    
+    // Copy constructor - deleted
+    SimpleWrapper(const SimpleWrapper&) = delete;
+    // Move constructor - defaulted!
+    // We don't have to write this in full
+    SimpleWrapper(SimpleWrapper&&) = default;
+};
+    \end{cppcode}
+    \caption{Example of \mintinline{cpp}{ForgetOnMove<T>} vs. manual handling.}
+    \label{fig:ForgetOnMoveEx}
+\end{figure}
+\end{figurepage}

@@ -1,6 +1,9 @@
 \documentclass[12pt,a4paper,oneside]{report}
 %Can change the pt, papersize etc.
 
+\usepackage[margin=2cm]{geometry}
+
+
 \usepackage{morewrites}
 
 % (1) choose a font that is available as T1
@@ -14,7 +17,10 @@
 % See https://github.com/borisveytsman/acmart/issues/402
 % and https://github.com/borisveytsman/acmart/issues/410
 \usepackage{bera}% optional: just to have a nice mono-spaced font
-\usepackage[libertine]{newtxmath}
+% \usepackage[libertine]{newtxmath}
+% Mathematic Double-Stroke font
+\usepackage{dsfont}
+% \usepackage{newtxmath}
 \usepackage[tt=false]{libertine}
 \setmonofont[StylisticSet=3]{inconsolata}
 % (3) load symbol definitions
@@ -22,11 +28,27 @@
 
 
 \usepackage{amsmath} %For both in-line and equation mode
+\usepackage{mathtools}
 \numberwithin{equation}{section} %Numbering of our equations per section
 % % Better forall spacing
 \let\oldforall\forall
 \let\forall\undefined
 \DeclareMathOperator{\forall}{\oldforall}
+% Abs value and normalize symbols. https://tex.stackexchange.com/a/43009
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+%
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
 \usepackage{breqn} % For long equation breaking
 \usepackage{bm}
 
@@ -36,11 +58,13 @@
 \usepackage{graphicx} %Inserting images
 \usepackage{lipsum}  %Blank text fill, delete me when finished
 \usepackage{setspace} %Spacing on the front page for crest and titles
-\usepackage[]{fncychap} % Styles can be Sonny, Lenny, Glenn, Conny, Rejne, Bjarne and Bjornstrup
+\usepackage[Sonny]{fncychap} % Styles can be Sonny, Lenny, Glenn, Conny, Rejne, Bjarne and Bjornstrup
 \usepackage[hyphens]{url} %Deals with hyphens in urls to make them clickable
 \usepackage{xcolor} %Great if you want coloured text
 \usepackage{tabularx}
-\usepackage{siunitx}
+\usepackage[binary-units=true,per-mode=symbol]{siunitx}
+\DeclareSIUnit\op{op}
+\sisetup{detect-all}
 \usepackage[justification=centering]{caption} 
 \usepackage{subcaption}
 
@@ -70,12 +94,24 @@
 \usepackage[ampersand]{easylist}
 % \usepackage{labels4easylist}
 
+% Test counter
+\newcounter{testI} % Test counter
+\setcounter{testI}{0}
+% Representation of test counter: T<testI>
+\renewcommand{\thetestI}{T\arabic{testI}}
+\newcommand{\newtest}{%
+    \refstepcounter{testI}% Step hypothesis counter
+    \thetestI% Print hypothesis counter
+}%label{#1}}% Mark with label
+
+
 \usepackage{pgfgantt}
 
 \usepackage{tikz}
 \usetikzlibrary{matrix}
 
-\usepackage{turniptodo}
+% \usepackage{turniptodo}
+\usepackage[nofootnotes]{turniptodo}
 
 \usepackage{wrapfig}
 
@@ -98,33 +134,75 @@ tabsize=4,
 autogobble
 }
 
-\newminted{cpp}{xleftmargin=-1.5cm,xrightmargin=-1.5cm}
-\newminted{cuda}{xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+%Don't need expanded margins now, global margin has shrunk
+\newminted{cpp}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{cuda}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
 \newminted{bash}{}
-\newminted{glsl}{xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{glsl}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
 \newminted{json}{}
 % \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
 % \usepackage{quotewarning}
 
 %KEEP THIS ONE LAST it's quite buggy, it allows you to click on links within the pdf and web links without changing the colour. The mouse cursor simply changes its icon to indicate to the user. Great tool - still awkward
 % \usepackage{varioref}
-\usepackage[hidelinks,
+\usepackage[colorlinks,%hidelinks,
             unicode,
             pdfauthor={Samuel Stark - u1800081},
             pdftitle={CS351 Final Report},
             pdfsubject={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation}]{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\hypersetup{linkcolor=blue!80!black}
+
 \usepackage[capitalize,nameinlink]{cleveref}
-\crefname{reqFi}{Requirement}{Requirements}
-\crefname{reqNFi}{Requirement}{Requirements}
+\crefname{reqFi}{Req.}{Reqs.}
+\crefname{reqNFi}{Req.}{Reqs.}
+\crefname{testI}{Test}{Tests}
 
 \usepackage[header, title]{appendix}
 \usepackage{pdfpages}
 
-\linespread{1.25}
+\linespread{1.5}
+
+\usepackage{pdflscape}
+\usepackage{rotating}
+
+\usepackage{tikz}
+\usetikzlibrary{angles,quotes}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{fadings}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{patterns}
+\pgfdeclarepatternformonly{south west lines}{\pgfqpoint{-0pt}{-0pt}}{\pgfqpoint{3pt}{3pt}}{\pgfqpoint{3pt}{3pt}}{
+    \pgfsetlinewidth{0.4pt}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{3pt}{3pt}}
+    \pgfpathmoveto{\pgfqpoint{2.8pt}{-.2pt}}
+    \pgfpathlineto{\pgfqpoint{3.2pt}{.2pt}}
+    \pgfpathmoveto{\pgfqpoint{-.2pt}{2.8pt}}
+    \pgfpathlineto{\pgfqpoint{.2pt}{3.2pt}}
+    \pgfusepath{stroke}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT STARTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newenvironment{figurepage}{
+\pagebreak
+\newgeometry{margin=2cm}
+}{
+\restoregeometry
+\pagebreak
+}
 
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
 
 %Lets begin the document, some chapters have examples in to give you an idea 
 \begin{document}
@@ -137,6 +215,7 @@ autogobble
 \include{Ch00Preamble/Lists}
 \include{Ch00Preamble/ChapterMods}
 
+
 \include{Ch10Introduction/Introduction}
 \include{Ch20Research/Research}
 \include{Ch30EthicalSocialLegal/EthicalSocialLegal}
@@ -145,6 +224,8 @@ autogobble
 \include{Ch48Implementation/Implementation}
 \include{Ch50ProjectManagement/ProjectManagement}
 \include{Ch60Testing/Testing}
+\include{Ch62Results/Results}
+\include{Ch65Evaluation/Evaluation}
 \include{Ch70Conclusion/Conclusion}
 
 % Bibliography

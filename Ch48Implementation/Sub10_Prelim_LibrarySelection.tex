@@ -1,0 +1,32 @@
+\subsection{Library Selection}
+\label{sec:LibrarySelection}
+\input{Ch48Implementation/figures/compat_matrix}
+CUDA and Vulkan have been chosen as backend, but other backends were also considered.
+As the simulation would have to run on DCS systems (\cref{reqN:DCSCompile}), and thus run on Linux, the only possible GPU rendering backends were OpenGL and Vulkan.
+However there were still multiple choices of compute backend:
+\begin{itemize}
+    \item OpenCL\cite{tool:OpenCL1.0PressRelease} is an ``Open Standard for Parallel Programming of Heterogeneous Systems''\cite{TheKhronosGroupOpenCLInc}.
+    \item CUDA\cite{tool:CUDA} is a closed-source library for running parallel code on NVIDIA GPUs.
+    \item OpenGL has Compute Shaders\cite{tool:OpenGLComputeShaderExt} which can execute computations outside of the graphics pipeline.
+    \item Vulkan also has Compute capability\cite{TheKhronosGroupVulkanGuide}, similar in function to OpenGL.
+\end{itemize}
+To decide on the compute backend to use, an interoperability matrix was drawn (\cref{fig:LibraryChoices}) to show which libraries could share data without copying it between buffers.
+As the researcher was already experienced with Vulkan, and the more granular control it provides would be beneficial to performance, Vulkan was selected as the rendering backend.
+This prevented OpenCL and OpenGL from being used as compute backends, as they are not compatible with Vulkan.
+CUDA and Vulkan have comparable ability, but CUDA was chosen as the compute backend.
+The Vulkan compute shaders are still a very graphics-oriented view of computation, and CUDA would give the researcher experience with other kinds of libraries.
+A Vulkan compute backend is used for the visualization portion of the code.
+
+% Not for now, but note that the C++ vulkan bindings are nice. They do end up wrapped in other classes, but they remove the need to remember boilerplate as much.
+
+In other cases there were clear choices: the SDL2\cite{SimpleHomepage} window and input library and the Dear ImGUI\cite{CornutDearImGui} UI library were chosen due to personal experience.
+The \texttt{stb\_image.h} header was found to be a simple method of importing image color data as byte arrays, used for the input generator (\cref{req:GenerateState}).
+
+There are a great many options for Command-Line parsing libraries, even more so because C++ is used instead of C.
+A recent survey of the possibilities\cite{attractivechaos2018AC/C++} was whittled down to five options.
+
+\texttt{getopt}\cite{FreeSoftwareFoundationGetopt3:Page}, \texttt{argp}\cite{GNUProjectArgpLibrary}, and \texttt{gopt}\cite{VajzovicGoptLibrary} are C libraries that use arrays of structures to define the required arguments.
+Of them, only \texttt{argp} can automatically generate a \texttt{--help} argument, which is a very valuable feature.
+
+\texttt{cxxopts}\cite{jarro2783Cxxopts:Parser} was considered as a C++ alternative, but used very odd syntax for defining arguments.
+Ultimately CLI11\cite{CLIUtilsCLI11} was chosen as a modern C++11 library that had native support for subcommands, which were used heavily for separating program components (see \cref{sec:DesignSubcommands}).

@@ -1,0 +1,17 @@
+\subsection{Comparison Heuristics}\label{sec:Comparisons}
+In the comparison subcommand heuristics are used to judge if one simulation is accurate and precise with respect to the other.
+This does not quite fulfil \cref{req:CompareBinary}, as there are two results and two heuristics used instead of just one, but it is useful for comparisons regardless so was not changed.
+
+This assumes one of the supplied states is a known-valid simulation state, and the other is not.
+The velocity and pressure values $u, v, p$ of two simulation states are compared separately.
+The simulation states must be of the same resolution, and should use the same boundary squares (although this is not checked).
+
+The comparison is performed by calculating the mean and standard deviation of the square error between the datasets.
+These are then compared to tolerance values to produce two binary outputs: ACCURATE if the mean is below tolerance, and PRECISE if the standard deviation is below tolerance.
+Examples are shown in \cref{fig:example_comparisons}.
+
+The tolerance for the mean was derived from an expected error magnitude of $\pm 10^{-7}$, which was squared to produce $10^{-14}$.
+It is assumed that the standard deviation should always be smaller than the mean, so the tolerance for standard deviation is also $10^{-14}$.
+\todopending{More examination of this? Square error always >0 => if std.dev > mean then distribution cannot be normal? Prob wait for full report}
+
+\input{Ch42Design/figures/example_comparisons}

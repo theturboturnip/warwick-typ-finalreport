@@ -1,0 +1,42 @@
+
+
+\begin{table}[p]
+    \centering
+    \begin{tabular}{l|c|l|c}%ccl|p{0.4\linewidth}|m{0.2\linewidth}|c}
+        ID & Priority & Tests & Status \\
+        \hline
+        \ref{req:StoreState} & \must{} & Implicit in program behaviour & \testsuccess{} \\
+        \ref{req:LoadState} & \must{} & \ref{test:intg:input:sim}, \ref{test:intg:input:viz}, \ref{test:intg:sim:sim}, \ref{test:intg:sim:viz} & \testsuccess{}\\
+        \ref{req:GenerateState} & \must{} & \ref{test:unit:makeinput} & \testsuccess{} \\
+        \hline
+        \ref{req:HeadlessSim} & \must{} & \ref{test:unit:fixedtime} & \testsuccess{}     \\
+        \ref{req:HeadlessOutput} & \must{} & \ref{test:unit:fixedtime} & \testsuccess{}  \\
+        \hline
+        \ref{req:VizSim} & \must{} & \ref{test:unit:run} & \testsuccess{}     \\
+        \ref{req:VizPauseResume} & \must{} & \ref{test:sys:run:pause} & \testsuccess{}     \\
+        \ref{req:VizSaveState} & \should{} & \ref{test:sys:run:save} & \testfail{}     \\
+        \ref{req:VizManip} & \should{} & \ref{test:sys:run:manip} & \testsuccess{}     \\
+        \ref{req:VizLockedFPS} & \should{} & \ref{test:sys:run:lockedFPS} & \testsuccess{}     \\
+        \ref{req:VizFlatOut} & \should{} & \ref{test:sys:run:flatoutFPS} & \testsuccess{}     \\
+        \ref{req:VizSomeSpeed} & \must{} & \ref{test:sys:run:lockedFPS}, \ref{test:sys:run:flatoutFPS} & \testsuccess{}     \\
+        \hline
+        \ref{req:GPUCapable} & \must{} & \ref{test:sys:sim:gpu}, \ref{test:sys:run:gpu} & \testsuccess{}     \\
+        \hline
+        \ref{req:Compare} & \must{} & \ref{test:unit:compare:identical}, \ref{test:unit:compare:different} & \testsuccess{}     \\
+        \ref{req:CompareBinary} & \should{} & \ref{test:unit:compare:different}, \ref{test:unit:compare:different} & \testfail{}      \\
+        \hline
+        \ref{req:VizLayers} & \must{} & \ref{test:sys:run:layerPerms} & \testsuccess{}     \\
+        \ref{req:VizLayersBackground}  & \must{} & \ref{test:sys:run:layerPerms} & \testsuccess{}  \\
+        \ref{req:VizLayersScalar}  & \must{} & \ref{test:sys:run:layerPerms} & \testsuccess{}      \\
+        \ref{req:VizLayersVector}  & \must{} & \ref{test:sys:run:layerPerms} & \testsuccess{}      \\
+        \ref{req:VizLayersParticle}  & \must{} & \ref{test:sys:run:layerPerms} & \testsuccess{}       \\
+        \hline
+        \ref{req:VizAutoRange} & \should{} & \ref{test:sys:run:autorange} & \testsuccess{}     \\
+        \ref{req:VizColors} & \should{} & \ref{test:sys:run:colors}  & \testsuccess{}    \\
+        \ref{req:VizParticleEmission} & \should{} & \ref{test:sys:run:manip} & \testsuccess{} \\
+    \end{tabular}
+    \caption{Evaluation of Functional Requirements}
+    \label{tab:functional_req}
+\end{table}
+
+% 24 total

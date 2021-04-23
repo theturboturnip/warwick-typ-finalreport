@@ -1,0 +1,80 @@
+\section{Memory Layer}
+As mentioned in the Design section, all elements of the Memory system are parameterized on the memory type.
+This was accomplished by creating an enum \mintinline{cpp}{MType} and a set of classes templated on it (\cref{fig:TypeclassMemory}).
+These templates were then specialized for each type of memory, implementing the logic for each type separately.
+Separate implementations were required due to the unique constraints and allocation methods of each memory type.
+
+\begin{figure}
+    \centering
+\begin{minted}{cpp}
+enum MType {
+    CPU,
+    Cuda,
+    VulkanCuda
+};
+
+enum RedBlackStorage {
+    RedBlackOnly, // Just store the red and black matrices
+    WithJoined // Store the red, black, and combined matrices
+};
+
+typeclass DataArray {
+    // Has a static value MemType telling you what memory type it takes
+    static MType MemType;
+    // Has a function for calculating the total bytes used for a matrix
+    static size_t sizeBytesOf(Size<uint32_t> size);
+}
+
+typeclass FrameAllocator<MType> {
+    // Function for allocating a 2D array
+    Sim2DArray<T, MType> allocate2D(Size);
+    
+    // Function for allocating a red/black array
+    SimRedBlackArray<T, MType, RedBlackStorage> allocateRedBlack(Size);
+}
+
+typeclass FrameSetAllocator<MType, TFrame> {
+    std::vector<TFrame> frames;
+}
+\end{minted}
+    \caption{Memory Layer Typeclasses}
+    \label{fig:TypeclassMemory}
+\end{figure}
+
+\subsection{Array Handles}
+The \mintinline{cpp}{Sim2DArray<T, MType>} and \mintinline{cpp}{SimRedBlackArray<T, MType, RedBlackStorage>} classes represent handles to 2D arrays of values of type \mintinline{cpp}{T}.
+They implement a common \emph{DataArray} typeclass (\cref{fig:TypeclassMemory}).
+They do not own the data they point to, so if a \mintinline{cpp}{Sim2DArray} is destroyed the referenced memory isn't freed.
+Freeing memory is handled by the \mintinline{cpp}{FrameAllocator} instead.
+
+\mintinline{cpp}{SimRedBlackArray} serves as a aggregate of \mintinline{cpp}{Sim2DArray}s, without defining any special behaviour.
+It does not specialize on the memory type, but provides two storage variants \mintinline{cpp}{RedBlackOnly} and \mintinline{cpp}{WithJoined} (\cref{fig:TypeclassMemory}).
+
+\mintinline{cpp}{Sim2DArray} implements a set of functions for accessing data from the CPU, GPU, and as Vulkan handles.
+These functions are only present if that access type is supported, so trying to use an unsupported function results in a compile-time error.
+Other more generic operations are also supported such as zeroing out memory, copying memory in from different sources, and copying memory out to the CPU.
+Each of these is implemented differently based on the memory type, and may not be implemented if the operation is impossible.
+\todomark{Matrix of supported operations}
+
+\subsection{\texttt{FrameAllocator}}
+\mintinline{cpp}{FrameAllocator<MType>} is an allocator associated with a single memory frame.
+The behaviour is specialized for each memory type, but each specialization fits a typeclass (\cref{fig:TypeclassMemory}) for allocating 2D and red-black arrays.
+The \mintinline{cpp}{FrameAllocator} owns these allocations, and when it is destroyed the allocations are freed.
+The CPU and CUDA Managed memory variants allocate data directly using their respective allocation functions when requested, store the raw pointers in a list, and frees all of them on destruction.
+
+The Vulkan variant allocates a fixed amount of Vulkan device memory, which is exported using the CUDA-Vulkan interop API to a CUDA-compatible pointer.
+All new allocations then sub-allocate from this memory.
+The fixed amount is calculated by the \mintinline{cpp}{FrameSetAllocator}, and assumes only the bare minimum ($u, v, p, fluidmask$) requirements are allocated in Vulkan.
+The associated CUDA pointer is \emph{not} compatible with Unified Memory, so cannot be paged to the CPU.
+
+\subsection{\texttt{FrameSetAllocator}}
+\mintinline{cpp}{FrameSetAllocator<MType, TFrame>} creates a set of TFrame objects which are each allocated using separate \mintinline{cpp}{FrameAllocator<MType>} objects.
+The CPU and CUDA variants simply construct N \mintinline{cpp}{TFrame}s using N \mintinline{cpp}{FrameAllocator}s.
+The Vulkan variant is more advanced as it has to check the \mintinline{cpp}{TFrame} exposes the correct data, calculate the amount of Vulkan data to allocate per frame, and expose this data by implementing a virtual \mintinline{cpp}{VulkanFrameSetAllocator} interface.
+The Vulkan variant also passes in a CUDA \mintinline{cpp}{FrameAllocator} with the Vulkan one to allow the other buffers to be allocated.
+
+\subsection{Usage in Other Layers}
+The Simulation layer instantiates \mintinline{cpp}{FrameSetAllocator}s in the simulation Runners.
+The Backend typeclass (\cref{fig:TypeclassBackend}) requires each backend to implement a Frame class, and to take a list of Frame instances as an argument to their constructor.
+
+The visualization will use the \mintinline{cpp}{VulkanFrameSetAllocator} interface to grab references to the simulation memory, and use these references while rendering.

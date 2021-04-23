@@ -1,0 +1,34 @@
+% \newcommand{\testsuccess}{\symbol{"2B45}}
+% \newcommand{\testfail}{\symbol{"2718}}
+
+\newcommand{\testsuccess}{\cmark{}}
+\newcommand{\testfail}{\xmark{}}
+
+% \pagebreak
+% \newgeometry{margin=2cm}
+% \begin{sidewaysfigure}
+%     \centering
+%     \makebox[\linewidth][c]{\includegraphics[width=\linewidth]{Ch48Implementation/figures/FinalReport_VizData.pdf}}
+%     \caption{Data Transformation Diagram showing the data flow for the Visualization}
+%     \label{fig:VizDataTransform}
+% \end{sidewaysfigure}
+% \restoregeometry
+% \pagebreak
+
+\todomark{Add tested reqs. to each test table}
+
+\begin{sidewaystable}
+    \centering
+    \begin{tabular}{ll|c|c|c}
+        ID & Description & Expected & Output & Result \\
+        \hline
+        \newtest{}\label{test:unit:compare:identical} & \texttt{compare}: identical states & No difference & No difference & \testsuccess{} \\
+        \newtest{}\label{test:unit:compare:different} & \texttt{compare}: ACA input to ACA target output & \todoref{ACA comparison input/target} & \todoref{Actual comparison ACA input to ACA target} & \testsuccess{} \\
+        \newtest{}\label{test:unit:renderppm} & \texttt{renderppm}: render state vorticity & Equal to ACA program & Equal to ACA program & \testsuccess{} \\
+        \newtest{}\label{test:unit:makeinput} & \texttt{makeinput}: generate an input file from a PNG & Valid simulation state & Valid simulation state & \testsuccess{} \\
+        \newtest{}\label{test:unit:fixedtime} & \texttt{fixedtime}: simulate from an input state for 25 seconds. & Valid simulation state & Valid simulation state & \testsuccess{} \\
+        \newtest{}\label{test:unit:run} & \texttt{run}: visualize a simulation from an input state for 25 seconds. & Valid simulation state & Valid simulation state & \testsuccess{} \\
+    \end{tabular}
+    \caption{Unit Tests}
+    \label{tab:unittests}
+\end{sidewaystable}

@@ -1,12 +1,35 @@
 
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
-\vspace{2cm}
+\vspace{1.5cm}
 
 \large
-\todomark{Abstract}
-When this thing gets up to 88 mph, you're gonna see some serious s$\cdot \cdot \cdot$.\\
 
-\vspace{1cm}
+% 2 sentences - Fluid simulations are important for XYZ
+Using CFD programs to simulate fluids has become an incredibly important element of many research areas and industrial applications such as weather forecasting, animation, and vehicle design.
+% have become a hugely important element of many design processes.
+% Fluid simulations are used for weather forecasting, animation, and designing vehicles to name a few examples.
+%to predict the weather, create animation, and to determine aerodynamic properties of vehicles.
+% 1 sentences - Making them go fast is important.
+Complex simulations may require large \& expensive systems to complete, and even then may take multiple hours to finish.
+% This is unhelpful for the simulation users, who may benefit from quicker simulations to e.g. speed up their design iterations.
+Making simulations run faster on relatively cheap GPU hardware would lower the barrier to entry, and help users work effectively by reducing their iteration times.
 
-\noindent \textit{Keywords: Flux Capacitor, 1.21 Gigawatts, Calvin Klein}
+% 1 sentences - Visualizing in-situ is important.
+% 1 sentences - Visualizing quickly is important. \todomark{Avoid round trip of full simulation -> visualization, which can take a long time}
+% User efficiency can also be improved with in-situ visualization, where data is visualized in parallel with the simulation instead of waiting for it to complete.
+% For advanced visualization features to be included, or to combine many different visualization features, an implementation must be efficient enough to not delay the simulation work.
+User efficiency may also be improved with real-time in-situ visualization, where data is visualized and displayed in parallel with the simulation.
+For advanced visualization features to be included, or to combine many different visualization features, an implementation must be efficient enough to not delay the simulation work.
+
+% 2 sentences - Goal is to introduce a high-speed tightly-coupled in-situ visualization based on ACA. Novelty comes from implementing techniques from games industry, mixing Vulkan and CUDA for an in-situ visualization.
+The goal of this project is to implement a 
+real-time tightly-coupled in-situ visualized fluid simulation, based on the simulation code from the 2020 CS257 coursework.
+The simulation is moved to the GPU to improve performance, and optimized for the target platform.
+The visualization is implemented from scratch with Vulkan, using techniques from the games industry for efficient rendering.
+% The implementation is evaluated vs. the original coursework, and impact of an advanced visualization is shown to be negligible compared to the simulation on the target hardware.
+The implementation is evaluated against the original simulation and other simulation programs, and the impact of an advanced visualization is shown to be negligible compared to the simulation.
+
+\vspace{0.5cm}
+
+\noindent \textit{Keywords: Fluid Simulation, CUDA, Vulkan, GPU, In-Situ, Visualization}

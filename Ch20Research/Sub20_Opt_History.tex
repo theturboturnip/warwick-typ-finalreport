@@ -1,0 +1,14 @@
+\subsection{Background}
+One of the first papers on optimizing a CFD simulation was released in 1995\cite{paper:1995CfdOpt:1383209}.
+This paper considered the effect of automatic compiler parallelization and optimization of a full CFD program, and the steps a programmer must take to guide the compiler i.e. avoiding false sharing.
+The program was only executed on the CPU, as General Purpose GPU computing (GPGPU) had not yet taken hold.
+
+GPGPU was first used for CFD simulations in 2004 with this paper\cite{paper:2004CfdGPU:10.1109/SC.2004.26}.
+This used the ``fragment shading'' stage of the GPU rendering pipeline to perform the computation, as standalone ``compute'' pipelines were only exposed by APIs from 2007 onwards.
+Such APIs include CUDA (2007)\cite{tool:CUDAProgrammingV1}, OpenCL (2008)\cite{tool:OpenCL1.0PressRelease}, DirectX's DirectCompute (2009)\cite{tool:DirectComputePresentation}, and OpenGL 4's compute shaders (2012)\cite{tool:OpenGLComputeShaderExt}.
+% TODO - OpenGL compute extensions may have existed before this.
+
+Since 2007, using GPGPU for CFD has become a large topic of study, as investigated in detail by \cite{paper:GPGPUSummary:10.1007/s11227-013-1015-7}.
+While the concept of accelerating a fluid simulation on the GPU is not new, much of the novelty of our optimizations will stem from the interaction between the simulation and the other systems at work.
+As an example, if the simulation were to be modifiable with user input, introducing this new data and updating the boundary conditions in an efficient manner becomes a new problem.
+% \todomark{Interactivity not a thing lmao}

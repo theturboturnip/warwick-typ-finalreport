@@ -3,15 +3,13 @@
 \chapter{Project Requirements}
 \label{sec:Requirements}
 These basic functional and non-functional requirements define the baseline the final result will be measured against.
-These are mostly unchanged from the Specification document, and may be expanded upon in the final report as the project evolves and more testable features are added.
-\cref{req:VizLockedFPS,req:VizFlatOut,req:VizSomeSpeed} have been added as the Specification was unclear as to the speed of the visualization.
-Functional requirements for visualization are intentionally not included, as an intuitive visualization can take many forms that must be investigated further before being specified.
+\todomark{Elaborate on requirements}
 
 \newcommand{\must}[0]{\textbf{must}}
 \newcommand{\should}[0]{\textbf{should}}
+\newcommand{\shouldnt}[0]{\textbf{should not}}
 
 \section{Functional Requirements}
-\todopending{Remove the need for [reqFi] here, it stops Overleaf from detecting requirements}
 \begin{reqF}
     \item \label{req:StoreState} The system \must{} store simulation state in a file or set of files.
     \item \label{req:LoadState} The system \must{} be able to load the initial state of a simulation from these file(s).
@@ -24,7 +22,7 @@ Functional requirements for visualization are intentionally not included, as an 
     \begin{reqF}
         \item \label[reqFi]{req:VizPauseResume} This mode \must{} allow the user to pause and resume the simulation.
         \item \label[reqFi]{req:VizSaveState} This mode \should{} be able to save it's state to output file(s) when requested.
-        \item \label[reqFi]{req:VizManip} This mode \should{} allow the user to manipulate the simulation state while simulating.
+        \item \label[reqFi]{req:VizManip} This mode \should{} allow the user to manipulate the simulation or visualization state while simulating.
         \item \label[reqFi]{req:VizLockedFPS} This mode \should{} be able to run at a locked frame-rate.
         \item \label[reqFi]{req:VizFlatOut} This mode \should{} be able to run as fast as possible, without locking the framerate.
         \item \label[reqFi]{req:VizSomeSpeed} This mode \must{} be able to perform at least one of \cref{req:VizLockedFPS,req:VizFlatOut}.
@@ -34,20 +32,34 @@ Functional requirements for visualization are intentionally not included, as an 
     \begin{reqF}
         \item \label[reqFi]{req:CompareBinary} This comparison \should{} produce a binary SIMILAR/NOT~SIMILAR verdict using heuristics.
     \end{reqF}
+    
+    \item \label{req:VizLayers} The visualization \must{} consist of multiple layers which can be individually controlled.
+    \begin{reqF}
+        \item \label[reqFi]{req:VizLayersBackground} The visualization \must{} always display a background layer which shows the simulation obstacles in a different color to the fluid.
+        \item \label[reqFi]{req:VizLayersScalar} The visualization \must{} be able to display an optional scalar quantity (e.g. pressure) using a color scale, where the value is within a user-defined range.
+        \item \label[reqFi]{req:VizLayersVector} The visualization \must{} be able to display an optional vector quantity (e.g. velocity) using a vector field, where the magnitude is within a user-defined range.
+        \item \label[reqFi]{req:VizLayersParticle} The visualization \must{} feature an optional particle simulation, where particles are continuously emitted and move with the velocity of the field.
+    \end{reqF}
+    \item \label{req:VizAutoRange} The scalar and vector quantities (\cref{req:VizLayersScalar,req:VizLayersVector}) \should{} have an auto-range function to automatically calculate the range based on the values present.
+    \item \label{req:VizColors} All colors used in the visualization (e.g. particle colors, the scalar color scale) \should{} be user-controlled.
+    \item \label{req:VizParticleEmission} The locations of particle emitters \should{} be user-controllable.
 \end{reqF}
 
+\pagebreak
 \section{Non-Functional Requirements}
 \begin{reqNF}
+    \item \label{reqN:LargeData} The system \must{} be capable of operating on large datasets (e.g. 4096x4096 grids) without failing.
+    \item \label{reqN:Resources} The system \must{} be efficient and avoid wasting any resources allotted to it.
     \item \label{reqN:SimilarOutput} The simulation \must{} produce similar results to the original coursework when equivalent initial state is used.
+    \item \label{reqN:SimSpeed} The simulation \should{} run at least 2x as fast as the original coursework when equivalent initial state is used.
     \item \label{reqN:Realtime} The visualized simulation \must{} run in real-time at framerates~$\ge$~30 FPS for some outputs.
+    \item \label{reqN:VizSpeed} The visualization features \shouldnt{} have a significant impact on the framerate.
     \item \label{reqN:Intuitive} The visualized simulation \should{} intuitively represent the fluid flow such that it can be understood by someone unfamiliar with fluid simulation.
+    \item \label{reqN:VizParticleAdvanced} The particle simulation (\cref{req:VizLayersParticle}) \should{} demonstrate advanced behaviour to make the visualization more intuitive e.g. avoiding clumping.
     \item \label{reqN:Documented} The system \must{} be fully documented and maintainable. % TODO Wheeler referenced BCS code of conduct again??
     \item \label{reqN:UsageGuide} The system \should{} have a simple guide to common operations for new users to refer to.
-    \item \label{reqN:LargeData} The system \must{} be capable of operating on large datasets (e.g. 4096x4096 grids) without failing.
     \item \label{reqN:DCSCompile} The system \should{} be fully compilable and executable from a DCS machine with minimal extra installations.
 \end{reqNF}
-
-\todopending{Coverage matrix?}
 
 \section{Hardware and Software Constraints}
 \label{sec:Requirements_HardwareSoftware}

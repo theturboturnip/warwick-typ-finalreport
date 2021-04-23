@@ -1,0 +1,115 @@
+\section{Visualization Layer}\label{sec:ImplementationViz}
+\subsection{Multithreading}
+The worker thread is implemented with a \mintinline{cpp}{SystemWorker} class combined with a generic threading system.
+% While only one worker thread is ever used in the final program, earlier versions planned to use a few unique workers so a generic system was required.
+An \mintinline{cpp}{IWorkerThread} virtual interface is defined and \mintinline{cpp}{IWorkerThread_Impl<Worker>} implements this for a specific \mintinline{cpp}{Worker} class, similar to the Simulation Runners pattern.
+% A similar pattern to Simulation Runners is used, where an \mintinline{cpp}{IWorkerThread} virtual interface is defined and a \mintinline{cpp}{IWorkerThread\_Impl<Worker>} class implements this for a specific \mintinline{cpp}{Worker} class.
+
+% The \mintinline{cpp}{IWorkerThread} class works with a \mintinline{cpp}{WorkerThreadController} class.
+To kick off the worker thread, a \mintinline{cpp}{WorkerThreadController} writes to a mutex-protected set of input data.
+The `work index' of this data is incremented to signal it is new, and a condition variable is signalled to alert the worker thread and begin processing.
+Work cannot be enqueued until the thread produces an output, which is sent to the main thread in the same way as before - a mutex is taken to update the output data with the new index, and the condition variable is signalled in case the main thread is waiting for the worker to finish.
+
+\subsection{GPU Work Breakdown}
+% \todoref{GPU work breakdown design} showed a coarse breakdown of work between the Viz Compute and Viz Graphics stages, which \cref{fig:VizDataTransform} expands on.
+\cref{fig:VizDataTransform} expands on the coarse GPU work breakdown from \cref{sec:Design:Viz:Breakdown}.
+Each rectangle represents a piece of memory, and each arrow represents a transformation from input to output via a compute shader, an image layout transfer, or a graphics pipeline.
+Most memory is global rather than per-frame, as the system does not run any visualization stages in parallel.
+Some per-frame memory is used to allow race-free accesses at record-time.
+These buffers allow user interaction, such as moving the particle emitters and setting the quantity ranges, and are highlighted in bold.
+% \begin{landscape}
+% \thispagestyle{empty}
+\pagebreak
+\newgeometry{margin=2cm}
+\begin{sidewaysfigure}
+    \centering
+    \makebox[\linewidth][c]{\includegraphics[width=0.9\linewidth]{Ch48Implementation/figures/FinalReport_VizData.pdf}}
+    \caption{Data Transformation Diagram showing the data flow for the Visualization}
+    \label{fig:VizDataTransform}
+\end{sidewaysfigure}
+\restoregeometry
+\pagebreak
+% \end{landscape}
+
+Image layout transfers allow the GPU to optimize access times for an image by changing the format it's stored in.
+Images are transferred to the \mintinline{cpp}{ShaderReadOnlyOptimal} layout (listed as `Texture' rather than `Image' in \cref{fig:VizDataTransform}) for efficient sampling at arbitrary points, and kept in the \mintinline{cpp}{General} layout when accessed at 2D data arrays (see \cref{fig:VizImageRead} as a comparison).
+
+Memory barriers (not shown in \cref{fig:VizDataTransform}) are inserted between every compute shader to ensure any required data written from a previous shader is visible to the next shader.\todocite{That website that explains memory barriers}
+% On top of that, each compute shader requires at least one \emph{memory barrier}, to ensure any data written in previous stages is visible to the next stage.
+These memory barriers are quite granular, as shown in \cref{fig:VizMemoryBarrier}.
+
+\begin{figure}
+    \centering
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+\begin{glslcode}
+uniform readonly image2D resultImage;
+ // = (u, v, p, isfluid);
+
+// Specify the exact pixel location
+ivec2 pxIdx = ivec2(200, 450);
+vec4 data = imageLoad(simDataImage, pxIdx);
+\end{glslcode}
+\caption{Directly}
+        %  \label{fig:vizimageLoad}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+\begin{glslcode}
+uniform sampler2D simDataSampler;
+ // = (u, v, p, isfluid);
+ 
+// 50% across, 20% up the image
+vec2 sampleAt = (0.5, 0.2);
+vec2 velocity = texture(simDataSampler, sampleAt).xy;
+\end{glslcode}
+\caption{With a Sampler}
+        %  \label{fig:vizimagesample}
+     \end{subfigure}
+  \caption{Reading from an image directly vs. using a sampler.}
+    \label{fig:VizImageRead}
+\end{figure}
+\begin{figure}
+    \centering
+    \begin{cppcode}
+// Make ShaderWrites from the ComputeShader stage available + visible to 
+//      IndirectCommandReads in the DrawIndirect stage
+fullMemoryBarrier(computeCmdBuffer,
+    vk::PipelineStageFlagBits::eComputeShader, vk::PipelineStageFlagBits::eDrawIndirect,
+    vk::AccessFlagBits::eShaderWrite, vk::AccessFlagBits::eIndirectCommandRead);
+// Make TransferWrites from the Transfer stage available + visible to the
+//      ShaderReads in the ComputeShader phase.
+fullMemoryBarrier(computeCmdBuffer,
+    vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eComputeShader,
+    vk::AccessFlagBits::eTransferWrite, vk::AccessFlagBits::eShaderRead);
+    \end{cppcode}
+    \caption{Example showing the granularity of Memory Barriers.}
+    \label{fig:VizMemoryBarrier}
+\end{figure}
+
+\pagebreak
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{Ch48Implementation/figures/FinalReport_VizData_Particles.pdf}
+    \caption{Breakdown of particle-related GPU work}
+    \label{fig:VizDataParticles}
+\end{figure}
+The particle system implentation in \cref{fig:VizDataTransform} is a simplified view for compactness, \cref{fig:VizDataParticles} shows a full breakdown of this subsystem.
+This maintains three growable/shrinkable lists, plus a buffer containing particle positions.
+\begin{enumerate}
+    \item The Draw list, a list of particle indices to draw on screen
+    \item The Inactive list, a list of inactive particle indices
+    \item The Simulate list, a list of particle indices which take part in Simulation.
+\end{enumerate}
+The previous Draw list is the authority on which pariticles currently exist, and is used for the Kickoff shader to determine how many particles will be emitted/simulated\footnote{This isn't known at record time, because the last frame may still be simulating the particles}.
+It is also copied into the Simulate particle list, which is grown by the Emit Particles shader.
+The particles are then moved by the Simulate Particles shader as shown in \cref{sec:Research:Viz:Particles}.
+These particles are added to the inactive list if out-of-bounds, and the new Draw list otherwise.
+% adding particles to the inactive list if they move out of the simulation bounds, and moving all other particles to the new Draw list.
+
+\subsection{CPU/GPU Interoperation}\label{sec:Impl:Viz:CPUGPUSafety}\todomark{Better name}
+\todomark{Talk about structures.h/glsl}
+
+\subsection{Usage in Other Layers}
+The \mintinline{cpp}{VulkanSimApp} class is instantiated by the command-line layer to run the visualization.

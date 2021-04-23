@@ -1,0 +1,28 @@
+% !TEX root =  ../FinalReport.tex
+
+\chapter{Evaluation}
+
+\section{Requirements Evaluation}
+
+
+\input{Ch65Evaluation/figures/req_matrix_f}
+\input{Ch65Evaluation/figures/req_matrix_n}
+
+\section{Optimizations}
+The CUDA program attempts to arrange the threads such that they coalesce accesses, but it has not been verified to work yet.
+\todomark{Verify}
+
+Inspection of the compiled PTX\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html}} text shows that values are loaded using \texttt{ld.global} instructions which load from the global memory space\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
+
+% As this project is focused on improving upon the accuracy of the ACA submission, instead of producing bit-identical results, these optimizations have been implemented in different forms.
+Fused multiply-add is inserted in many places by the CUDA compiler in Release mode\todocite{NVCC inserts FMA?}, single-precision floats are used in all cases, and the residual phase is still skipped.
+\todomark{Comment on skipped residual phase, want to re-add but would need more stuff to be implemented for any benefit}
+\footnote{The CUDA program still lacks a residual phase, but this is planned to be implemented later.\label{sec:OptimizationReAddingResidual}}
+
+\todomark{Touch on FMA difference (\#pragma STDC FP_CONTRACT ON could help with the discrepancy?)}
+
+\section{Project Management}
+
+\todomark{not-tightly-coupled, because it allows easier parallelism}
+
+

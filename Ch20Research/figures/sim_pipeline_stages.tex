@@ -1,0 +1,33 @@
+\begin{figure}
+    \centering
+
+    \begin{tikzpicture}[
+    scale=0.8, every node/.style={scale=0.8},
+    stage/.style={minimum height = 2.5em, draw, anchor=north}
+    ]
+        \newcommand{\stagesep}{-0.4};
+        \node[stage](s1) at (0,0) {Compute $\delta{t}$};
+        \node[stage](s2) at ($(s1.south) + (0,\stagesep)$) {Compute Tentative Velocity};
+        \node[stage](s3) at ($(s2.south) + (0,\stagesep)$) {Compute Poisson RHS};
+        \node[stage](s4) at ($(s3.south) + (0,\stagesep)$) {Poisson Solver};
+        % \node[stage](s5) at ($(s4.south) + (0,-0.6)$) {Poisson Iteration \#2};
+        % \node[stage](s6) at ($(s5.south) + (0,-0.6)$) {...};
+        % \node[stage](s7) at ($(s6.south) + (0,-0.6)$) {Poisson Iteration \#N};
+        \node[stage](s8) at ($(s4.south) + (0,\stagesep)$) {Update Velocity};
+        \node[stage](s9) at ($(s8.south) + (0,\stagesep)$) {Boundary Conditions};
+    
+        \draw[thick, ->] (s4.east) arc (0:-330:-0.4cm);% syntax (starting point coordinates) arc (starting angle:ending angle:radius)
+        \node at ($(s4.east) + (2cm, 0)$){$N$ {}iterations}; 
+    
+        \draw[-latex] (s1.south) -- (s2.north);
+        \draw[-latex] (s2.south) -- (s3.north);
+        \draw[-latex] (s3.south) -- (s4.north);
+        \draw[-latex] (s4.south) -- (s8.north);
+        % \draw[-latex] (s5.south) -- (s6.north);
+        % \draw[-latex] (s6.south) -- (s7.north);
+        % \draw[-latex] (s7.south) -- (s8.north);
+        \draw[-latex] (s8.south) -- (s9.north);
+    \end{tikzpicture}
+    \caption{Stages of a Simulation Tick}
+    \label{fig:SimStages}
+\end{figure}

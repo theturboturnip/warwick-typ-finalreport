@@ -1,0 +1,24 @@
+\begin{sidewaystable}
+    \centering
+    \begin{tabular}{lp{0.2\linewidth}|p{0.4\linewidth}|m{0.2\linewidth}|c}
+        ID & Description & Expected & Output & Result \\
+        \hline
+        \newtest{}\label{test:sys:sim:large} & \texttt{run}: Large Simulation & \successoutput{Simulation can run on a 4096x4096 input.} \\
+        \newtest{}\label{test:sys:sim:valgrind} & \texttt{run}: No CPU memory leaks & Visualization run under \texttt{valgrind} should have no program-controlled memory leaks. & See \cref{sec:Results:Sim:Mem,sec:Results:Viz:Memory} & \testsuccess{} \\
+        \newtest{}\label{test:sys:sim:cudamemcheck} & \texttt{run}: No CUDA memory leaks & Simulation run under \texttt{cuda-memcheck} should have no program-controlled memory leaks. & See \cref{sec:Results:Sim:Mem,sec:Results:Viz:Memory} & \testsuccess{} \\
+        \newtest{}\label{test:sys:run:pipeline} & \texttt{run}: High GPU Utilization & Nsight Systems profiler output should show maximum achievable GPU utilization\footnote{100\% may not be possible due to other programs using the GPU} & See \cref{sec:Results:Sim:Efficiency,sec:Results:Viz:Efficiency} & \testsuccess{} \\
+        
+        
+        \newtest{}\label{test:sys:sim:speed} & \texttt{fixedtime}: Simulation is faster than original coursework & CUDA simulation should run 2x faster than the original coursework on the ACA input. &See \cref{sec:Results:Sim:Speed} & \testsuccess{} \\
+        \newtest{}\label{test:sys:sim:accuracy} & \texttt{fixedtime}: Simulation produces similar results to original coursework &
+        CUDA simulation solver residual should be within 5\% of adapted CPU backend.
+        & See \cref{sec:Results:Sim:Accuracy} & \testfail{} \\
+        % CUDA simulation output should be within $10^-10$ of the adapted CPU backend output. & See \cref{sec:Results:Sim:Accuracy} & \testfail{} \\
+
+        \newtest{}\label{test:sys:run:highFPS} & \texttt{run}: Can run at high framerate & Visualization can run at >30FPS in some case & Simulating ACA input at n=100 runs at \~800FPS. & \testsuccess{} \\
+        \newtest{}\label{test:sys:run:vizSpeed} & \texttt{run}: Visualization features are faster than simulation & See \todoref{Success Measurement} & See \cref{sec:Results:Viz:Speed} & \testsuccess{} \\
+        % \newtest{}\label{test:sys:run:vizSpeed} & Try to compile on DCS systems & Should be able to compile and run the simulation on elements of the DCS system. & See \todoref{Results} & \testsuccess{} \\
+    \end{tabular}
+    \caption{System Tests (Non-Functional)}
+    \label{tab:sys_tests_nonfunc}
+\end{sidewaystable}

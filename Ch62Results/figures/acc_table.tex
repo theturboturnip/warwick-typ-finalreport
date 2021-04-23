@@ -1,0 +1,15 @@
+\newcolumntype{Z}{S[table-format=3.2]}
+\begin{table}[]
+    \centering
+    \begin{tabular}{c|ZZZZ|ZZZZ}
+        & \multicolumn{4}{c}{Velocity} & \multicolumn{4}{c}{Pressure} \\
+        \hline
+        {Time (\si{\second})} & {100} & {200} & {300} & {1000} & {100} & {200} & {300} & {1000} \\
+        \hline
+        10 & -14.12 & -14.01 & -13.46 & -13.02 & -8.14 & -7.71 & -7.01 & -5.18 \\
+        25 & -5.93 & -5.93 & -5.93 & -5.93 & -5.36 & -4.14 & -3.33 & -0.91 \\
+        50 & -6.41 & -6.34 & -6.33 & -6.29 & -5.02 & -4.21 & -3.11 & -0.13 \\
+    \end{tabular}
+    \caption{Log of Mean Square Error between CPU and CUDA results for the ACA input.\\Numbers closer to 0 are worse.}
+    \label{tab:results:accuracy_mse}
+\end{table}

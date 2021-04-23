@@ -1,0 +1,131 @@
+\todomark{valgrind CPU backend - 0 leaks in our code, "possibly lost" leak from OMP}
+% valgrind --leak-check=full -- ./sim_cuda fixedtime fluid_100.json initial_aca.bin --backend=cpu 0.1 2>&1 | less
+
+% ==78089== HEAP SUMMARY:
+% ==78089==     in use at exit: 10,656 bytes in 19 blocks
+% ==78089==   total heap usage: 1,471 allocs, 1,452 frees, 8,877,744 bytes allocated
+% ==78089== 
+% ==78089== LEAK SUMMARY:
+% ==78089==    definitely lost: 0 bytes in 0 blocks
+% ==78089==    indirectly lost: 0 bytes in 0 blocks
+% ==78089==      possibly lost: 5,520 bytes in 15 blocks
+% ==78089==    still reachable: 5,136 bytes in 4 blocks
+% ==78089==         suppressed: 0 bytes in 0 blocks
+
+% ==78145== 5,520 bytes in 15 blocks are possibly lost in loss record 5 of 5
+% ==78145==    at 0x483DD99: calloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+% ==78145==    by 0x40149CA: allocate_dtv (dl-tls.c:286)
+% ==78145==    by 0x40149CA: _dl_allocate_tls (dl-tls.c:532)
+% ==78145==    by 0x4C3D322: allocate_stack (allocatestack.c:622)
+% ==78145==    by 0x4C3D322: pthread_create@@GLIBC_2.2.5 (pthread_create.c:660)
+% ==78145==    by 0x51B5DDA: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+% ==78145==    by 0x51AD8E0: GOMP_parallel (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+% ==78145==    by 0x1531B3: OriginalOptimized::calculatePBeta(float**, char**, int, int, float, float, float, float) (in /home/samuel/Desktop/Warwick/third-year-project/warwick-typ/project/framework_test/cmake-build-release-g8/sim_cuda)
+% ==78145==    by 0x1552B9: CpuOptimizedSimBackend::CpuOptimizedSimBackend(std::vector<CpuOptimizedSimBackend::Frame, std::allocator<CpuOptimizedSimBackend::Frame> >, FluidParams const&, SimSnapshot const&) (in /home/samuel/Desktop/Warwick/third-year-project/warwick-typ/project/framework_test/cmake-build-release-g8/sim_cuda)
+% ==78145==    by 0x155460: CpuOptimizedAdaptedSimBackend::CpuOptimizedAdaptedSimBackend(std::vector<CpuOptimizedSimBackend::Frame, std::allocator<CpuOptimizedSimBackend::Frame> >, FluidParams const&, SimSnapshot const&) (in /home/samuel/Desktop/Warwick/third-year-project/warwick-typ/project/framework_test/cmake-build-release-g8/sim_cuda)
+% ==78145==    by 0x140E58: SimFixedTimeRunner<CpuOptimizedAdaptedSimBackend, (MType)0>::runForTime(FluidParams const&, SimSnapshot const&, float, float) (in /home/samuel/Desktop/Warwick/third-year-project/warwick-typ/project/framework_test/cmake-build-release-g8/sim_cuda)
+% ==78145==    by 0x1674C1: FixedTimeSimSubApp::run() (in /home/samuel/Desktop/Warwick/third-year-project/warwick-typ/project/framework_test/cmake-build-release-g8/sim_cuda)
+% ==78145==    by 0x178DED: CLI::App::run_callback(bool) (in /home/samuel/Desktop/Warwick/third-year-project/warwick-typ/project/framework_test/cmake-build-release-g8/sim_cuda)
+% ==78145==    by 0x13840D: CommandLineParser::parseArguments(int, char const**) [clone .constprop.197] (in /home/samuel/Desktop/Warwick/third-year-project/warwick-typ/project/framework_test/cmake-build-release-g8/sim_cuda)
+
+% Using CUDA-suppressions in valgrind to find CPU leaks: (https://forums.developer.nvidia.com/t/valgrind-3-4-suppressions-a-little-howto/7504)
+% {
+%   CUDA-calloc
+%   Memcheck:Leak
+%   match-leak-kinds: reachable
+%   fun:calloc
+%   ...
+%   obj:/usr/lib/x86_64-linux-gnu/libcuda.so.450.102.04
+%   ...
+% }
+% {
+%   CUDA-malloc
+%   Memcheck:Leak
+%   match-leak-kinds: reachable
+%   fun:malloc
+%   ...
+%   obj:/usr/lib/x86_64-linux-gnu/libcuda.so.450.102.04
+%   ...
+% }
+% {
+%   CUDA-realloc
+%   Memcheck:Leak
+%   match-leak-kinds: reachable
+%   fun:realloc
+%   ...
+%   obj:/usr/lib/x86_64-linux-gnu/libcuda.so.450.102.04
+%   ...
+% }
+
+% {
+%   CUDA-calloc
+%   Memcheck:Leak
+%   match-leak-kinds: possible
+%   fun:calloc
+%   ...
+%   obj:/usr/lib/x86_64-linux-gnu/libcuda.so.450.102.04
+%   ...
+% }
+% {
+%   CUDA-malloc
+%   Memcheck:Leak
+%   match-leak-kinds: possible
+%   fun:malloc
+%   ...
+%   obj:/usr/lib/x86_64-linux-gnu/libcuda.so.450.102.04
+%   ...
+% }
+% {
+%   CUDA-realloc
+%   Memcheck:Leak
+%   match-leak-kinds: possible
+%   fun:realloc
+%   ...
+%   obj:/usr/lib/x86_64-linux-gnu/libcuda.so.450.102.04
+%   ...
+% }
+
+% {
+%   OpenMP
+%   Memcheck:Leak
+%   match-leak-kinds: reachable
+%   fun:malloc
+%   obj:/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+%   ...
+% }
+% {
+%   OpenMP
+%   Memcheck:Leak
+%   match-leak-kinds: reachable
+%   fun:calloc
+%   obj:/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+%   ...
+% }
+% {
+%   OpenMP
+%   Memcheck:Leak
+%   match-leak-kinds: reachable
+%   fun:realloc
+%   obj:/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0
+%   ...
+% }
+% valgrind --leak-check=full --gen-suppressions=all --show-reachable=yes --suppressions=./cudart.valgrind34.supp.txt  -- ./sim_cuda fixedtime fluid_100.json initial_aca.bin --backend=cuda 0.1 2>&1 | less
+\todomark{valgrind - no CPU based leaks in cuda mode}
+
+%valgrind --leak-check=full --gen-suppressions=all --show-reachable=yes --suppressions=./cudart.valgrind34.supp.txt  -- ./sim_cuda run fluid_100.json initial_aca.bin --backend=cuda 2>&1 | less
+\todomark{valgrind - no our-program CPU based leaks in cuda visualization (some for SDL2, X windowing system)}
+
+
+\todomark{cuda-memcheck has no errors on cuda sim}
+% cuda-memcheck -- ./sim_cuda fixedtime fluid_100.json initial_aca.bin --backend=cuda 1 2>&1 | less
+% ========= CUDA-MEMCHECK
+% 8.930131
+% 96
+% performed calc in 8.930131 seconds, 96 ticks
+% ========= ERROR SUMMARY: 0 errors
+
+\todomark{cuda-memcheck cannot handle vulkan interop or graphs (\url{https://docs.nvidia.com/cuda/cuda-memcheck/index.html\#known-issues} says can't handle D3D interop or cuda graphs. compute-sanitizer is recommended if graphs are needed, but it cannot handle vulkan interop either \url{https://docs.nvidia.com/cuda/sanitizer-docs/pdf/ReleaseNotes.pdf})}
+% cuda-memcheck -- ./sim_cuda run fluid_100.json initial_aca.bin --backend=cuda 2>&1 | less 
+% compute-sanitizer  ./sim_cuda run fluid_100.json initial_aca.bin --backend=cuda 2>&1 | less
+
+\todomark{NVIDIA Nsight Systems used to check memory usage instead, could only track CUDA usage but this usage remained constant. Vulkan program specifically designed to run without allocating any memory at runtime.}

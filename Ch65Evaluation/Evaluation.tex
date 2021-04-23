@@ -1,0 +1,70 @@
+% !TEX root =  ../FinalReport.tex
+
+\chapter{Evaluation}\label{sec:Evaluation}
+
+This chapter evaluates the project's end result against the requirements laid out in \cref{sec:Requirements}.
+The project management is appraised, and the researcher's evaluation of the project is provided.
+
+\section{Requirements Evaluation}
+The Requirements in \cref{sec:Requirements} evolved as the simulation and visualization areas were researched throughout the project.
+The program was designed with these requirements in mind, and by checking if the program meets these requirements the overall success of the project can be determined.
+Requirements are prioritized as either \must{}-have or \should{}-have.
+All \must{}-have requirements have been met, but three \should{}-have requirements have not (see \cref{tab:failed_req}).
+These are justified in \cref{sec:Evaluation:FailedReq}.
+
+Functional Requirements define the actions a program must/should be able to perform, such as \cref{req:GenerateState} stating ``the system must be able to generate initial simulation states''.
+The functional requirements, the tests performed to check them, and the outcomes have been listed in \cref{tab:functional_req}.
+
+Non-functional Requirements do not define actions, but rather define properties of those actions that must be met.
+As an example \cref{reqN:SimSpeed} states that with the same initial input, the CUDA simulation ``should run at least 2x as fast as the original coursework''.
+Similarly to functional requirements, these are laid out in \cref{tab:nonfunctional_req}.
+
+\subsection{Failed Requirements}\label{sec:Evaluation:FailedReq}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l|c|l|c}%ccl|p{0.4\linewidth}|m{0.2\linewidth}|c}
+        ID & Priority & Tests & Status \\
+        \hline
+        \ref{req:VizSaveState} & \should{} & \ref{test:sys:run:save} & \testfail{}     \\
+        \ref{req:CompareBinary} & \should{} & \ref{test:unit:compare:identical}, \ref{test:unit:compare:different} & \testfail{}      \\
+        \hline
+        \ref{reqN:VizParticleAdvanced} & \should{} & \ref{test:sys:run:layerPerms} & \testfail{}           \\
+    \end{tabular}
+    \caption{Failed Requirements}
+    \label{tab:failed_req}
+\end{table}
+
+Of the thirty-five requirements, three have not been met (\cref{tab:failed_req}).
+These requirements are all \should{}-haves, and each omission can be justified.
+
+Satisfying (\cref{req:VizSaveState}), which required saving the simulation state during a visualization, would have delayed the work on the visualization layers.
+As the visualization is a significant portion of the project, and this feature would not have had a relevant use-case during development, it was cut.
+
+\cref{req:CompareBinary} would require the \texttt{compare} tool to output a single SIMILAR/NOT~SIMILAR value rather than the more detailed metrics it now uses.
+Using a single value to convey this information is near-impossible and would result in a significant loss of nuance, even more so if only binary options are available, and would be useless if shown alongside the more detailed metrics.
+
+\cref{reqN:VizParticleAdvanced} was planned in the Progress Report, specifically citing BOID-like behaviour\cite{BOIDS_10.1145/37401.37406} as a potential means for reducing clumping.
+This would have greatly increased the complexity of the particle system.
+Particles would need to identify other nearby particles, which would likely require the positions to be sorted for efficient access, and while this has been implemented on the GPU before\todocite{https://www.diva-portal.org/smash/get/diva2:1191916/FULLTEXT01.pdf}\todocite{https://github.com/Shinao/Unity-GPU-Boids} it wasn't possible to implement it before the code freeze.
+% All of these requirements are \should{}-haves, meaning the core elements of the project have been successful.
+% Nevertheless these failures are 
+
+\section{Project Management}
+The Project Management has been incredibly successful, allowing an extremely complex combined simulation and visualization to be efficiently completed on-schedule.
+The schedule itself allotted enough time for both research and implementation, and gave enough leeway that the manifested risks did not prevent success.
+Using third-party libraries for GUI management and command-line parsing allowed developer time to be spent on important problems, instead of hooking together customized implementations.
+The Code Freeze implemented in Week 22 ensured enough time was devoted to developing the presentation, which was crucial to it's success.
+
+\todomark{No Researcher's Evaluation here, tie those questions into the conclusion}
+% \section{Researcher's Evaluation}
+% % Complementing the objective analysis, this section includes a personal
+
+% \\\\
+% \textbf{What is the contribution of this project?}
+
+
+% \\\\
+% \textbf{Why was this a challenging project suitable to a Computer Systems Engineering degree?}
+
+% \\\\
+% \textbf{}

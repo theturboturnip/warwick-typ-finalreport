@@ -1,0 +1,21 @@
+\subsection{Build System}
+The build system is implemented in CMake\cite{tool:Cmake} as specified in \cref{sec:ProjManagementTools}.
+This section highlights a few changes that were made to an otherwise standard setup to accommodate the project.
+
+\subsubsection{CUDA-less Binaries}
+The project can be built to produce both CUDA and CUDA-less binaries, in case it needs to be run on CUDA-less computers.
+The list of regular C++ source files and CUDA source files are maintained separately. A CUDA-less binary (\texttt{sim\_nocuda}) will only build the C++ files while a CUDA binary (\texttt{sim\_cuda}) will build both.
+When building the \texttt{sim\_cuda} target the preprocessor macro \texttt{CUDA\_ENABLED} is defined throughout all source files, including the C++ files.
+This allows support for CUDA backends in C++ code (i.e. as selectable options on the command-line) to be conditionally enabled without maintaining two copies of the relevant source files.
+In \cref{fig:ConditionalCUDA} (which has been amended for brevity), the switch statement only contains a case for CUDA if the directive is set, triggering a fatal error otherwise.
+\input{Ch48Implementation/figures/conditional_cuda}
+
+
+\todomark{Move Shader Build Infrastructure somewhere else?}
+\subsubsection{Shader Build Infrastructure} % Fits in with the build system vibe
+The shaders used for visualization are written in GLSL, with appropriate extensions to be compatible with Vulkan.
+They are separated by file type, with Vertex shaders in \texttt{.vert} files and Fragment shaders in \texttt{.frag} files.
+As Vulkan does not natively support GLSL, they must be compiled to SPIR-V before they can be used.
+CMake does not support GLSL as a first-class language, so a custom build command was used to compile them with \texttt{glslc}\cite{GoogleLLCShaderc} when they change.
+This allows them to be treated just like any other source file from the programmer's perspective.
+The SPIR-V files are placed in a \texttt{shaders} directory next to the binaries, where they can be easily accessed and passed to Vulkan.

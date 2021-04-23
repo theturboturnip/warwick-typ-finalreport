@@ -2,21 +2,69 @@
 
 \chapter{Conclusion}
 \label{sec:Conclusion} 
-As planned, enough research has been done into the problem space to produce an effectively optimized program.
-There has been enough time to think through the design and implementation, and the schedule has been followed well to this point.
-Testing, where implemented, has been helpful.
-Enough future tests have been planned so that the final program will be robust.
+% Why was this project worth doing? 
 
-The simulation program and associated state has been shown to fulfil many of the requirements already.
-The visualization fulfils the base \cref{req:VizSim}, but not \cref{req:VizSaveState,req:VizManip,req:VizLockedFPS,req:VizFlatOut,req:VizSomeSpeed}.
-These will be added next term.
-Furthermore, there are possible program extensions listed in \cref{sec:FuturePlansAppendix}.
+% What’s the contribution of your project? 
 
-All in all, this is a very good place to be in with respect to the schedule.
-The work done here should allow plenty of time next term to be devoted to the visualization, which should produce a very polished final program, report and presentation.
+% What is its “technical strength”? 
 
-% \todomark{This should include a brief statement on the current state of the program, 
-% how we're doing with respect to the schedule, 
-% and a list of things that should be added to the program over Christmas before the visualization development begins.
-% Maybe also an optimistic statement on how the project should be high quality once the final deadline hits.
-% }
+% (Why was this a challenging project suitable to your degree?) Why should your project be considered a success? 
+
+
+The aim of this project was to create a GPU fluid simulation and realtime in-situ visualization program, which required substantial research on fluid simulations, optimizing large parallel computation on GPUs, and various visualization methods.
+Implementing the program required knowledge of C++, Vulkan, and CUDA; an in-depth understanding of the complex underlying details of each, including their handling of memory; and an effective high-level design.
+%that separated the code into manageable layers.
+On top of this the project was well scheduled, allowing all core features to be implemented while allowing enough time for the associated reports and presentation to be developed.
+Rigorous testing was undertaken to ensure the program met the requirements, and the program passed with flying colours.
+The behaviour of the simulation at scale was measured, producing interesting findings and paving the way for future work in the area.
+Overall, the project has been a success.
+
+\section{Summary}
+% Novelty of in-situ realtime visualization
+The full in-situ visualization is large program, at over 8.5 thousand lines of code (excluding libraries, comments, whitespace), which is impressive in its own right.
+It also brings novelty as an accurate simulation/visualization that runs in real-time, rather than rendering a visualization to disk for later viewing or rendering a static simulation state.
+% By using approaches from the games industry for efficient visualization, the visualization 
+It uses the high-performance Vulkan rendering API, which other toolkits have been slow to adopt\footnote{VTK has a Vulkan branch at \url{https://gitlab.kitware.com/ken-martin/vtk/-/tree/vulkan/Rendering/Vulkan}, which hasn't been updated since August 2020.}.
+Along with the up-and-coming Datoviz library\footnote{\url{https://github.com/datoviz/datoviz}}, it is a step forwards to bring Vulkan-level performance to the wider visualization community.
+
+Porting the simulation to CUDA is not a new work, but it was still a significant undertaking for the researcher and required extra thought to adapt to a tightly-coupled visualization.
+Gathering results at different scales demonstrated the upper limit of GPU throughput, and empirically showed the importance of cache-friendliness in GPU algorithms.
+It is certainly a good starting point for future work in this space.
+
+\section{Reflection}
+While the project as a whole was successful, there are elements that could have been better executed.
+Third-party libraries were used in places, most notably for the GUI, but were not used in the low-level memory management or other Vulkan code.
+For Vulkan specifically, using the Vulkan Memory Allocator library \todocite{\url{https://gpuopen.com/vulkan-memory-allocator/}} would have allowed for easier memory allocation.
+Other Vulkan wrappers and tools, such as the codebase developed by Sascha Willems' for their Vulkan samples\todocite{https://github.com/SaschaWillems/Vulkan}, may have made certain actions less cumbersome.
+
+A common pattern encountered when implementing new code was to design for a larger system than necessary.
+For example when implementing the worker thread, a generic worker thread setup was created in case another worker thread was needed later.
+Building a single worker thread would have been simpler and quicker.
+In general, a lack of initial investigation on the coding side led to slight overcomplication.
+However this was very minor, as most of the code developed is still used in the program.
+In fact some elements, like the simulation runners, benefited from being designed as generic code first!
+
+\section{Future Work}
+% This section lists some general considerations to take into account if building a similar project, and some ideas for projects that may be interesting.
+% This section lists some ideas for developing the project further, and some concepts to take into account when doing so.
+
+On the simulation side clear areas for improvement are the cache usage/performance at scale, and the pressure inflation problem.
+Both would require further investigation, but have some easy starting points.
+Other parallel GPU algorithms take advantage of shared memory and locality to improve performance, which the algorithm could be adapted to support.
+Investigating the non-physical pressure values fix from \cite{book:griebel1998numerical} (see \cref{ext:PressureValues}) could be the key to removing pressure inflation.
+Different Poisson solvers could also be added to the simulation, which may be more cache-friendly.
+
+Visualization also has many potential improvements.
+A more advanced particle simulation as mentioned in \cref{sec:Evaluation:FailedReq} could be implemented, which would require more research into game industry particle simulations.
+For better accessibility, the colors initially used in the visualization could also be adapted to be more colorblind friendly.
+
+Truly parallel simulation/visualization has not been achieved, mostly due to the limitations of the researcher's hardware \todoref{NEED TO MENTION GTX1080 NOT IN PARALLEL SOMEWHERE}.
+As established in \cref{sec:Results:Viz:Speed} the visualization is already very fast, but for larger \& more complicated visualizations this may become a significant portion of runtime.
+Using multiple GPUs, perhaps on separate systems, to implement a loosely-coupled version of this visualization could allow for a truly parallel visualization and investigation of the benefits vs. tight coupling.
+
+All in all, this project is in a very open research area, and has a lot of potential to expand.
+As massively parallel systems become more powerful and accessible, running programs like this on larger datasets will become more and more feasible, especially in industrial applications.
+It will be very interesting to see what comes next.
+% The researcher believes this will be watching this 
+% It will be very interesting to see what comes next.
+% \todomark{not-tightly-coupled, because it allows easier parallelism}

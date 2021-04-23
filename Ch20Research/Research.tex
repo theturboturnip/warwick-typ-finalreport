@@ -2,27 +2,37 @@
 
 \chapter{Research}
 \label{sec:Research} 
-On top of the preliminary research performed for the Specification document, research of the underlying simulation structure and of the state of the art for optimizing a simulation has been done.
-Minor research has been also done for Visualization, although the schedule dictates this should start after Term 1 has ended.
+% Before designing the program, understanding the current state of the art is crucial to proper
+Effectively optimizing a program requires extensive knowledge of both the program internals and the target platform.
+\cref{sec:Research:SimulationTick} describes the mathematics backing the fluid simulation, and \cref{sec:Research:Optimization} describes previous CPU optimizations and state-of-the-art GPU optimization techniques.
+\cref{sec:Research:Visualization} then investigates the current standard for visualization techniques and a games industry method for particle simulation, which are used to inform the program requirements and design.
 
-\input{Ch20Research/Sub_SimulationExpl}
+\input{Ch20Research/Sub10_SimulationExpl}
 
 \section{Optimization}
 \label{sec:Research:Optimization}
 Optimizing simulations is important in all cases, even those that are not real-time, as it allows the engineers using the software to iterate faster on their designs.
 When the extra constraint of real-time speeds is added, it becomes even more important.
-This research is mostly complete, although more can be done if the simulation needs to get even faster.
 
-\input{Ch20Research/Sub_Opt_History}
-\input{Ch20Research/Sub_Opt_Previous}
-\input{Ch20Research/Sub_Opt_Future}
+\input{Ch20Research/Sub20_Opt_History}
+\input{Ch20Research/Sub20_Opt_ACA}
+\input{Ch20Research/Sub20_Opt_New}
 
-\section{Visualization}
-For the engineers and scientists developing simulations, it is important for a visualization to be completely accurate and show the data in as much detail as possible.
-However there are other groups that may not have as deep of an understanding, but whose actions and decisions should still be informed by the simulation results.
-Currently the research is focused on learning lessons from the ACA coursework's provided visualization.
-For a visualization to cater to these groups well further research in this space is required.
+\section{Visualization}\label{sec:Research:Visualization}
+% For the engineers and scientists developing simulations, it is important for a visualization to be completely accurate and show the data in as much detail as possible.
+% However there are other groups that may not have as deep of an understanding, but whose actions and decisions should still be informed by the simulation results.
+\todomark{Viz intro}
 
-\input{Ch20Research/Sub_Viz_History}
-\input{Ch20Research/Sub_Viz_Current}
-\input{Ch20Research/Sub_Viz_Future}
+
+
+% To ensure the visualization has an equivalent workload to real-world programs, understanding the current state of the art visualization techniques are 
+
+% This all needs to be updated.
+
+\input{Ch20Research/Sub30_Viz_History}
+\input{Ch20Research/Sub30_Viz_ACA}
+\input{Ch20Research/Sub30_Viz_New}
+
+\subsection{Conclusions}
+The research outlined so far has established common visualization methods, the potential for composing them together, and a design for an efficient particle simulation.
+This was used to design the visualization (\cref{sec:Requirements}) and informed the implementation (\cref{fig:VizDataParticles}).

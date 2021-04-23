@@ -1,0 +1,42 @@
+% !TEX root =  ../FinalReport.tex
+
+\chapter{Testing and Success Measurement}
+\label{sec:Testing}
+In order to measure the degree of success a project achieves, testing must be performed to verify the behaviour of the program is correct.
+Building tests also allows further development of the program to easily identify when new bugs are introduced.
+% The tests proposed in this section have been implemented for these purposes.
+% This section proposes potential effective tests, and documents the results of tests already performed since they were described in the Specification.
+This section discusses the informal tests performed while building the system and describes a set of formal tests to validate the system requirements.
+The results of the formal tests are laid out in the Results section (\todoref{results}).
+
+\section{Unit Testing}
+This phase of testing splits the codebase into independent `units' which can be tested individually.
+
+
+The separate phases of the simulation are effective units of code.
+As they depend heavily on other phases to make sense, testing them individually would require creating many `input' and `expected output' datasets.
+This method would produce false-negatives, as we don't necessarily want identical results to the original coursework, so it was not done.
+During the simulation implementation, individual units were swapped out for known working versions in order to pinpoint bugs found in wider tests.
+
+The \texttt{makeinput} (\cref{req:GenerateState}), \texttt{compare} (\cref{req:Compare}), and \texttt{renderppm} program modes can also be tested as individual units with input/expected output combinations.
+These tests were not automated, but they are performed in the \todoref{Results} section.
+
+Most of the other code elements not mentioned here either implement complex behaviour that depends on other elements (i.e. the main visualization loop depends on many helper classes), or implement other behaviour that cannot be easily unit-tested (e.g. difficult to test programatically that a resource has been properly freed.)
+These are tested in the integration and system tests, but not at the unit level.
+
+\section{Integration Testing}
+The ``headless mode'' outlined in \cref{req:HeadlessSim} functioned as an integration test for all of the simulation phases.
+Initially the CPU Simple and Optimized backends (\cref{sec:DesignBackends}) were added and tested against the original ACA program\cite{modules:CS257Coursework} and the submitted coursework\cite{modules:aca257submission} using the provided testing tools.
+The Compare mode (\cref{req:Compare}) was then implemented and tested against the ACA testing tools to ensure it's behaviour was correct.
+The Optimized Adapted and CUDA backends (\cref{sec:DesignBackends}) were then added and compared to the required output to ensure that any deviations were small.\footnote{Because the simulation operates on single-precision floating point numbers, small changes to orders of operation or compiler optimizations could introduce small discrepancies at the bit level.}
+
+\todomark{Describe visualization integration tests}
+% While the visualization cannot be tested without some simulation data to visualize, that data does not necessarily need to be continuously simulated.
+% Static simulation states may be created in order to test separate parts of the visualization, or multiple parts at once.\label{sec:TestsForViz}
+When not directly interacting with he
+
+\section{Overall Testing}
+The ``visualization mode'' from \cref{req:VizSim} functioned as a full system test of the simulation with the visualization.
+% Assuming the headless simulations are accurate, there should be a negligible difference in results from a visualized simulation.
+
+\todomark{Big table o' formal tests}

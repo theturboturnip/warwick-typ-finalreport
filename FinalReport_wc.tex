@@ -1,6 +1,10 @@
 \documentclass[]{article}
 
 \usepackage{turnipwordcount}
+\usepackage{geometry}
+
+
+\usepackage{morewrites}
 
 % (1) choose a font that is available as T1
 % for example:
@@ -21,11 +25,27 @@
 
 
 \usepackage{amsmath} %For both in-line and equation mode
+\usepackage{mathtools}
 \numberwithin{equation}{section} %Numbering of our equations per section
 % % Better forall spacing
 \let\oldforall\forall
 \let\forall\undefined
 \DeclareMathOperator{\forall}{\oldforall}
+% Abs value and normalize symbols. https://tex.stackexchange.com/a/43009
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+%
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
 \usepackage{breqn} % For long equation breaking
 \usepackage{bm}
 
@@ -35,17 +55,17 @@
 \usepackage{graphicx} %Inserting images
 \usepackage{lipsum}  %Blank text fill, delete me when finished
 \usepackage{setspace} %Spacing on the front page for crest and titles
-\usepackage[]{fncychap} % Styles can be Sonny, Lenny, Glenn, Conny, Rejne, Bjarne and Bjornstrup
+\usepackage[Sonny]{fncychap} % Styles can be Sonny, Lenny, Glenn, Conny, Rejne, Bjarne and Bjornstrup
 \usepackage[hyphens]{url} %Deals with hyphens in urls to make them clickable
 \usepackage{xcolor} %Great if you want coloured text
 \usepackage{tabularx}
 \usepackage{siunitx}
+\usepackage[justification=centering]{caption} 
 \usepackage{subcaption}
 
 % BibLaTeX
 \usepackage{turnipcite}
 \addbibresource{mendeley_references.bib}
-% \addbibresource{mendeley_export.bib}
 \addbibresource{typ_FinalReport.bib}
 
 \usepackage{markdown}
@@ -74,10 +94,36 @@
 \usepackage{tikz}
 \usetikzlibrary{matrix}
 
-\usepackage{turniptodo}
-\usepackage{turniphighlighting}
-% \usepackage{quotewarning}
+\usepackage[nofootnotes]{turniptodo}
+
 \usepackage{wrapfig}
+
+% \usepackage{turniphighlighting}
+\usepackage{varwidth}
+\usepackage{minted}
+\usemintedstyle{pastie}%emacs%friendly
+% \usepackage{xpatch,letltxmacro}
+% \LetLtxMacro{\cminted}{\minted}
+% \let\endcminted\endminted
+% \xpretocmd{\cminted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
+\setminted{
+frame=lines,
+baselinestretch=1.2,
+% bgcolor=LightGray,
+fontsize=\footnotesize,
+% linenos,
+breaklines=true,
+tabsize=4,
+autogobble
+}
+
+\newminted{cpp}{xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{cuda}{xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{bash}{}
+\newminted{glsl}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{json}{}
+% \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
+% \usepackage{quotewarning}
 
 %KEEP THIS ONE LAST it's quite buggy, it allows you to click on links within the pdf and web links without changing the colour. The mouse cursor simply changes its icon to indicate to the user. Great tool - still awkward
 % \usepackage{varioref}
@@ -95,12 +141,46 @@
 
 \linespread{1.25}
 
+\usepackage{pdflscape}
+\usepackage{rotating}
+
+\usepackage{tikz}
+\usetikzlibrary{angles,quotes}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{fadings}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{patterns}
+\pgfdeclarepatternformonly{south west lines}{\pgfqpoint{-0pt}{-0pt}}{\pgfqpoint{3pt}{3pt}}{\pgfqpoint{3pt}{3pt}}{
+    \pgfsetlinewidth{0.4pt}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{3pt}{3pt}}
+    \pgfpathmoveto{\pgfqpoint{2.8pt}{-.2pt}}
+    \pgfpathlineto{\pgfqpoint{3.2pt}{.2pt}}
+    \pgfpathmoveto{\pgfqpoint{-.2pt}{2.8pt}}
+    \pgfpathlineto{\pgfqpoint{.2pt}{3.2pt}}
+    \pgfusepath{stroke}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT STARTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{figurepage}{
+\pagebreak
+\newgeometry{margin=2cm}
+}{
+\restoregeometry
+\pagebreak
+}
+
 \begin{document}
 
 \newcommand{\chapterwordcount}[1]{#1 & \quickwordcount{#1} \\}
 
 \begin{tabular}{lc}
     Chapter & Word Count \\
+    \chapterwordcount{Ch00Preamble/Abstract}
+    \chapterwordcount{Ch00Preamble/Acknowledgements}
     \chapterwordcount{Ch10Introduction/Introduction}
     \chapterwordcount{Ch20Research/Research}
     \chapterwordcount{Ch30EthicalSocialLegal/EthicalSocialLegal}
@@ -109,8 +189,12 @@
     \chapterwordcount{Ch48Implementation/Implementation}
     \chapterwordcount{Ch50ProjectManagement/ProjectManagement}
     \chapterwordcount{Ch60Testing/Testing}
+    \chapterwordcount{Ch62Results/Results}
+    \chapterwordcount{Ch65Evaluation/Evaluation}
     \chapterwordcount{Ch70Conclusion/Conclusion}
 \end{tabular}
+
+Overall Word Count: \quickwordcount{FinalReport_content}
 
 
 \end{document}
