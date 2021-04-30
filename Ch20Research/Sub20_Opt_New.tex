@@ -15,13 +15,15 @@ The CUDA C Programming Guide\cite{NVIDIAGlobalGuide} states that read-only memor
 The compiler may insert this automatically when it detects that data must be read-only.
 The use of \texttt{const} and \texttt{\_\_restrict\_\_} qualifiers on pointers that are read-only is encouraged to make read-only data obvious.
 In \cite{10.1145/3238147.3241533} it was found that introducing these qualifiers where possible led to large speedups in pointer heavy applications, and while our case may not use many pointers this should still be implemented wherever possible.
+This optimization can be verified by checking for the presence of the \texttt{ld.global}\cite{NvidiaPTX} instructions in the PTX assembly of compiled GPU kernels.
 
 % GPU Vectorization (cite).
-The ACA solution used Intel AVX and SSE instructions\cite{IntelCorporationIntroductionExtensions} to calculate four Poisson values at once\footnote{Vectors of eight were tried but were found to be slower than four.}.
-In the Progress Report\todocite{progress report} it was asserted that CUDA cores could use SIMD on four-element floating-point vectors, and that this could be exploited similarly.
+The CPU simulation used Intel AVX and SSE instructions\cite{IntelCorporationIntroductionExtensions} to calculate four Poisson values at once\footnote{Vectors of eight were tried but were found to be slower than four.}.
+% In the Progress Report\todocite{progress report} it was asserted that CUDA cores could use SIMD on four-element floating-point vectors, and that this could be exploited similarly.
+At the start of the project it was believed that CUDA cores could use SIMD on four-element floating-point vectors, and that this could be exploited similarly.
 However, this is not the case.
 The only SIMD instructions CUDA allows are for integer vectors of 2x16-bit or 4x8-bit\cite{NvidiaCUDASIMD}.%\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
-As the simulation operates on 32-bit signed floating point, these instructions are not suitable.
+As both simulations operate on 32-bit signed floating point, these instructions are not suitable.
 
 % Mention parallelization with OpenMP
 % did already?

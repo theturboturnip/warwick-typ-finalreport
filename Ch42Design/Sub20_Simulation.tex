@@ -7,8 +7,8 @@ To allow easy comparisons between CPU and GPU simulations the program contains m
 The headless and visualized simulations use a \texttt{--backend} command line option to allow the user to choose the backend from this selection:\label{sec:DesignBackends}
 \begin{itemize}
     \item Null, a backend which does no simulation for testing purposes.
-    \item CPU Simple, equivalent to pre-optimization ACA code.
-    \item CPU Optimized, equivalent to the submission for ACA, bit-equivalent to CPU Simple.
+    \item CPU Simple, equivalent to the pre-optimization CPU simulation.
+    \item CPU Optimized, equivalent to the initial optimized CPU simulation, bit-equivalent to CPU Simple.
     \item CPU Optimized Adapted, a version of CPU Optimized slightly modified to be closer to the GPU version.
     \item CUDA Backend V1, the only GPU-based backend.
 \end{itemize}

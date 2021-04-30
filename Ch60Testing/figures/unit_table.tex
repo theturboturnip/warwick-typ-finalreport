@@ -21,8 +21,8 @@
         ID & Description & Expected & Output & Result \\
         \hline
         \newtest{}\label{test:unit:compare:identical} & \texttt{compare}: identical states & No difference & No difference & \testsuccess{} \\
-        \newtest{}\label{test:unit:compare:different} & \texttt{compare}: ACA input to ACA target output & Some difference & Some difference & \testsuccess{} \\
-        \newtest{}\label{test:unit:renderppm} & \texttt{renderppm}: render state vorticity & Equal to ACA program & Equal to ACA program & \testsuccess{} \\
+        \newtest{}\label{test:unit:compare:different} & \texttt{compare}: Original input to original target output & Some difference & Some difference & \testsuccess{} \\
+        \newtest{}\label{test:unit:renderppm} & \texttt{renderppm}: render state vorticity & Equal to original program & Equal to original program & \testsuccess{} \\
         \newtest{}\label{test:unit:makeinput} & \texttt{makeinput}: generate an input file from a PNG & Valid simulation state & Valid simulation state & \testsuccess{} \\
         \newtest{}\label{test:unit:fixedtime} & \texttt{fixedtime}: simulate from an input state for 25 seconds. & Valid simulation state & Valid simulation state & \testsuccess{} \\
         \newtest{}\label{test:unit:run} & \texttt{run}: visualize a simulation from an input state for 25 seconds. & Valid simulation state & Valid simulation state & \testsuccess{} \\

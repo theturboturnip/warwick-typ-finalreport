@@ -9,13 +9,13 @@
         \newtest{}\label{test:sys:run:pipeline} & \texttt{run}: High GPU Utilization & Nsight Systems profiler output should show maximum achievable GPU utilization\footnote{100\% may not be possible due to other programs using the GPU} & See \cref{sec:Results:Sim:Efficiency,sec:Results:Viz:Efficiency} & \testsuccess{} \\
         
         
-        \newtest{}\label{test:sys:sim:speed} & \texttt{fixedtime}: Simulation is faster than original coursework & CUDA simulation should run 2x faster than the original coursework on the ACA input. &See \cref{sec:Results:Sim:Speed} & \testsuccess{} \\
-        \newtest{}\label{test:sys:sim:accuracy} & \texttt{fixedtime}: Simulation produces similar results to original coursework &
+        \newtest{}\label{test:sys:sim:speed} & \texttt{fixedtime}: Simulation is faster than original simulation & CUDA simulation should run 2x faster than the original simulation on the original input. &See \cref{sec:Results:Sim:Speed} & \testsuccess{} \\
+        \newtest{}\label{test:sys:sim:accuracy} & \texttt{fixedtime}: Simulation produces similar results to original simulation &
         CUDA simulation solver residual should be within 5\% of adapted CPU backend.
-        & See \cref{sec:Results:Sim:Accuracy} & \testfail{} \\
+        & See \cref{sec:Results:Sim:Accuracy} & \testsuccess{} \\
         % CUDA simulation output should be within $10^-10$ of the adapted CPU backend output. & See \cref{sec:Results:Sim:Accuracy} & \testfail{} \\
 
-        \newtest{}\label{test:sys:run:highFPS} & \texttt{run}: Can run at high framerate & Visualization can run at >30FPS in some case & Simulating ACA input at n=100 runs at \~800FPS. & \testsuccess{} \\
+        \newtest{}\label{test:sys:run:highFPS} & \texttt{run}: Can run at high framerate & Visualization can run at >30FPS in some case & Simulating the original input at N=100 runs at \~800FPS. & \testsuccess{} \\
         \newtest{}\label{test:sys:run:vizSpeed} & \texttt{run}: Visualization features are faster than simulation & See \cref{sec:Testing:SuccessMeasurement} & See \cref{sec:Results:Viz:Speed} & \testsuccess{} \\
         \newtest{}\label{test:sys:run:dcsComp} & Try to compile on DCS systems & Should be able to compile and run the simulation on elements of the DCS system. & Successfully compiled non-CUDA sim on DCS. & \testsuccess{} \\
     \end{tabular}

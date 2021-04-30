@@ -22,7 +22,7 @@ These results are then used in the Evaluation (\cref{sec:Evaluation}).
 \input{Ch62Results/figures/ticks_vs_time}
 
 Each tick of a simulation performs the same amount of work, so it was hypothesized that the number of ticks per second would be a suitable metric for measuring simulation speed.
-To verify this, the initial ACA input was simulated with the CUDA and CPU backends for 10, 25, and 50 simulation-seconds with $\npoisson = 100$.
+To verify this, the original simulation input was simulated with the CUDA and CPU backends for 10, 25, and 50 simulation-seconds with $\npoisson = 100$.
 As shown in \cref{fig:results:ticks_vs_time}, elapsed real-time is directly proportional to number of ticks executed with R-values of $R^2_{CPU} = 0.9999$ and $R^2_{CUDA} = 0.9996$.
 This proves that ticks-per-second can be used to accurately compare CUDA/CPU performance.
 
@@ -122,7 +122,7 @@ The pressure is only used internally as a relative value, so theoretically this 
 The CUDA and CPU compilers are configured to handle floating-point numbers slightly differently.
 \texttt{nvcc} compiles with the \texttt{--fmad} option turned on by default\cite{NvccFmad} which ``enables the contraction of floating-point multiplies and adds/subtracts into floating-point multiply-add operations''.
 This optimization performs a multiply and an addition at the same time, without a rounding step in between, resulting in a slightly more accurate result\cite{NvidiaFMAJustification}.
-It is disabled for the CPU compiler, to keep the results from the other CPU backends consistent with the original ACA coursework.
+It is disabled for the CPU compiler, to keep the results from the other CPU backends consistent with the original simulation.
 While the change is subtle it's present in all CUDA kernels and when applied thousands of times may have a significant effect, leading to the deviation.
 In the future this could be verified by compiling the CPU simulation with this option enabled.
 
@@ -130,10 +130,11 @@ In the future this could be verified by compiling the CPU simulation with this o
 \input{Ch62Results/figures/profile_sim}
 GPU Utilization is close to 100\% where possible.
 During the Poisson iterations the GPU utilization is 100\% thanks to the CUDA Graph optimization.
-At the tick boundaries, a bubble is unavoidable (see \cref{fig:results:sim_profile_bubble}) where the CPU has to wait for the GPU reductions to finish before calculating the timestep for the next tick and invoking the new calculations.
+At the tick boundaries, a bubble is unavoidable (see \cref{fig:results:sim_profile_bubble}) where the CPU has to wait for the GPU reductions to finish before calculating the timestep for the next tick and invoking the next kernels.
 In practice this bubble is approximately \SI{10}{\micro\second} long, combined with another \SI{10}{\micro\second} long bubble between the Tentative Velocity stage finishing and the Poisson stage beginning.
-Each tick at 100 iterations for the initial ACA took \SI{700}{\micro\second}, so this gap accounts for 2.8\% of the runtime.
+Each tick at 100 iterations for this simulation took \SI{700}{\micro\second}, so this gap accounts for 2.8\% of the runtime.
 As the simulation gets larger or the iteration count increases this gap should remain constant, and become even less significant.
+Computing the timestep entirely on the GPU, instead of sending data back and forth from the CPU, could allow the kernels to be enqueued earlier and avoid the GPU bubble.
 
 \subsection{Memory Leaks}\label{sec:Results:Sim:Mem}
 The program is designed to allocate all memory up-front, instead of allocating during a simulation.
@@ -148,7 +149,7 @@ It did not find any leaks in the project code, but did find a potential memory l
 \section{Visualization}
 \subsection{Speed}\label{sec:Results:Viz:Speed}
 The speed of each individual feature was measured by enabling just that feature, moving to the worst-case for that feature such as enabling auto-range and maximizing onscreeen instances (\cref{tab:results:vizworstcases}), and then reading off the time-to-render from the GUI.
-The rendered simulation state was the 660~x~120 ACA input, which is rendered internally at 2x resolution in both directions i.e. 1320~x~240 then composited with the GUI onto a 1600~x~900 window.
+The rendered simulation state was the 660~x~120 original simulation input, which is rendered internally at 2x resolution in both directions i.e. 1320~x~240 then composited with the GUI onto a 1600~x~900 window.
 
 \begin{table}[]
     \centering

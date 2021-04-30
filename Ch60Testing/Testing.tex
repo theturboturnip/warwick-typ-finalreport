@@ -10,8 +10,8 @@ In some systems it is practical to automate these tests, but this was not pursue
 
 Helpfully the program is already split into subcommands at the command-line level (\cref{sec:DesignSubcommands}), which can all be tested individually.
 % The \texttt{compare}, \texttt{renderppm}, and \texttt{fixedtime} subcommands can each be tested completely independently of other.
-Because the file format is the same as the original coursework, the original input file can be used to test comparisons (\texttt{compare}), simple visualization (\texttt{renderppm}), and both simulations (\texttt{fixedtime} and \texttt{run}).
-These commands all have equivalents in the original coursework, which provides a basis for validating correctness.
+Because the file format is the same as the original simulation, the original input file can be used to test comparisons (\texttt{compare}), simple visualization (\texttt{renderppm}), and both simulations (\texttt{fixedtime} and \texttt{run}).
+These commands all have equivalents in the original program, which provides a basis for validating correctness.
 The \texttt{makeinput} subcommand, which creates a new input file based on an image, can be tested by passing the resulting input file to other known-functional subcommands and checking their behaviour.
 This provides a coarse view of system functionality, but a finer level of detail can be obtained by testing individual code components.
 
@@ -67,9 +67,9 @@ Single small leaks are less concerning, as they should not impact the rest of th
 The programs used to find these leaks may themselves be bad at recognizing allocation/freeing\cite{ValgrindProblemsBlog}, and lead to false-positives.
 Care must be taken when evaluating their results.
 \cref{test:sys:sim:speed,test:sys:sim:accuracy} evaluate the speed and accuracy of the CUDA-based simulation backend vs. the adapted CPU backend.
-The accuracy is measured by comparing the output of equivalent simulations on the original CS257 input state.
+The accuracy is measured by comparing the output of equivalent simulations on the original simulation input state.
 Other states were tested, but any newly generated states with obstacles proved to be unstable and produce Not-a-Number outputs on both backends.
-The simulation speed is tested on the original CS257 input state, then behaviour at scale is tested on custom generated states with no obstacles.
+The simulation speed is tested on the original simulation input state, then behaviour at scale is tested on custom generated states with no obstacles.
 Obstacle configuration does not affect time-per-tick, so time-per-tick will be a representative value and equal for any state of the same size.
 This would not be suitable for accuracy tests, as having no obstacles greatly reduces the complexity and would likely produce disproportionately high accuracy values.
 

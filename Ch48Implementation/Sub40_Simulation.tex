@@ -56,7 +56,7 @@ typeclass Backend {
 \end{figure}
 
 \subsubsection{CPU Backends}
-Most of the simulation code for these backends has been directly copied from the ACA simulation\cite{modules:aca257submission}.
+Most of the simulation code for these backends has been directly copied from the original simulation\cite{modules:CS257Coursework}\cite{modules:aca257submission}.
 Some templates and template specializations have been added for the Adapted backend, but for the most part the simulation is unchanged.
 The backend classes simply wrap up this code to be compatible with the typeclass.
 
@@ -131,12 +131,14 @@ Allocating pinned memory, which cannot be paged to disk or moved around by the O
 
 \begin{figure}
     \centering
-    \subcaptionbox[0.49\linewidth]{Synchronous Copy}{%
+    \begin{subfigure}{0.49\linewidth}%
         \includegraphics[width=\linewidth]{Ch48Implementation/figures/memcpy_sync.png}%
-    }%
-    \subcaptionbox[0.49\linewidth]{Asynchronous Copy}{%
+        \caption{Synchronous Copy}%
+    \end{subfigure}%
+    \begin{subfigure}{0.49\linewidth}%
         \includegraphics[width=\linewidth]{Ch48Implementation/figures/memcpy_async.png}%
-    }% 
+        \caption{Asynchronous Copy}%
+    \end{subfigure}
     \caption{Using asynchronous copies for greater efficiency}
     \label{fig:async_copy}
 \end{figure}

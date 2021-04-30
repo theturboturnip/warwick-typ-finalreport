@@ -4,7 +4,8 @@
 
 \section{An Example Simulation Tick}\label{sec:Research:SimulationTick}
 The 1998 book ``Numerical simulation in fluid dynamics : a practical introduction''\cite{book:griebel1998numerical} defines a basic structure for a discrete simulated timestep (a.k.a. a ``tick'') and provides a sample guide to implementing it in Fortran or C.
-To the best of the author's knowledge this was used as the base of the ACA coursework, and continues to be the base of this project.
+%To the best of the author's knowledge t
+This was used as the base of the original simulation, and continues to be the base of this project.
 This section will explain the general structure of the simulation as defined in \cite{book:griebel1998numerical}.
 
 The simulation described specifically simulates ``\emph{laminar} flows of \emph{viscous, incompressible fluids}''\cite{book:griebel1998numerical} in 2D.
@@ -233,13 +234,16 @@ As each individual cell only depends on the adjacent values, iterations of Succe
     \label{eq:poisson_final}
 \end{multline}
 
-These iterations are continued until the L2 norm\cite{l2norm} of the residuals (the difference between the left-hand side as calculated and the expected right-hand side of \cref{eq:poisson_final} for each cell) falls below a specific tolerance\footnote{In the ACA coursework this tolerance was relative to the L2 norm of $p$, although this was not directly specified by the book.}\cite{book:griebel1998numerical}.
+These iterations are continued until the L2 norm\cite{l2norm} of the residuals (the difference between the left-hand side as calculated and the expected right-hand side of \cref{eq:poisson_final} for each cell) falls below a specific tolerance
+% \footnote{In the ACA coursework this tolerance was relative to the L2 norm of $p$, although this was not directly specified by the book.}
+\footnote{In the original simulation this tolerance was relative to the L2 norm of $p$, although this was not directly specified by the book.}
+\cite{book:griebel1998numerical}.
 
 \subsection{Final Velocity Calculations}
 % Update Velocity, applyBoundaryConditions
 Once the final values of $p$ have been calculated the velocity values $u,v$ can be found with \cref{eq:uv_modified}.
 The boundary conditions for velocity must then be applied.
-There are four relevant types of boundary condition\footnote{The book specifies five, including a Periodic Boundary Condition, which the ACA system does not support.}, which are applied depending on the type of boundary.
+There are four relevant types of boundary condition\footnote{The book specifies five, including a Periodic Boundary Condition, which the original simulation did not support.}, which are applied depending on the type of boundary.
 \begin{enumerate}
     \item No-Slip condition - no fluid penetrates the boundary, and fluid does not move past it i.e. the boundary applies friction.
     \item Free-Slip condition - fluid may not penetrate the boundary, but no friction is applied. Only tangential velocity is preserved for adjacent fluids.

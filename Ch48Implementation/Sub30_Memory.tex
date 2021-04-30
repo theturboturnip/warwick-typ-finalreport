@@ -54,7 +54,8 @@ It does not specialize on the memory type, but provides two storage variants \mi
 These functions are only present if that access type is supported, so trying to use an unsupported function results in a compile-time error.
 Other more generic operations are also supported such as zeroing out memory, copying memory in from different sources, and copying memory out to the CPU.
 Each of these is implemented differently based on the memory type, and may not be implemented if the operation is impossible.
-\todomark{Matrix of supported operations}
+For example attempting to `prefetch', i.e. move CUDA Unified Memory to the GPU, is only supported for CUDA Unified Memory and not the other types.
+% \todomark{Matrix of supported operations}
 
 \subsection{\texttt{FrameAllocator}}
 \mintinline{cpp}{FrameAllocator<MType>} is an allocator associated with a single memory frame.

@@ -26,6 +26,32 @@
 % (3) load symbol definitions
 \usepackage{textcomp}
 
+\usepackage{minted}
+\usemintedstyle{pastie}%emacs%friendly
+% \usepackage{xpatch,letltxmacro}
+% \LetLtxMacro{\cminted}{\minted}
+% \let\endcminted\endminted
+% \xpretocmd{\cminted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
+\setminted{
+frame=lines,
+baselinestretch=1.2,
+% bgcolor=LightGray,
+fontsize=\footnotesize,
+% linenos,
+breaklines=true,
+tabsize=4,
+autogobble
+}
+
+%Don't need expanded margins now, global margin has shrunk
+\newminted{cpp}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{cuda}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{bash}{}
+\newminted{glsl}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{json}{}
+% \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
+% \usepackage{quotewarning}
+
 
 \usepackage{amsmath} %For both in-line and equation mode
 \usepackage{mathtools}
@@ -120,52 +146,9 @@
 
 % \usepackage{turniphighlighting}
 \usepackage{varwidth}
-\usepackage{minted}
-\usemintedstyle{pastie}%emacs%friendly
-% \usepackage{xpatch,letltxmacro}
-% \LetLtxMacro{\cminted}{\minted}
-% \let\endcminted\endminted
-% \xpretocmd{\cminted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
-\setminted{
-frame=lines,
-baselinestretch=1.2,
-% bgcolor=LightGray,
-fontsize=\footnotesize,
-% linenos,
-breaklines=true,
-tabsize=4,
-autogobble
-}
 
-%Don't need expanded margins now, global margin has shrunk
-\newminted{cpp}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
-\newminted{cuda}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
-\newminted{bash}{}
-\newminted{glsl}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
-\newminted{json}{}
-% \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
-% \usepackage{quotewarning}
 
-%KEEP THIS ONE LAST it's quite buggy, it allows you to click on links within the pdf and web links without changing the colour. The mouse cursor simply changes its icon to indicate to the user. Great tool - still awkward
-% \usepackage{varioref}
-\usepackage[colorlinks,%hidelinks,
-            unicode,
-            pdfauthor={Samuel Stark // 1800081},
-            pdftitle={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation},
-            pdfsubject={CS351 Final Report},
-            pdfkeywords={Fluid Simulation, CUDA, Vulkan, GPU, In-Situ, Visualization}]{hyperref}
-\hypersetup{
-    colorlinks,
-    linkcolor={red!50!black},
-    citecolor={blue!50!black},
-    urlcolor={blue!80!black}
-}
-\hypersetup{linkcolor=blue!80!black}
 
-\usepackage[capitalize,nameinlink]{cleveref}
-\crefname{reqFi}{Req.}{Reqs.}
-\crefname{reqNFi}{Req.}{Reqs.}
-\crefname{testI}{Test}{Tests}
 
 \usepackage[header, title]{appendix}
 \usepackage{pdfpages}
@@ -205,11 +188,41 @@ autogobble
 \pagebreak
 }
 
+\usepackage{listings}
+\lstset{
+    basicstyle=\color{red}\itshape
+}
+\lstdefinestyle{inline}{
+    columns=fullflexible,
+    breaklines=false
+}
+\newcommand{\code}[1]{\lstinline[style=inline]!#1!}
 
 
 \usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
+
+%KEEP THIS ONE LAST it's quite buggy, it allows you to click on links within the pdf and web links without changing the colour. The mouse cursor simply changes its icon to indicate to the user. Great tool - still awkward
+% \usepackage{varioref}
+\usepackage[colorlinks,%hidelinks,
+            unicode,
+            pdfauthor={Samuel Stark // 1800081},
+            pdftitle={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation},
+            pdfsubject={CS351 Final Report},
+            pdfkeywords={Fluid Simulation, CUDA, Vulkan, GPU, In-Situ, Visualization}]{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\hypersetup{linkcolor=blue!80!black}
+
+\usepackage[capitalize,nameinlink]{cleveref}
+\crefname{reqFi}{Req.}{Reqs.}
+\crefname{reqNFi}{Req.}{Reqs.}
+\crefname{testI}{Test}{Tests}
 
 %Lets begin the document, some chapters have examples in to give you an idea 
 \begin{document}

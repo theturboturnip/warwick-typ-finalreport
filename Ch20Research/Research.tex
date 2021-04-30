@@ -23,7 +23,9 @@ The next section collates research into the possible optimizations for the GPU i
 \label{sec:Research:Optimization}
 Optimizing simulations is important in all cases, even those that are not real-time, as it allows the engineers using the software to iterate faster on their designs.
 When the extra constraint of real-time speeds is added, it becomes even more important.
-This section explores how CFD simulations started moving to the GPU, the previous optimizations applied at the CPU level for the CS257 coursework, and the new optimizations to be applied to the GPU version.
+This section explores how CFD simulations started moving to the GPU, the previous optimizations applied at the CPU level
+%for the CS257 coursework
+, and the new optimizations to be applied to the GPU version.
 
 \input{Ch20Research/Sub20_Opt_History}
 \input{Ch20Research/Sub20_Opt_ACA}
@@ -34,7 +36,7 @@ This section explores how CFD simulations started moving to the GPU, the previou
 % However there are other groups that may not have as deep of an understanding, but whose actions and decisions should still be informed by the simulation results.
 % \todomark{Viz intro}
 To develop a visualization with similar computational intensity to the current state-of-the-art, the current state-of-the-art must first be investigated.
-This section covers some previous visualizations, including the capabilities built-in to the CS257 program, and shows the visual techniques used in Autodesk CFD.
+This section covers some previous visualizations, including the capabilities built-in to the original program, and shows the visual techniques used in Autodesk CFD.
 The common practice of combining different techniques is investigated, and an algorithm for massively parallel particle simulation is shown.
 
 
