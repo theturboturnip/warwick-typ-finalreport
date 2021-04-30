@@ -35,7 +35,7 @@ It is certainly a good starting point for future work in this space.
 While the project as a whole was successful, there are elements that could have been better executed.
 Third-party libraries were used in places, most notably for the GUI, but were not used in the low-level memory management or other Vulkan code.
 For Vulkan specifically, using the Vulkan Memory Allocator library \todocite{\url{https://gpuopen.com/vulkan-memory-allocator/}} would have allowed for easier memory allocation.
-Other Vulkan wrappers and tools, such as the codebase developed by Sascha Willems' for their Vulkan samples\todocite{https://github.com/SaschaWillems/Vulkan}, may have made certain actions less cumbersome.
+Other Vulkan wrappers and tools, such as the codebase developed by Sascha Willems for their Vulkan samples\todocite{https://github.com/SaschaWillems/Vulkan}, may have made certain actions less cumbersome.
 
 A common pattern encountered when implementing new code was to design for a larger system than necessary.
 For example when implementing the worker thread, a generic worker thread setup was created in case another worker thread was needed later.
@@ -52,13 +52,14 @@ On the simulation side clear areas for improvement are the cache usage/performan
 Both would require further investigation, but have some easy starting points.
 Other parallel GPU algorithms take advantage of shared memory and locality to improve performance, which the algorithm could be adapted to support.
 Investigating the non-physical pressure values fix from \cite{book:griebel1998numerical} (see \cref{ext:PressureValues}) could be the key to removing pressure inflation.
+Re-implementing the Poisson residual check may reduce the number of required Poisson iterations per tick.
 Different Poisson solvers could also be added to the simulation, which may be more cache-friendly.
 
 Visualization also has many potential improvements.
 A more advanced particle simulation as mentioned in \cref{sec:Evaluation:FailedReq} could be implemented, which would require more research into game industry particle simulations.
 For better accessibility, the colors initially used in the visualization could also be adapted to be more colorblind friendly.
 
-Truly parallel simulation/visualization has not been achieved, mostly due to the limitations of the researcher's hardware \todoref{NEED TO MENTION GTX1080 NOT IN PARALLEL SOMEWHERE}.
+Truly parallel simulation/visualization has not been achieved, mostly due to the limitations of the researcher's hardware (\cref{sec:Design:Viz:Timing}).
 As established in \cref{sec:Results:Viz:Speed} the visualization is already very fast, but for larger \& more complicated visualizations this may become a significant portion of runtime.
 Using multiple GPUs, perhaps on separate systems, to implement a loosely-coupled version of this visualization could allow for a truly parallel visualization and investigation of the benefits vs. tight coupling.
 

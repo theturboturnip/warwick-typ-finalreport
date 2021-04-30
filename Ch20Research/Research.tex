@@ -3,9 +3,19 @@
 \chapter{Research}
 \label{sec:Research} 
 % Before designing the program, understanding the current state of the art is crucial to proper
-Effectively optimizing a program requires extensive knowledge of both the program internals and the target platform.
-\cref{sec:Research:SimulationTick} describes the mathematics backing the fluid simulation, and \cref{sec:Research:Optimization} describes previous CPU optimizations and state-of-the-art GPU optimization techniques.
-\cref{sec:Research:Visualization} then investigates the current standard for visualization techniques and a games industry method for particle simulation, which are used to inform the program requirements and design.
+
+Implementing and optimizing a fluid simulation without losing correctness required a complete understanding of the mathematics the sim evaluates.
+From this base, optimizations were applied to speed up the program without accidentally changing the result.
+As GPU-based optimization is a wide-reaching problem that has been investigated before, researching optimizations that others have found effective was the first step taken before designing the program.
+Implementing the visualization required investigation of the current state-of-the-art visualization methods, along with specific methods for building GPU-based visualizations.
+% Before creating the visualization the current state-of-the-art techniques, along with specific methods for implementing visualizations on the GPU, were 
+
+This chapter details all research that was performed while building the program.
+All the equations related to a simulation `tick' are stepped through in the first section.
+The next section collates research into the possible optimizations for the GPU implementation, and the final section details the current status of visualizations and some techniques used in the final program.
+% Effectively optimizing a program requires extensive knowledge of both the program internals and the target platform.
+% \cref{sec:Research:SimulationTick} describes the mathematics backing the fluid simulation, and \cref{sec:Research:Optimization} describes previous CPU optimizations and state-of-the-art GPU optimization techniques.
+% \cref{sec:Research:Visualization} then investigates the current standard for visualization techniques and a games industry method for particle simulation, which are used to inform the program requirements and design.
 
 \input{Ch20Research/Sub10_SimulationExpl}
 
@@ -13,6 +23,7 @@ Effectively optimizing a program requires extensive knowledge of both the progra
 \label{sec:Research:Optimization}
 Optimizing simulations is important in all cases, even those that are not real-time, as it allows the engineers using the software to iterate faster on their designs.
 When the extra constraint of real-time speeds is added, it becomes even more important.
+This section explores how CFD simulations started moving to the GPU, the previous optimizations applied at the CPU level for the CS257 coursework, and the new optimizations to be applied to the GPU version.
 
 \input{Ch20Research/Sub20_Opt_History}
 \input{Ch20Research/Sub20_Opt_ACA}
@@ -21,8 +32,10 @@ When the extra constraint of real-time speeds is added, it becomes even more imp
 \section{Visualization}\label{sec:Research:Visualization}
 % For the engineers and scientists developing simulations, it is important for a visualization to be completely accurate and show the data in as much detail as possible.
 % However there are other groups that may not have as deep of an understanding, but whose actions and decisions should still be informed by the simulation results.
-\todomark{Viz intro}
-
+% \todomark{Viz intro}
+To develop a visualization with similar computational intensity to the current state-of-the-art, the current state-of-the-art must first be investigated.
+This section covers some previous visualizations, including the capabilities built-in to the CS257 program, and shows the visual techniques used in Autodesk CFD.
+The common practice of combining different techniques is investigated, and an algorithm for massively parallel particle simulation is shown.
 
 
 % To ensure the visualization has an equivalent workload to real-world programs, understanding the current state of the art visualization techniques are 

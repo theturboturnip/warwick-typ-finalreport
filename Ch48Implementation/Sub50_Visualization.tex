@@ -34,7 +34,7 @@ These buffers allow user interaction, such as moving the particle emitters and s
 Image layout transfers allow the GPU to optimize access times for an image by changing the format it's stored in.
 Images are transferred to the \mintinline{cpp}{ShaderReadOnlyOptimal} layout (listed as `Texture' rather than `Image' in \cref{fig:VizDataTransform}) for efficient sampling at arbitrary points, and kept in the \mintinline{cpp}{General} layout when accessed at 2D data arrays (see \cref{fig:VizImageRead} as a comparison).
 
-Memory barriers (not shown in \cref{fig:VizDataTransform}) are inserted between every compute shader to ensure any required data written from a previous shader is visible to the next shader.\todocite{That website that explains memory barriers}
+Memory barriers (not shown in \cref{fig:VizDataTransform}) are inserted between every compute shader to ensure any required data written from a previous shader is visible to the next shader\cite{TheKhronosGroupVulkanSpec}. % Could also be \cite{MaisterVulkanSyncBlog}
 % On top of that, each compute shader requires at least one \emph{memory barrier}, to ensure any data written in previous stages is visible to the next stage.
 These memory barriers are quite granular, as shown in \cref{fig:VizMemoryBarrier}.
 
@@ -108,8 +108,14 @@ The particles are then moved by the Simulate Particles shader as shown in \cref{
 These particles are added to the inactive list if out-of-bounds, and the new Draw list otherwise.
 % adding particles to the inactive list if they move out of the simulation bounds, and moving all other particles to the new Draw list.
 
-\subsection{CPU/GPU Interoperation}\label{sec:Impl:Viz:CPUGPUSafety}\todomark{Better name}
-\todomark{Talk about structures.h/glsl}
+\subsection{Safe CPU/GPU Communication}\label{sec:Impl:Viz:CPUGPUSafety}
+Unlike CUDA, the Vulkan API does not provide any means of type-safety when communicating between the CPU and GPU.
+If the GPU expects data in a specific structure, it is the API user's job to create data that fits this structure.
+A naive solution might be to keep a C++ structure definition and a GLSL structure definition, and assume that one matches the other.
+This is error prone as the structures are not automatically kept in sync - if one changes, the other will not, and communication will break down.
+This project's approach is to create a GLSL file defining all interoperable structures (\texttt{structures.glsl}), and then include it into a C++ header with some extra code to define GLSL types correctly.
+Both sides will now use the same structure definitions, which are all defined in exactly one place.
+All GLSL code uses the \texttt{std430} memory layout rules, which closely matches the C++ memory layout, so the structures can be passed directly from the CPU to the GPU safely.
 
 \subsection{Usage in Other Layers}
 The \mintinline{cpp}{VulkanSimApp} class is instantiated by the command-line layer to run the visualization.

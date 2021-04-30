@@ -3,6 +3,14 @@
 \chapter{Design}
 \label{sec:Design} 
 
+while building a large project it's important to develop a consistent, logical, and properly separated design; both to make initial development easy and to make it intuitive for any future developers to understand.
+This applies to all aspects of the program including the codebase (i.e. which classes exist and how they communicate), how the program implement complex processes (such as the simulation/visualization), and how the end user will eventually use the program.
+
+This section first separates the codebase into layers, then analyses these layers in order from the lowest-level to the highest-level.
+All notable design decisions for each layer are noted, and the means of interaction between these layers are documented.
+The final section, for the Command-Line layer, also documents the design of the command-line interface and the file formats used to store simulation state.
+
+
 \section{Code Structure}
 \begin{figure}
     \centering
@@ -40,6 +48,7 @@ Using parameterized array classes allows these differences to be expressed while
 
 \input{Ch42Design/Sub20_Simulation}
 
+\pagebreak
 \section{Visualization Layer}
 \input{Ch42Design/Sub30_VisualizationPipeline}
 

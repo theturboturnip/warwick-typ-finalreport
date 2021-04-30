@@ -1,6 +1,6 @@
 \section{Simulation Layer}
 As shown in the Design section, the Simulation layer is split into generic Runners and multiple simulation Backends.
-\todomark{More sentences?}
+Building a system that efficiently allowed Runners to be Backend-agnostic and still performance was nontrivial.
 
 \subsection{Runners}
 Runners had three major design constraints:
@@ -128,7 +128,18 @@ Two data buffers are used to ping-pong the reductions - each iteration flips the
 Because there are two reductions, it is most efficient to perform the first one asynchronously and enqueue both before waiting for them to finish.
 By default copying reduction results back to the CPU is synchronous, which prevents this.
 Allocating pinned memory, which cannot be paged to disk or moved around by the OS, allows the copy to be done asynchronously.
-\todomark{Figure showing the difference between sync copy and async copy}
+
+\begin{figure}
+    \centering
+    \subcaptionbox[0.49\linewidth]{Synchronous Copy}{%
+        \includegraphics[width=\linewidth]{Ch48Implementation/figures/memcpy_sync.png}%
+    }%
+    \subcaptionbox[0.49\linewidth]{Asynchronous Copy}{%
+        \includegraphics[width=\linewidth]{Ch48Implementation/figures/memcpy_async.png}%
+    }% 
+    \caption{Using asynchronous copies for greater efficiency}
+    \label{fig:async_copy}
+\end{figure}
 
 % Copying the result back to the CPU is done asynchronously, which requires pinned memory to be allocated\todocite{pinned memory}.
 % Normal virtual memory can be paged to disk or moved around by the OS, which means there is no reliable location for the GPU to eventually copy data to.

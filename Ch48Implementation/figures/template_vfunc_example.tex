@@ -1,0 +1,59 @@
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\linewidth}%
+        \begin{cppcode}
+class Dog {
+public:
+    void talk() {
+        printf("bark\n");
+    }
+};
+
+class Cat {
+public:
+    void talk() {
+        printf("meow\n");
+    }
+};
+
+template<class TAnimal>
+void make_animal_talk(TAnimal* animal) {
+    animal->talk();
+}
+
+int main() {
+    Dog dog{};
+    // Instantiates make_animal_talk<Dog>, which calls Dog::talk statically
+    make_animal_talk<Dog>(&dog);
+
+    Cat cat{};
+    // Instantiates make_animal_talk<Cat>, which calls Cat::talk statically
+    make_animal_talk<Cat>(&cat);
+
+    return 0;
+}
+        \end{cppcode}
+        % \caption{C++ implementation}
+    \end{subfigure}%
+    \begin{subfigure}{0.49\linewidth}%
+        \begin{minted}{gas}
+# void make_animal_talk<Dog>(Dog*):
+# ...
+mov     rax, QWORD PTR [rbp-8]
+mov     rdi, rax
+call    Dog::talk()
+# ...
+        
+# void make_animal_talk<Cat>(Cat*):
+# ...
+mov     rax, QWORD PTR [rbp-8]
+mov     rdi, rax
+call    Cat::talk()
+# ...
+        \end{minted}
+        % \caption{x86 Assembly for templated functions}
+    \end{subfigure}%
+    \caption{Using templates for polymorphism}
+    \label{fig:templated_polymorphism}
+    \todocite{\url{https://godbolt.org/z/hfM465EYa}}
+\end{figure}

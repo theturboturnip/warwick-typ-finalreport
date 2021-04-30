@@ -7,7 +7,7 @@ This section will explain these features in more detail.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{Ch20Research/figures/results_ribbon.png}
-    \caption{Results Ribbon for Autodesk CFD 2019}\todocite{http://help.autodesk.com/view/SCDSE/2019/ENU/?guid=GUID-BDC6758D-BB45-43E9-B4E7-233904B36232}
+    \caption{Results Ribbon for Autodesk CFD 2019\cite[Results Visualization]{AutodeskCFDManual}}
     \label{fig:AutodeskCFDRibbon}
 \end{figure}
 
@@ -33,7 +33,7 @@ This section will explain these features in more detail.
 Autodesk CFD is a 3D simulation/visualization, and typically involves placing one or more 3D surfaces (a 'model') and simulating the fluid movement around these surfaces.
 The simulation process creates multiple quantities, including scalar quantities Speed, Temperature, Pressure; and Vector quantities such as Velocity.
 
-\textbf{Global Controls}\todocite{http://help.autodesk.com/view/SCDSE/2019/ENU/?guid=GUID-F4CD54F6-5DAB-4107-B8E5-53FE9BFB5228} visualize selected quantities on all model surfaces.
+\textbf{Global Controls}\cite[Global Controls]{AutodeskCFDManual} visualize selected quantities on all model surfaces.
 A scalar quantity can be displayed by changing the surface color according to a scale (\cref{fig:AutodeskCFDGlobalControlsScalar}).
 A vector quantity can be displayed by creating small arrows on the surfaces that represent the direction and magnitude of the quantity.
 The range of displayed values can be changed for both the scalar and vector quantities.
@@ -45,12 +45,11 @@ Result Planes, Iso Surfaces, and Iso Volumes address this by calculating new sur
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Ch20Research/figures/autodesk_cfd_global_results_scalar.PNG}
-    \caption{Using the Global Controls to visualize a scalar result}
+    \caption{Using the Global Controls to visualize a scalar result\cite{AutodeskCFDExercise7}}
     \label{fig:AutodeskCFDGlobalControlsScalar}
-    \todocite{https://knowledge.autodesk.com/support/cfd/learn-explore/caas/CloudHelp/cloudhelp/2014/ENU/SimCFD/files/GUID-ADAF2C66-9992-43FA-B5FB-5CB13F967DAD-htm.html}
 \end{figure}
 
-\textbf{Results Planes}\todocite{http://help.autodesk.com/view/SCDSE/2019/ENU/?guid=GUID-AA40D02F-8CBC-4F78-A3C8-CEF30E05522B} define a flat cross-section of the model which can visualize a single scalar quantity with a single vector quantity (\cref{fig:AutodeskCFDResultsPlane}).
+\textbf{Results Planes}\cite[Planes]{AutodeskCFDManual} define a flat cross-section of the model which can visualize a single scalar quantity with a single vector quantity (\cref{fig:AutodeskCFDResultsPlane}).
 
 \begin{figure}
     \centering
@@ -98,18 +97,17 @@ Autodesk allows these paths to be traced forwards or backwards, allows particles
 
 \subsection{Stagnation \& Composition}
 The techniques described above have been well known for at least 20 years.
-The most prevalent algorithm for computing iso-surfaces was published in 1987\todocite{https://www2.cs.sfu.ca/~haoz/teaching/cmpt464/references/87_Lorensen_MarchingCubes.pdf}.
+The most prevalent algorithm for computing iso-surfaces was published in 1987\cite{LorensenMarching}.
 % Source for marching-cubes being first? is https://www.routledge.com/Isosurfaces-Geometry-Topology-and-Algorithms/Wenger/p/book/9781466570979
-Particle Traces and Results Planes were used in 1997 \todocite{https://ieeexplore.ieee.org/document/809918}, although this is not the origin of either technique.
-In some cases there has been extensive research into optimizing visualization techniques \todocite{https://ieeexplore.ieee.org/document/506222}, and in domain-specific areas there is academic research into creating new techniques (\todocite{https://ieeexplore.ieee.org/abstract/document/7604964}), but research into new generic visualization techniques has stagnated.
-This stagnation was noted in \todocite{https://ieeexplore.ieee.org/abstract/document/7604964} from 2004, which concluded the primary challenges facing visualization were ``identifying and characterizing features'' to visualize rather than developing new techniques.
+Particle Traces and Results Planes were used in 1999\cite{Schulz1999}, although this is not the origin of either technique.
+In some cases there has been extensive research into optimizing visualization techniques\cite{Ueng1996}, and in domain-specific areas there is academic research into creating new techniques\cite{Chen16}, but research into new generic visualization techniques has stagnated.
+This stagnation was noted in \cite{vizRole2004} from 2004, which concluded the primary challenges facing visualization were ``identifying and characterizing features'' to visualize rather than developing new techniques.
 The MET Office's weather reports demonstrate this principle, and show that composing multiple techniques together can increase information density while remaining easy to understand.
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Ch20Research/figures/weather_better.PNG}
-    \todocite{\url{https://youtu.be/y_1--MkiNjQ}, Met Office 10 Day Trend for March 3rd.}
-    \caption{MET Office weather report}
+    \caption{MET Office weather report\cite{video:MetOfficeTenDayTrend}}
     \label{fig:MetOffice}
 \end{figure}
 
@@ -123,7 +121,7 @@ This proves the potential of combining multiple techniques, which was taken into
 
 \subsection{Realtime Particle Simulation Techniques}\label{sec:Research:Viz:Particles}
 The particle simulation element of our visualization doesn't affect the simulation content, and does not have to be completely accurate as long as the flow is approximately correct for the viewer.
-That is, the particle movement should fulfil \cref{eq:UnsteadyFlow}\todocite{\url{https://ieeexplore.ieee.org/document/398848}}
+That is, the particle movement should fulfil \cref{eq:UnsteadyFlow}\cite{Lane93}
 for the following variables:
 \begin{itemize}
     \item $p = $ particle position.
@@ -140,7 +138,7 @@ for the following variables:
 \end{figure}
 The unsteady-flow variant is shown because the fluid and particles will be moving at the same time, so the fluid itself is unsteady.
 
-A common numerical method for accurately integrating this is the second-order Runge-Kutta scheme with adaptive timesteps, described in \todocite{\url{https://ieeexplore.ieee.org/document/398848}}.
+A common numerical method for accurately integrating this is the second-order Runge-Kutta scheme with adaptive timesteps, described in \cite{Lane93}.
 This takes a constant step size $0 < c \leq 1$ which can be changed to control accuracy.
 \begin{multline}
     h = c\norm{\vec{V}(p_k, t)}, \qquad p^{*} = p_k + h\vec{V}(p_k, t), \\
@@ -154,15 +152,14 @@ Instead, a simpler version was chosen based on the steady-state variant.
 At the instant the particle is simulated, the fluid is modelled as steady, and the particle moves with the same timestep taken by the simulation.
 To avoid particles stepping over cells entirely, the timestep is subdivided into 4 iterations.
 
-\begin{multline}
-    \text{for} i \in [1..4] 
-        p_i = p_{i-1} + \vec{V}(p_{i-1}, t) / 4
-\end{multline}
-If $p$ does not align with a grid space, $\vec{V}(p)$ is trilinearly iterpolated between the closest grid cells, as specified in \todocite{\url{https://ieeexplore.ieee.org/document/398848}}.
+\begin{equation}
+    \forall i \in [1..4] \qquad{} p_i = p_{i-1} + \vec{V}(p_{i-1}, t) / 4
+\end{equation}
+If $p$ does not align with a grid space, $\vec{V}(p)$ is trilinearly interpolated between the closest grid cells, as specified in \cite{Lane93}.
 
 In addition to the particle simulation, particles must also be spawned and deleted when necessary.
 GPU-based particle simulations are standard in video games, which need to run at high frame rates just like our visualization, so their techniques are a natural fit.
-A notable method, which has been adapted for this program, is outlined in \todocite{https://wickedengine.net/2017/11/07/gpu-based-particle-simulation/}.
+A notable method, which has been adapted for this program, is outlined in \cite{WickedEngineParticles}.
 This splits the simulation into three phases:
 \begin{enumerate}
     \item The kickoff phase, which determines the amount of new particles to create.

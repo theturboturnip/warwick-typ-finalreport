@@ -16,8 +16,8 @@
         % CUDA simulation output should be within $10^-10$ of the adapted CPU backend output. & See \cref{sec:Results:Sim:Accuracy} & \testfail{} \\
 
         \newtest{}\label{test:sys:run:highFPS} & \texttt{run}: Can run at high framerate & Visualization can run at >30FPS in some case & Simulating ACA input at n=100 runs at \~800FPS. & \testsuccess{} \\
-        \newtest{}\label{test:sys:run:vizSpeed} & \texttt{run}: Visualization features are faster than simulation & See \todoref{Success Measurement} & See \cref{sec:Results:Viz:Speed} & \testsuccess{} \\
-        % \newtest{}\label{test:sys:run:vizSpeed} & Try to compile on DCS systems & Should be able to compile and run the simulation on elements of the DCS system. & See \todoref{Results} & \testsuccess{} \\
+        \newtest{}\label{test:sys:run:vizSpeed} & \texttt{run}: Visualization features are faster than simulation & See \cref{sec:Testing:SuccessMeasurement} & See \cref{sec:Results:Viz:Speed} & \testsuccess{} \\
+        \newtest{}\label{test:sys:run:dcsComp} & Try to compile on DCS systems & Should be able to compile and run the simulation on elements of the DCS system. & Successfully compiled non-CUDA sim on DCS. & \testsuccess{} \\
     \end{tabular}
     \caption{System Tests (Non-Functional)}
     \label{tab:sys_tests_nonfunc}

@@ -1,4 +1,4 @@
-\ProvidesPackage{turniptodo}[2021/03/05]
+\ProvidesPackage{turniptodo}[2021/04/23]
 
 % For macro help
 \RequirePackage{etoolbox}
@@ -112,22 +112,22 @@
     
     \@maketodostream{todopending}{Future TODOs}
     \apptocmd{\todopending}{%
-        \addtostream{@todopending}{\arabic{todopendingi} - \unexpanded{#1} - \currfilepath}%
+        \addtostream{@todopending}{\arabic{todopendingi} - \currfilepath - \unexpanded{#1}}%
     }{}{}
     
     \@maketodostream{todomark}{TODOs}
     \apptocmd{\todomark}{%
-        \addtostream{@todomark}{\arabic{todomarki} - \unexpanded{#1} - \currfilepath}%
+        \addtostream{@todomark}{\arabic{todomarki} - \currfilepath - \unexpanded{#1}}%
     }{}{}
     
     \@maketodostream{todocite}{TODO Citations}
     \apptocmd{\todocite}{%
-        \addtostream{@todocite}{\arabic{todocitei} - \unexpanded{#1} - \currfilepath}%
+        \addtostream{@todocite}{\arabic{todocitei} - \currfilepath - \unexpanded{#1}}%
     }{}{}
     
     \@maketodostream{todoref}{TODO Refs}
     \apptocmd{\todoref}{%
-        \addtostream{@todoref}{\arabic{todorefi} - \unexpanded{#1} - \currfilepath}%
+        \addtostream{@todoref}{\arabic{todorefi} - \currfilepath - \unexpanded{#1}}%
     }{}{}
 \fi
 

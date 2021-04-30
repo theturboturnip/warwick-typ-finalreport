@@ -1,7 +1,16 @@
 % !TEX root =  ../FinalReport.tex
 
 \chapter{Implementation}
-\label{sec:Implementation} 
+\label{sec:Implementation}
+
+Building the program was a huge technical challenge on many levels, resulting in 8.5k lines of code spread over 146 files in three different programming languages.% involving three programming languages, % resulting in 8.5k lines of code built with three programming languages 
+Solving the more complicated problems required some interesting tricks which may have interacted with lesser-known language features, memory models, and in one case the particulars of the C++17 specification.
+The correctness of the resulting program was then ensured through the use of other features, including C++ macros and files that crossed language boundaries\footnote{See \cref{sec:Impl:Viz:CPUGPUSafety}.}.
+This chapter documents these tricks and the background needed to understand them.
+
+The first section contains an overview of relevant C++ features, and some other concepts employed while developing the program.
+The next section focuses on Code Safety, detecting any faults during compilation and then ensuring any other faults do not then manifest into problematic errors.
+As in the Design section, each layer of the codebase is then examined and all interesting problems solved during development are documented.
 
 \input{Ch48Implementation/Sub10_Prelim}
 

@@ -20,7 +20,7 @@ In \cite{10.1145/3238147.3241533} it was found that introducing these qualifiers
 The ACA solution used Intel AVX and SSE instructions\cite{IntelCorporationIntroductionExtensions} to calculate four Poisson values at once\footnote{Vectors of eight were tried but were found to be slower than four.}.
 In the Progress Report\todocite{progress report} it was asserted that CUDA cores could use SIMD on four-element floating-point vectors, and that this could be exploited similarly.
 However, this is not the case.
-The only SIMD instructions CUDA allows are for integer vectors of 2x16-bit or 4x8-bit\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
+The only SIMD instructions CUDA allows are for integer vectors of 2x16-bit or 4x8-bit\cite{NvidiaCUDASIMD}.%\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
 As the simulation operates on 32-bit signed floating point, these instructions are not suitable.
 
 % Mention parallelization with OpenMP
@@ -31,6 +31,6 @@ Calculating the simulation timestep and calculating the residual for a Poisson i
 Highly parallel GPU optimizations have already been studied extensively, so it is trivial to implement a fast generic reduction kernel.
 In \cite{CUDAParallelReduction} seven kernels are described, in ascending order of speed, and this should be used as the basis for the implementation.
 
-CUDA Graphs\todocite{https://developer.nvidia.com/blog/cuda-graphs/} are a CUDA feature that reduces CPU overhead by invoking a large amount of GPU work all at once, rather than with individual invocations.
+CUDA Graphs \cite{GrayCUDAGraph2019Blog} are a CUDA feature that reduces CPU overhead by invoking a large amount of GPU work all at once, rather than with individual invocations.
 Running a CUDA graph will always use the same arguments as when initially recorded, so any work that depends on data that changes quickly (such as a timestep) would not be suitable.
 Profiling should be used to determine when CUDA graphs are suitable, then applied only in these cases to avoid overcomplicating the program.

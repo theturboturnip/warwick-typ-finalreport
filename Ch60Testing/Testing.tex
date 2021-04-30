@@ -1,8 +1,8 @@
-\chapter{Testing \& Success Measurement}
+\chapter{Testing \& Success Measurement}\label{sec:Testing}
 In order to measure the degree of success a project achieves, testing must be performed to verify the behaviour of the program is correct.
-This covers testing the functionality of individual units of the program (unit testing\todocite{unit testing}), testing how those units interact with each other (integration testing\todocite{integration testing}), and validating the behaviour of the overall system against the functional and non-functional requirements (\todocite{system testing}).
+This covers testing the functionality of individual units of the program (unit testing), testing how those units interact with each other (integration testing), and validating the behaviour of the overall system against the functional and non-functional requirements\todocite{https://reqtest.com/testing-blog/different-levels-of-testing/}.
 This section also defines the means of Success Measurement for some non-functional requirements, which are then measured and evaluated in subsequent sections.% The codebase does not lend itself well to automatic testing, as most components have behaviour that's too difficult to automatically verify (such as automatic memory management, or the entire visualization).
-\todomark{More on explanation of Testing chapter}
+% \todomark{More on explanation of Testing chapter}
 
 \section{Unit Tests}
 The first layer of testing splits the program into `units', that are independent of each other, which are individually tested before combining them with other units in the system.
@@ -25,9 +25,7 @@ Each unit depends on the output of the previous unit, so they cannot be tested i
 This technique was used during development to ensure the CUDA simulation was consistent with the CPU version.
 
 Overall, while unit tests are not always suitable for elements of the codebase, they are helpful at a coarse level.
-The final set of unit tests are shown in \todoref{unit test matrix}.
-
-\input{Ch60Testing/figures/unit_table}
+The final set of unit tests are shown in \cref{tab:unittests}.
 
 \section{Integration Testing}
 Once the program units have been individually tested, Integration Testing tests if the units can interface with each other correctly.
@@ -39,45 +37,54 @@ the headless simulation functions as an integration test for the Memory and Simu
 The C++ type system ensures that low-level connections between CPU code use the correct types, making integration testing at this level redundant.
 Moving data between the CPU and GPU is more complicated, but the elements put in place in (\cref{sec:Impl:Viz:CPUGPUSafety}) and the Vulkan validation layers (\cref{sec:Impl:CodeSafety}) ensure that any integration errors are caught when simply running the program in Debug mode.
 
-The Integration tests are shown in \todoref{integration test matrix}.
+The Integration tests are shown in \cref{tab:integration_tests}.
 
-\input{Ch60Testing/figures/integration_table}
 
 
 \section{System Testing}
 This final layer of testing determines if the program upholds the functional and non-functional requirements set out in \cref{sec:Requirements}.
 Some functional requirements such as \cref{req:VizPauseResume} require in-depth checks of the visualization not suitable for other layers, so are tested here.
-The System Tests specified in \todoref{system tests functional} cover all such tests, and combined with the previous layers of tests prove that the system meets the functional requirements.
+The System Tests specified in \cref{tab:sys_tests_func} cover all such tests, and combined with the previous layers of tests prove that the system meets the functional requirements.
 
 Many non-functional requirements can be tested directly: \cref{reqN:Resources} is tested with external programs \texttt{valgrind} and \texttt{cuda-memcheck}, \cref{reqN:Documented,reqN:UsageGuide} are tested by simply inspecting the program and source files, \cref{reqN:DCSCompile} is tested by attempting to compile + run the program on DCS systems.
 A few require a large amount of data collection, or at least careful attention to detail.
 % The others need special care and extra specification to measure qualitatively.
 % The nonfunctional tests (\todoref{system tests nonfunctional}) handle the non-functional requirements.
 % Some of these tests are more complex and require more data to evaluate them.
-All gathered data is specified in the next subsection, and then the results are shown in \todoref{results}.
+These tests are specified in \cref{tab:sys_tests_nonfunc}.
+All gathered data is specified in the next subsection, and then the results are shown in \cref{sec:Results}.
 
+\input{Ch60Testing/figures/unit_table}
+\input{Ch60Testing/figures/integration_table}
 \input{Ch60Testing/figures/system_table}
 \input{Ch60Testing/figures/system_table_nonfunc}
 
-\subsection{Success Measurement}
+\subsection{Success Measurement}\label{sec:Testing:SuccessMeasurement}
 \cref{test:sys:sim:valgrind,test:sys:sim:cudamemcheck} test the memory usage of the system.
 The most important kind of error they can detect are memory leaks, where memory is allocated without being released, leading to the program taking up memory it does not need anymore.
 While it is important to avoid memory leaks in all cases the most important variation is continuous memory leaks, where memory is continuously leaked over and over, or large leaks of sizes larger than 100MB.
 Single small leaks are less concerning, as they should not impact the rest of the system greatly.
-The programs used to find these leaks may themselves be bad at recognizing allocation/freeing\todocite{https://tgebarowski.github.io/2008/08/21/glib-gobject-and-memory-leaks/}, and lead to false-positives.
+The programs used to find these leaks may themselves be bad at recognizing allocation/freeing\cite{ValgrindProblemsBlog}, and lead to false-positives.
 Care must be taken when evaluating their results.
+\cref{test:sys:sim:speed,test:sys:sim:accuracy} evaluate the speed and accuracy of the CUDA-based simulation backend vs. the adapted CPU backend.
+The accuracy is measured by comparing the output of equivalent simulations on the original CS257 input state.
+Other states were tested, but any newly generated states with obstacles proved to be unstable and produce Not-a-Number outputs on both backends.
+The simulation speed is tested on the original CS257 input state, then behaviour at scale is tested on custom generated states with no obstacles.
+Obstacle configuration does not affect time-per-tick, so time-per-tick will be a representative value and equal for any state of the same size.
+This would not be suitable for accuracy tests, as having no obstacles greatly reduces the complexity and would likely produce disproportionately high accuracy values.
 
-\cref{test:sys:sim:speed,test:sys:sim:accuracy} evaluate the speed and precision of the CUDA-based simulation backend vs. the adapted CPU backend.
-To account for all possible factors, results were gathered for many permutations of variables. \todomark{(shown in variable table?)}
-Two input files are used: the original ACA input file (660x120), and a custom 1024x512 image representing \SI{128}{\metre}x\SI{64}{\metre}s of physical space (see \todoref{figure of circles}).
-Larger images are less likely to fit in cache, so accentuate the impact of memory usage on the algorithm.
-Four different simulation configurations are used, which only differ in Poisson iteration count: 100 (matching the original), 200, 300, and 1000.
-Higher iteration counts ensure the Poisson stage dominates the time taken.
-Each permutation is then run for simulations of 10, 25, and 50 seconds to determine the impact of longer simulations on accuracy.
-To measure the time taken for each test five measurements are taken, the fastest and slowest times are removed, and the three remaining results are then averaged.
-The similarity between tests on different backends is measured using the \texttt{compare} tool, and the Poisson residual for each output is found with a small utility that computes the Poisson RHS (see \cref{sec:Research:SimulationTick}) then immediately determines the residual using the CPU backend.
 As there is no visual component to the simulation tests, the program is run from a terminal without running the X windowing system.
 Combined these tests should give a complete picture of how the CUDA simulation's speed and accuracy will scale, and be enough to evaluate the requirements in context.
+
+% To account for all possible factors, results were gathered for many permutations of variables. \todomark{(shown in variable table?)}
+% Two input files are used: the original ACA input file (660x120), and a custom 1024x512 image representing \SI{128}{\metre}x\SI{64}{\metre}s of physical space (see \todoref{figure of circles}).
+% Larger images are less likely to fit in cache, so accentuate the impact of memory usage on the algorithm.
+% Four different simulation configurations are used, which only differ in Poisson iteration count: 100 (matching the original), 200, 300, and 1000.
+% Higher iteration counts ensure the Poisson stage dominates the time taken.
+% Each permutation is then run for simulations of 10, 25, and 50 seconds to determine the impact of longer simulations on accuracy.
+% To measure the time taken for each test five measurements are taken, the fastest and slowest times are removed, and the three remaining results are then averaged.
+% The similarity between tests on different backends is measured using the \texttt{compare} tool, and the Poisson residual for each output is found with a small utility that computes the Poisson RHS (see \cref{sec:Research:SimulationTick}) then immediately determines the residual using the CPU backend.
+
 
 \cref{test:sys:run:vizSpeed} evaluates the speed of individual visualization features vs. the simulation.
 As the time taken to run a simulation tick can be variable based on the input, these visualization speeds are compared to the time allotted to the target 60FPS, i.e. \SI{16.6}{\milli\second}.

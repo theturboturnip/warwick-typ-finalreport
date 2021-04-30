@@ -17,7 +17,7 @@
 % See https://github.com/borisveytsman/acmart/issues/402
 % and https://github.com/borisveytsman/acmart/issues/410
 \usepackage{bera}% optional: just to have a nice mono-spaced font
-% \usepackage[libertine]{newtxmath}
+\usepackage[libertine]{newtxmath}
 % Mathematic Double-Stroke font
 \usepackage{dsfont}
 % \usepackage{newtxmath}
@@ -70,8 +70,11 @@
 
 % BibLaTeX
 \usepackage{turnipcite}
-\addbibresource{mendeley_references.bib}
-\addbibresource{typ_FinalReport.bib}
+% \addbibresource{mendeley_references.bib}
+% \addbibresource{typ_FinalReport.bib}
+\addbibresource{sorted_old_refs.bib}
+\addbibresource{sorted_new_refs.bib}
+
 
 \usepackage{markdown}
 
@@ -110,8 +113,8 @@
 \usepackage{tikz}
 \usetikzlibrary{matrix}
 
-% \usepackage{turniptodo}
-\usepackage[nofootnotes]{turniptodo}
+\usepackage{turniptodo}
+% \usepackage[nofootnotes]{turniptodo}
 
 \usepackage{wrapfig}
 
@@ -147,9 +150,10 @@ autogobble
 % \usepackage{varioref}
 \usepackage[colorlinks,%hidelinks,
             unicode,
-            pdfauthor={Samuel Stark - u1800081},
-            pdftitle={CS351 Final Report},
-            pdfsubject={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation}]{hyperref}
+            pdfauthor={Samuel Stark // 1800081},
+            pdftitle={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation},
+            pdfsubject={CS351 Final Report},
+            pdfkeywords={Fluid Simulation, CUDA, Vulkan, GPU, In-Situ, Visualization}]{hyperref}
 \hypersetup{
     colorlinks,
     linkcolor={red!50!black},
@@ -166,7 +170,8 @@ autogobble
 \usepackage[header, title]{appendix}
 \usepackage{pdfpages}
 
-\linespread{1.5}
+\linespread{1.4}
+\renewcommand*{\arraystretch}{1.2}
 
 \usepackage{pdflscape}
 \usepackage{rotating}
@@ -200,6 +205,8 @@ autogobble
 \pagebreak
 }
 
+
+
 \usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
@@ -229,8 +236,17 @@ autogobble
 \include{Ch70Conclusion/Conclusion}
 
 % Bibliography
-\todopending{Remove chapter number}
-\turnipbib{}
+\turnipbib{\todomark{Need to order these in a different order than alphabetical - thinking articles/inproceedings/presentations etc. first, then any official documentation, then other online sources.}}
+% \begingroup
+% \raggedright
+% \printbibliography[type=book,title={Books}]
+
+% \printbibliography[type=article,title={Articles}]
+
+% \printbibliography[nottype=book,nottype=article,title={Miscellaneous}]
+% \endgroup%
+
+
 
 % Appendices
 \pagebreak

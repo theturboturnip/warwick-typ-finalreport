@@ -2,9 +2,12 @@
 
 \chapter{Project Management}
 \label{sec:ProjectManagement}
-\todomark{Need to update this?}
+
+To ensure a smooth development process, all research and implementation was planned ahead of time.
+This chapter details these plans including a complete schedule, the development methodology used, the tools used, and the potential risks and associated contingencies.
+
 \section{Software Development Methodology}
-Plan-driven solutions depend on a rigid specification being completed before development\cite{modules:CS261}, which does not fit with the more abstract goals of the visualization portion.
+Plan-driven solutions depend on a rigid specification being completed before development\cite{modules:CS261}, which did not fit with the more abstract goals of the visualization portion.
 Additionally some of the main advantages of plan-driven approaches only apply when introducing new team members and handling large teams.
 Neither scenario applies here, as only one person is undertaking active development.
 
@@ -13,16 +16,18 @@ The goals for each development cycle were documented using Trello\cite{tool:Trel
 It was planned that the supervisor would be contacted every week with the current status of the project and the progress made in the current cycle.
 These contacts would either take place over e-mail if there were no pressing questions to ask, and otherwise take place on Microsoft Teams\cite{tool:MicrosoftTeams}.
 Unfortunately for the first few weeks this did not happen, as other work was vying for attention and preventing project work from taking place.
-This has been resolved in Week 5, and there is now frequent email correspondence.
+This was resolved in Week 5, and there is now frequent email correspondence.
 
 \section{Project Timeline}
 The project was split into multiple tasks to schedule it effectively.
 These tasks are scheduled on both a Gantt Chart in \cref{fig:project schedule gantt}, and as a table in \cref{tab:project schedule table}.
-The timeline has been well followed, and this schedule has been left unchanged from the Specification. 
-Note that over the Christmas break no work is scheduled, this is to allow time on the other courseworks the researcher will have due over that period.
+The timeline has been well followed, and this schedule has been left unchanged over the course of the project. 
+Over the Christmas break no work was scheduled, to allow time on the other courseworks the researcher will have due.
 
-Also note that the development of the visualization and optimization of the simulation are scheduled concurrently - this is to account for the fact that some strides in visualization may require extra optimizations to run in real-time.
-Both of these blocks end on Week 22, where development is then completely focused on the presentation.
+The development of the visualization was scheduled concurrently with optimizing the simulation, in case some strides in visualization required extra optimizations to run in real-time.
+This was not strictly the case, but some optimizations were developed in this time period to push performance further.
+A Code Freeze was set for Week 22, to focus the researcher entirely on the presentation.
+%where development is then completely focused on the presentation.
 
 \begin{figure}[ht]
     \centering
@@ -68,52 +73,57 @@ Trello\cite{tool:Trello} is used to track bugs and upcoming features in each dev
 Google Drive\cite{tool:GoogleDrive} is used to host other documents, i.e. scanned notes, that have been generated during development.
 
 \section{Risk Management}
-As the project continues, there are risks that may impede progress and even prevent the project from succeeding.
+% As the project continues, there are risks that may impede progress and even prevent the project from succeeding.
+While progressing through the project, there may be risks that may impede progress and even prevent the project from succeeding.
 Being aware of these risks allows them to be predicted ahead of time, avoided, or in the worst case mitigated once they arrive.
 Risk can be calculated with the following equation, where Severity and Likelihood are graded between 1 and 5.
 \begin{equation*}
     Risk = Severity * Likelihood
 \end{equation*}
 
-Some of these risks have been encountered, including a new risk (Other Pressures) which was not accounted for in the Specification.
-Thankfully this risk did not cause a large delay.
+Of these risks Illness and Other Pressures were encountered during development.
+In both cases they were mitigated quickly and did not cause a large delay.
+% Some of these risks were encountered, including a new risk (Other Pressures) which was not accounted for in the Specification.
+% Thankfully this risk did not cause a large delay.
 
 \subsection{Misscheduling}
-It is possible that the features outlined in \cref{sec:Requirements} are too great to be implemented in the allotted time.
+It may have been possible that the features outlined in \cref{sec:Requirements} were too great to be implemented in the allotted time.
 In that case, the quality of work may have to be reduced to meet deadlines, or the schedule may need to be changed.
-This is especially relevant to the Visualization portion of the project, which cannot be fully scheduled yet.
+This is especially relevant to the Visualization portion of the project, which was not fully planned until the research was completed.
 
 \textbf{Risk} = 2 * 2 = 4
 
 \textbf{Avoidance:}
-Previous projects should be used as a yardstick to predict how long implementing features will take, and inform the schedule.
-As new Visualization features are discussed, the impact on timing they each have should be considered.
+Previous projects would be used as a yardstick to predict how long implementing features will take, and inform the schedule.
+As new Visualization features are discussed, the impact on timing they each have would be considered.
 
 \textbf{Contingency:}
-The scope of the project could be reduced to allow the report to be completed in time.
-A ``code freeze'' will be implemented close to the presentation deadline to ensure enough time is spent polishing the presentation and report.
+The scope of the project couldhave been reduced to allow the report to be completed in time.
+A ``code freeze'' was implemented close to the presentation deadline to ensure enough time is spent polishing the presentation and report.
 
 \subsection{Other Pressures}
-While the project schedule may have been well estimated based on the work required for the project, the amount of work required for other modules may be larger than expected.
+While the project schedule may have been well estimated based on the work required for the project, the amount of work required for other modules was larger than expected.
 This manifested in Term 1, where the researcher took more modules than usual. 
 Additionally, the removal of in-person lectures due to COVID-19 led to a lack of overall structure, which made organizing the other work more difficult.
 
 \textbf{Risk} = 2 * 1 = 2
 
 \textbf{Avoidance:}
-A more balanced set of modules between Term 1 and Term 2 could have helped resolve this, however on the other side of the coin the researcher now has fewer modules in Term 2 so this is unlikely to happen again.
-Next term the researcher will try to maintain a schedule for working on other module content, which should make up for a lack of in-person lectures.
+% A more balanced set of modules between Term 1 and Term 2 could have helped resolve this, however on the other side of the coin the researcher had fewer modules in Term 2.
+% Balancing modules between Term 1 and Term 2 could have resolved this, but as Term 2 had fewer mo
+% Next term the researcher will try to maintain a schedule for working on other module content, which should make up for a lack of in-person lectures.
+This could have been avoided by better balancing the modules between Term 1 and Term 2, but on the flip-side having fewer modules in Term 2 allowed for more project work to be completed
 
 \textbf{Contingency:}
-As before, the scope of the project could be reduced to allow the report to be completed in time.
-If module work is taking more time than expected by week 20, the code freeze could be pulled forwards to week 20 or 21 to spend more time on the presentation.
+As before, the scope of the project could have been reduced to allow the report to be completed in time.
+If module work took more time than expected by week 20, the code freeze could have been pulled forwards to week 20 or 21 to spend more time on the presentation.
 
 
 \subsection{Loss of Hardware Access}
 As noted in \cref{sec:Requirements_HardwareSoftware}, a GPU is required for the project to be tested and developed.
-Currently, the main development environment used is the researcher's personal computer, which has a suitable GPU.
-However, if this computer breaks down or is stolen, there is no readily available alternate environment.
-Under normal circumstances the Department of Computer Science labs would be used instead, as they also have suitable GPUs, but the current virus situation prevents this.
+The main development environment was the researcher's personal computer, which has a suitable GPU.
+However, if this computer breaks down or is stolen, there was no readily available alternate environment.
+Under normal circumstances the Department of Computer Science labs would be used instead, as they also have suitable GPUs, but the virus situation prevented this.
 
 \textbf{Risk} = 5 * 1 = 5
 
@@ -121,8 +131,8 @@ Under normal circumstances the Department of Computer Science labs would be used
 Not possible.
 
 \textbf{Contingency:}
-Student insurance could be used to purchase a new GPU/computer if it is stolen.
-Failing this, the DCS clusters could be used, but these will likely have high contention from other students who need to use GPUs remotely.
+Student insurance could have been used to purchase a new GPU/computer if it is stolen.
+Failing this, the DCS clusters could be used, but these would likely have high contention from other students who need to use GPUs remotely.
 
 \subsection{Illness}
 It is always prudent to consider the possibility that the stakeholders may fall ill and be unable to work on the project for some time.
@@ -138,5 +148,5 @@ Not possible.
 
 \textbf{Contingency:}
 The schedule would need to be changed to account for lack of time spent working.
-Some requirements may need to be reduced or removed entirely.
+Some requirements could be reduced or removed entirely.
 

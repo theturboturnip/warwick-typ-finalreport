@@ -6,28 +6,21 @@ This chapter evaluates the project's end result against the requirements laid ou
 This is then supplemented with a justification for the few missed requirements, all of which were non-essential.
 The project management is then appraised.
 
-\section{Requirements Evaluation}\label{sec:Evaluation:FailedReq}
+\section{Requirements Evaluation}
 The Requirements in \cref{sec:Requirements} evolved as the simulation and visualization areas were researched throughout the project.
 The program was designed with these requirements in mind, and by checking if the program meets these requirements the overall success of the project can be determined.
-Each requirement has been tested by one or more of the tests defined in \cref{sec:Testing}.
-\cref{tab:req_matrix_f} and \cref{tab:req_matrix_nf} show the tests for each requirement, and the overall status of each test.
-The full description of each requirement can be found in \cref{sec:Requirements} and the descriptions of the tests can be found in \cref{sec:Testing}.
+Requirements are prioritized as either \must{}-have or \should{}-have.
+All \must{}-have requirements have been met, but three \should{}-have requirements have not (see \cref{tab:failed_req}).
+These are justified in \cref{sec:Evaluation:FailedReq}.
 
-\input{Ch65Evaluation/figures/req_matrix_f}
-\input{Ch65Evaluation/figures/req_matrix_nf}
+Functional Requirements define the actions a program must/should be able to perform, such as \cref{req:GenerateState} stating ``the system must be able to generate initial simulation states''.
+The functional requirements, the tests performed to check them, and the outcomes have been listed in \cref{tab:functional_req}.
 
-% Requirements are prioritized as either \must{}-have or \should{}-have.
-% All \must{}-have requirements have been met, but three \should{}-have requirements have not (see \cref{tab:failed_req}).
-% These are justified in \cref{sec:Evaluation:FailedReq}.
+Non-functional Requirements do not define actions, but rather define properties of those actions that must be met.
+As an example \cref{reqN:SimSpeed} states that with the same initial input, the CUDA simulation ``should run at least 2x as fast as the original coursework''.
+Similarly to functional requirements, these are laid out in \cref{tab:nonfunctional_req}.
 
-% Functional Requirements define the actions a program must/should be able to perform, such as \cref{req:GenerateState} stating ``the system must be able to generate initial simulation states''.
-% The functional requirements, the tests performed to check them, and the outcomes have been listed in \cref{tab:functional_req}.
-
-% Non-functional Requirements do not define actions, but rather define properties of those actions that must be met.
-% As an example \cref{reqN:SimSpeed} states that with the same initial input, the CUDA simulation ``should run at least 2x as fast as the original coursework''.
-% Similarly to functional requirements, these are laid out in \cref{tab:nonfunctional_req}.
-
-% \subsection{Failed Requirements}
+\subsection{Failed Requirements}\label{sec:Evaluation:FailedReq}
 \begin{table}[h]
     \centering
     \begin{tabular}{l|c|l|c}%ccl|p{0.4\linewidth}|m{0.2\linewidth}|c}
@@ -42,10 +35,10 @@ The full description of each requirement can be found in \cref{sec:Requirements}
     \label{tab:failed_req}
 \end{table}
 
-All 24 of the \must{}-have requirements have been met, as have 8 out of the 11 \should{}-have requirements.
-This is an overwhelming success, showing the core functionality of the program is as expected.
-The 3 failed \should{}-have requirements, shown in \cref{tab:failed_req}, are relatively minor.
-Furthermore, each omission can be justified.
+Of the thirty-five \must{}-have requirements, 100\% of them have been met.
+Just three \should{}-have requirements failed, and each omission can be justified.
+% The three failed requirements (\cref{tab:failed_req}) are all \should{}-haves, and each omission can be justified.
+% These requirements are all \should{}-haves, and each omission can be justified.
 
 Satisfying (\cref{req:VizSaveState}), which required saving the simulation state during a visualization, would have delayed the work on the visualization layers.
 As the visualization is a significant portion of the project, and this feature would not have had a relevant use-case during development, it was cut.
@@ -63,13 +56,8 @@ Particles would need to identify other nearby particles, which would likely requ
 The Project Management has been incredibly successful, allowing an extremely complex combined simulation and visualization to be efficiently completed on-schedule.
 The schedule itself allotted enough time for both research and implementation, and gave enough leeway that the manifested risks did not prevent success.
 Using third-party libraries for GUI management and command-line parsing allowed developer time to be spent on important problems, instead of hooking together customized implementations.
-The Code Freeze implemented in Week 22 ensured enough time was devoted to developing the presentation, which was crucial to success.
-As shown by the many successful requirements it did not make the program fall short in any way.
+The Code Freeze implemented in Week 22 ensured enough time was devoted to developing the presentation, which was crucial to it's success.
 
-% \section{Researcher's Evaluation}
-% As shown by the many successful requirements
-
-% Overall the project has met the standard for success, 
 % \todomark{No Researcher's Evaluation here, tie those questions into the conclusion}
 % \section{Researcher's Evaluation}
 % % Complementing the objective analysis, this section includes a personal
@@ -83,3 +71,6 @@ As shown by the many successful requirements it did not make the program fall sh
 
 % \\\\
 % \textbf{}
+
+\section{Researcher's Evaluation}
+Given the great success of the 

@@ -4,24 +4,26 @@ This section will explain key elements of C++17 used in the program, the build s
 
 \subsection{C++ Primer}
 Virtual classes use virtual functions to allow subclasses to override behaviour in the parent.
-The seminal example is creating a parent class \texttt{Animal} which can \texttt{talk()}, and a subclass \texttt{Dog} which overrides \texttt{talk()} to bark. \todomark{Better example/code?}
-When a virtual function is called on an object, instead of statically determining which function to call at compile-time, the \emph{vtable} of the object is read out at run-time with the correct function pointer.
+The seminal example is creating a parent class \texttt{Animal} which can \texttt{talk()}, and a subclass \texttt{Dog} which overrides \texttt{talk()} to bark.
+When a virtual function is called on an object, instead of statically determining which function to call at compile-time, the \emph{vtable} of the object is read out at run-time with the correct function pointer\cite{presentation:RuntimePolymorphism}.
+%Citation formerly \todocite{https://pabloariasal.github.io/2017/06/10/understanding-virtual-tables/}
 In Java and Python all functions are considered virtual, but in C++ virtual behaviour can be selectively enabled.
-As each virtual function call requires multiple indirections (object $\rightarrow$ vtable $\rightarrow$ function), the performance is slightly worse than using normal functions.
+As each virtual function call requires multiple indirections (object $\rightarrow$ vtable $\rightarrow$ function), the performance is slightly worse than using normal functions (see \cref{fig:virtual_inheritance}).
 Virtual functions are avoided where possible in the codebase.
-\todomark{Demo code https://godbolt.org/z/jYonzK76r}
-\todocite{https://pabloariasal.github.io/2017/06/10/understanding-virtual-tables/}
 
-C++'s largest innovation over C is the template system.
+\input{Ch48Implementation/figures/vfunc_example}
+
+C++'s greatest innovation over C is the template system.
 Classes and functions can be `templated' on types or values, and then `instantiated' when these parameters are known.
 When such a class or function is instantiated a complete copy is created with the new parameter values, which is compiled and optimized separately from any other instantiations.
 This is useful for encoding extra information in a type for safety, e.g. \mintinline{cpp}{VulkanShader<Vertex>} cannot be passed to a function expecting \mintinline{cpp}{VulkanShader<Compute>} because they're independent types.
 It's also useful for static function dispatch, as instead of taking a virtual class with a \texttt{talk()} function you can instead template a function on the type of animal it uses, and call the function directly.
 This technique is used in the Simulation to efficiently use Backends.
-\todomark{https://godbolt.org/z/zz7jvTW6E template vfunc example}
+
+\input{Ch48Implementation/figures/template_vfunc_example}
 
 \subsubsection{``Typeclasses''}
-In other languages, like Haskell, a typeclass defines some behaviour a class should fit. From \todocite{Learn you a haskell}: ``If a type is a part of a typeclass, that means that it supports and implements the behavior the typeclass describes''.
+In other languages, like Haskell, a typeclass defines some behaviour a class should fit. From \cite{learnyouahaskell}: ``If a type is a part of a typeclass, that means that it supports and implements the behavior the typeclass describes''.
 C++17 does not have a convenient way of denoting this but it is especially helpful when building generic code with templates, as it allows the generic code to make assumptions about what behaviour types will support.
 The rest of this chapter will define typeclasses where convenient to describe behaviour shared by certain classes.
 

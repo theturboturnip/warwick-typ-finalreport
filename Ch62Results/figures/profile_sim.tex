@@ -1,0 +1,22 @@
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \node[inner sep=0pt] (profile) at (0,0)
+    {\includegraphics[width=1.0\linewidth]{Ch62Results/figures/temp_sim_profile.png}};
+    
+    \draw[line width=0.5mm] (-3.7, -0.1) -- ++(0, 2);% node[anchor=north east,align=right,fill=white] {GPU Reductions};
+    \draw[line width=0.5mm] (-2.8, -0.1) -- ++(0,2);
+    % \draw[line width=0.1mm] (-3.7, 1) -- (-2.8, 1);
+
+    \draw[line width=0.5mm] (0.2, -0.1) -- ++(0, 2);
+    \draw[line width=0.5mm] (0.9, -0.1) -- ++(0,2);
+    
+    % \draw[line width=0.1mm] (0.2, 1) -- (0.9, 1);
+    
+    \node[fill=white] at (-3.25, 1.9) {\SI{10}{\micro\second}};
+    \node[fill=white] at (0.5, 1.9) {\SI{10}{\micro\second}};
+
+    \end{tikzpicture}    
+    \caption{Simulation Profile, highlighting the GPU bubbles}
+    \label{fig:results:sim_profile_bubble}
+\end{figure}

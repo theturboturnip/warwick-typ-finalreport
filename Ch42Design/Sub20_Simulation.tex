@@ -37,7 +37,7 @@ Reduction kernels treat the 2D grid as a flat 1D array, because there is no need
 The CUDA backend must execute both with Vulkan (when visualized) and without Vulkan (when headless).
 This affects the type of memory used in the simulation.
 When visualized, crucial data such as velocity and pressure are stored in shared Vulkan-CUDA memory, to allow direct usage from both APIs without copying the data.
-In all other cases CUDA Unified Memory is used\todocite{UnifiedMemory}, which can be paged between the CPU and GPU on-demand without manually mapping it across.
+In all other cases CUDA Unified Memory is used, which can be paged between the CPU and GPU on-demand without manually mapping it across\cite{Harris2017UnifiedBlog}.
 This allowed for granular debugging during development, as GPU kernels could be easily swapped out for known-correct CPU implementations without having to move memory manually.
 
 % \todomark{CUDA Unified memory allows for granular debugging by combining known-correct CPU implementations with GPU kernels} 
@@ -50,5 +50,5 @@ Each simulation tick is assigned to a specific frame chosen by the Runner, and o
 The index of the last-written frame is tracked, and is used as the input for the next simulation tick.
 During a simulation of frame \#N, the contents of the other frames is constant and can be read out without any race conditions.
 
-\subsection{Design Optimizations}
-The residual check after every Poisson phase is still removed, although it was planned to be 
+% \subsection{Design Optimizations}
+% The residual check after every Poisson phase is still removed, although it was planned to be 
