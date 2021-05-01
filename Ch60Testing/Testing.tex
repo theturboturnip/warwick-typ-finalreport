@@ -1,6 +1,6 @@
 \chapter{Testing \& Success Measurement}\label{sec:Testing}
 In order to measure the degree of success a project achieves, testing must be performed to verify the behaviour of the program is correct.
-This covers testing the functionality of individual units of the program (unit testing), testing how those units interact with each other (integration testing), and validating the behaviour of the overall system against the functional and non-functional requirements\todocite{https://reqtest.com/testing-blog/different-levels-of-testing/}.
+This covers testing the functionality of individual units of the program (unit testing), testing how those units interact with each other (integration testing), and validating the behaviour of the overall system against the functional and non-functional requirements\cite{LevelsOfTesting}.
 This section also defines the means of Success Measurement for some non-functional requirements, which are then measured and evaluated in subsequent sections.% The codebase does not lend itself well to automatic testing, as most components have behaviour that's too difficult to automatically verify (such as automatic memory management, or the entire visualization).
 % \todomark{More on explanation of Testing chapter}
 
@@ -88,7 +88,7 @@ Combined these tests should give a complete picture of how the CUDA simulation's
 
 \cref{test:sys:run:vizSpeed} evaluates the speed of individual visualization features vs. the simulation.
 As the time taken to run a simulation tick can be variable based on the input, these visualization speeds are compared to the time allotted to the target 60FPS, i.e. \SI{16.6}{\milli\second}.
-These visualization times are measured using the frame-time counter in the GUI (\todoref{example of GUI?}), which measures the average time taken to present the last 32 frames.
+These visualization times are measured using the frame-time counter in the GUI (\cref{fig:viz_gui}), which measures the average time taken to present the last 32 frames.
 First, the time taken to render a frame with no visualization features is taken.
 Each feature is then individually enabled, brought to the worst-case scenario (using auto-range where applicable, and rendering the maximum amount of instances where applicable), then the average frame-time is taken.
 To ensure the results are not affected by external sources, the program is run in unlocked framerate mode with no other programs running on the system.

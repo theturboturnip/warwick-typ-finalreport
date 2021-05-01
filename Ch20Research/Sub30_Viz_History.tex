@@ -12,10 +12,10 @@ Decoupling the simulation speed from the visualization speed allowed for high fr
 This qualifies as a loosely-coupled in-situ visualization, because simulation data is streamed to a separate visualization system while the simulation completes.
 
 % Introduce current industrial tools (autodesk CFD, VTK)
-A significant open-source toolkit is VTK\todocite{vtk.org}, first introduced in 1993\cite{VTKBook}, which powers multiple tools such as ParaView\todocite{paraview.org} and VisIt\todocite{wci.llnl.gov}.
+A significant open-source toolkit is VTK\cite{VTKWebpage}, first introduced in 1993\cite{VTKBook}, which powers multiple tools such as ParaView\cite{ParaViewWebpage} and VisIt\cite{VisItWebpage}.
 Both of these programs support tightly-coupled in-situ visualization of an external simulation with plugins, but the VTK base is not well suited to in-situ integration\cite{kress2017situ}.
 
-Autodesk CFD\todocite{https://www.autodesk.com/products/cfd/overview} is a closed-source tool which integrates its own simulation and visualization together.
+Autodesk CFD\cite{AutodeskCFDWebpage} is a closed-source tool which integrates its own simulation and visualization together.
 It's based on ALGOR FEA, created by ALGOR Inc which was acquired by Autodesk in 2008 \cite{AutodeskAcquiresALGOR}.
 The latest iteration is targeted at the manufacturing industry, unlike VTK which is a generic toolkit, and does not support in-situ visualization.
 

@@ -178,6 +178,22 @@ autogobble
     \pgfpathlineto{\pgfqpoint{.2pt}{3.2pt}}
     \pgfusepath{stroke}}
 
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\pgfplotsset{
+    ymajorgrids=true,
+    xmajorgrids=true,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!10},
+    major grid style={line width=.2pt, draw=gray!50},
+    minor tick num=5,
+    ticklabel style = {font=\footnotesize},
+    axis x line*=bottom,
+    axis x line=bottom,
+    axis y line=left,
+}
+
+\usetikzlibrary{calc}
 %%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT STARTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newenvironment{figurepage}{

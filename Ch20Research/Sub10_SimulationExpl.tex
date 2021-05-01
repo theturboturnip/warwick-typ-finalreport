@@ -94,7 +94,7 @@ Each simulation tick simulates a discrete amount of time known as a timestep \de
 This timestep is not a fixed value, and typically one would want to select as large a timestep as possible.
 However, there are constraints on it's maximum value which depend on the simulation state.
 
-As the derivatives are calculated between adjacent grid points, it is impossible to accurately simulate a timestep where fluid moves between non-adjacent grid cells \todoref{Figure?}.
+As the derivatives are calculated between adjacent grid points, it is impossible to accurately simulate a timestep where fluid moves between non-adjacent grid cells.
 %[Peyret&Taylor,1983]or[Roache,1976].Anadaptivestepsizecontrolbasedonthesestabilityconditionsis usedin[Tome&McKee,1994].
 % The simulation cannot accurately solve a timestep in which particles move completely over a cell (see Figure \todocite{}).
 To prevent this the timestep \deltaT{} is calculated from the fluid velocities to make it impossible.

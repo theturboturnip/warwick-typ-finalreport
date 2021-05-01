@@ -31,31 +31,31 @@ This proves that ticks-per-second can be used to accurately compare CUDA/CPU per
 
 The ticks-per-second for CPU and CUDA are shown in \cref{fig:results:ticks_per_second_bar_aca}, varying $\npoisson \in {100, 200, 300, 1000}$.
 As expected the ticks-per-second decreases as more iterations are added, and CUDA is consistently faster than the CPU.
-When normalized relative to the CPU speed (\cref{fig:results:ticks_per_second_bar_rel_cpu_aca}), CUDA is shown to consistently have \~2.6x the ticks-per-second of the CPU, i.e. CUDA is consistently 2.6x faster than the CPU. 
+When normalized relative to the CPU speed (\cref{fig:results:ticks_per_second_bar_rel_cpu_aca}), CUDA is shown to consistently have \textasciitilde{}2.6x the ticks-per-second of the CPU, i.e. CUDA is consistently 2.6x faster than the CPU. 
 The Poisson stage is likely less sped up than the others, as the speedup for $\npoisson{} = 1000$ (where the Poisson stage dominates) is less than that for lower $\npoisson{}$ values.
 
 \subsubsection{Scaling}
 To determine how the implementations scale with grid resolution, a simple simulation with no obstacle squares was performed for resolutions between 260~x~130 and 4096~x~2048.
-As the amount of work per simulation tick varies with grid size, each tick is multiplied by the number of grid cells and number of Poisson iterations to determine the number of operations (\si{op}s) executed, and  mega-operations-per-second (\si{\mega\op\per\second}) is used to measure performance.
+As the amount of work per simulation tick varies with grid size, each tick is multiplied by the number of grid cells and number of Poisson iterations to determine the number of operations (\si{op}s) executed, and  giga-operations-per-second (\si{\giga\op\per\second}) is used to measure performance.
 The increasing size is measured in the total amount of memory (in \si{\mega\byte}) required for a full Poisson red/black iteration, equal to three full size matrices: the pressure matrix, the $\beta$ matrix, and the $rhs$ matrix.
-\cref{fig:results:throughput_over_size} shows \si{\mega\op\per\second} for CUDA and CPU against the memory required in \si{\mega\byte}.
+\cref{fig:results:throughput_over_size} shows \si{\giga\op\per\second} for CUDA and CPU against the memory required in \si{\mega\byte}.
 
 \input{Ch62Results/figures/poisson_throughput_vs_size}
 
 Initially, the biggest surprise in \cref{fig:results:throughput_over_size} was the CPU performing better than CUDA between 4-\SI{16}{\mega\byte}.
 Other interesting points were the linear increase in CUDA throughput between 0.4-\SI{1.2}{\mega\byte}, and the performance plateau from \SI{4}{\mega\byte} onwards (CUDA) and \SI{32}{\mega\byte} onwards (CPU).
-These are due to multiple factors, and are best explained by separating the CUDA graph into stages.
+These are due to multiple factors, and are best explained by separating the CUDA graph into stages (\cref{fig:results:throughput_over_size_stages}.
 \todomark{Create a separate graph with each stage separated out?}
 % (\todoref{figure with subfigures for each separate state}).
 
 % \todoref{Throughput/Poisson - Inital climb state} shows \si{\mega\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
-The first stage shows \si{\mega\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
+The first stage shows \si{\giga\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
 This is due to the GPU's parallelization not being fully utilized.
 This data was measured on a GTX 1080 which has 2560 CUDA cores separated into 20 Streaming Multiprocessors of 128 cores each\cite{nvidia1080Whitepaper}.
-Each Multiprocessor can execute 2048~threads at once \todocite{https://docs.nvidia.com/cuda/cuda-occupancy-calculator/index.html}\todomark{(find better citation?)}, thus the GPU can execute at most 40,960~threads in parallel.
+Each Multiprocessor can execute 2048~threads at once\cite{NvidiaCudaOccupancyCalc}, thus the GPU can execute at most 40,960~threads in parallel.
 The first datapoint uses a 260~x~130 grid with only 33,800~cells, thus 16,900 threads per Poisson color stage\footnote{The red and black stages only write to the 1/2 of the grid corresponding to their color.}, so the GPU isn't saturated and isn't producing as many outputs as possible per second.
 This is also the case for the second datapoint, with 36,100 threads per color stage.
-Beyond this point, the GPU is saturated and the throughput plateaus.
+Beyond this point, the GPU is saturated and the throughput plateaus at 2.6x the CPU value.
 
 \begin{table}[]
     \centering
@@ -76,7 +76,7 @@ Beyond this point, the GPU is saturated and the throughput plateaus.
         2360x1180 & 31.87 & 2,784,800 & 1,392,400 \\
         4096x2048 & 96.00 & 8,388,608 & 4,194,304 \\
     \end{tabular}
-    \caption{Throughput Mesaurement Points}
+    \caption{Throughput Measurement Points}
     \label{tab:results:speeddata}
 \end{table}
 
@@ -84,8 +84,10 @@ Beyond this point, the GPU is saturated and the throughput plateaus.
 % The decrease in \todoref{Throughput/Poisson - falling due to cache} begins after \SI{2}{\mega\byte}, which is the size of the GTX ~1080 L2 cache\cite{nvidia1080Whitepaper}.
 The throughput decreases after \SI{2}{\mega\byte}, which is the size of the GTX~1080 L2 cache\cite{nvidia1080Whitepaper}.
 As the size increases beyond this point the chances of a memory read being present in the cache decreases, so requests to main memory are made more frequently.
-Main memory is much slower than L2 cache so the throughput decreases until the data is 2x the cache size (\SI{4}{\mega\byte}), at which point all accesses are to main memory and the throughput plateaus at \SI{10,000}{\mega\op\per\second}.
+Main memory is much slower than L2 cache so the throughput decreases until the data is 2x the cache size (\SI{4}{\mega\byte}), at which point all accesses are to main memory and the throughput plateaus at \SI{10}{\giga\op\per\second}.
 This behaviour can also be seen with the CPU, an AMD Ryzen 7 1800X with \SI{16}{\mega\byte} of L3 cache, which peaks at \SI{16}{\mega\byte} then drops at \SI{32}{\mega\byte} onwards.
+Initially when the GPU performance drops it falls below the CPU performance, but once the CPU performance falls the GPU ends up being ~6x faster.
+
 Caching is vital to performance, and this program is no exception.
 Adapting the implementation to better utilize cache is crucial to improving simulation speed at scale, and would be excellent to investigate this as future work.
 

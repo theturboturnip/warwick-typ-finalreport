@@ -25,7 +25,7 @@ The full in-situ visualization is large program, at over 8.5 thousand lines of c
 It also brings novelty as an accurate simulation/visualization that runs in real-time, rather than rendering a visualization to disk for later viewing or rendering a static simulation state.
 % By using approaches from the games industry for efficient visualization, the visualization 
 It uses the high-performance Vulkan rendering API, which other toolkits have been slow to adopt\footnote{VTK has a Vulkan branch at \url{https://gitlab.kitware.com/ken-martin/vtk/-/tree/vulkan/Rendering/Vulkan}, which hasn't been updated since August 2020.}.
-Along with the up-and-coming Datoviz library\footnote{\url{https://github.com/datoviz/datoviz}}, it is a step forwards to bring Vulkan-level performance to the wider visualization community.
+Along with the up-and-coming Datoviz library\cite{Datoviz}, it is a step forwards to bring Vulkan-level performance to the wider visualization community.
 
 Porting the simulation to CUDA is not a new work, but it was still a significant undertaking for the researcher and required extra thought to adapt to a tightly-coupled visualization.
 Gathering results at different scales demonstrated the upper limit of GPU throughput, and empirically showed the importance of cache-friendliness in GPU algorithms.
@@ -34,8 +34,8 @@ It is certainly a good starting point for future work in this space.
 \section{Reflection}
 While the project as a whole was successful, there are elements that could have been better executed.
 Third-party libraries were used in places, most notably for the GUI, but were not used in the low-level memory management or other Vulkan code.
-For Vulkan specifically, using the Vulkan Memory Allocator library \todocite{\url{https://gpuopen.com/vulkan-memory-allocator/}} would have allowed for easier memory allocation.
-Other Vulkan wrappers and tools, such as the codebase developed by Sascha Willems for their Vulkan samples\todocite{https://github.com/SaschaWillems/Vulkan}, may have made certain actions less cumbersome.
+For Vulkan specifically, using the Vulkan Memory Allocator library\cite{GPUOpenVMA} would have allowed for easier memory allocation.
+Other Vulkan wrappers and tools, such as the codebase developed by Sascha Willems for their Vulkan samples\cite{SaschaWillemsVulkan}, may have made certain actions less cumbersome.
 
 A common pattern encountered when implementing new code was to design for a larger system than necessary.
 For example when implementing the worker thread, a generic worker thread setup was created in case another worker thread was needed later.

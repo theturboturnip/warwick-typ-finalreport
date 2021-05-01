@@ -1,6 +1,71 @@
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\linewidth]{Ch62Results/figures/temp_throughput_over_size.pdf}
+%     \caption{Simulation Throughput for CPU and CUDA as required data size increases.}
+%     \label{fig:results:throughput_over_size}
+% \end{figure}
+
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{Ch62Results/figures/temp_throughput_over_size.pdf}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Throughput vs. Poisson Data Size (N = 1000)},
+        ylabel={Throughput (\si{\giga\op\per\second})},
+        xlabel={Poisson Data Size (\si{\mega\byte})},
+        ymin=0, ymax=20000,
+        xmin=0.2, xmax=128,
+        xmode=log,
+        xtick={0.4,0.8,1.2,1.6,2.0,4.0,8.0,16.0,32.0,64.0,128.0},
+        scaled y ticks=base 10:-3,
+        ytick scale label code/.code={},
+        log basis x={2},
+        log ticks with fixed point,
+        width=\linewidth,
+        height=15em,
+        axis x line=bottom,
+        axis y line=left,
+    ]
+    \addplot table [x=cache, y=cuda, col sep=space, ignore chars={\,}] {Ch62Results/figures/data/throughput_cache.csv};
+    \addlegendentry{CUDA};
+    \addplot table [x=cache, y=cpu, col sep=space, ignore chars={\,}] {Ch62Results/figures/data/throughput_cache.csv};
+    \addlegendentry{CPU};
+    \end{axis}
+    \end{tikzpicture}
     \caption{Simulation Throughput for CPU and CUDA as required data size increases.}
     \label{fig:results:throughput_over_size}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Throughput vs. Poisson Data Size (N = 1000)},
+        ylabel={Throughput (\si{\giga\op\per\second})},
+        xlabel={Poisson Data Size (\si{\mega\byte})},
+        ymin=0, ymax=20000,
+        xmin=0.35, xmax=128,
+        xmode=log,
+        xtick={0.4,0.8,1.2,1.6,2.0,4.0,8.0,16.0,32.0,64.0,128.0},
+        scaled y ticks=base 10:-3,
+        ytick scale label code/.code={},
+        log basis x={2},
+        log ticks with fixed point,
+        width=\linewidth,
+        height=15em,
+        axis x line=bottom,
+        axis y line=left,
+    ]
+    \addplot table [x=cache, y=cuda, col sep=space, ignore chars={\,}] {Ch62Results/figures/data/throughput_cache.csv};
+    \addlegendentry{CUDA};
+    
+    \fill [opacity=0.5,blue] (axis cs:0.35,0) -- (axis cs:0.35,20000) -- (axis cs:2,20000) -- (axis cs:2,0);
+    \fill [opacity=0.5,red] (axis cs:2,0) -- (axis cs:2,20000) -- (axis cs:4,20000) -- (axis cs:4,0);
+    \fill [opacity=0.5,green] (axis cs:4,0) -- (axis cs:4,20000) -- (axis cs:128,20000) -- (axis cs:128,0);
+    
+    \node at (axis cs:1,1) [anchor=north east] {test};
+    
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Simulation Throughput for CUDA, split into stages.}
+    \label{fig:results:throughput_over_size_stages}
 \end{figure}
