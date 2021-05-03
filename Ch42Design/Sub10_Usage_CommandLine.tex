@@ -2,12 +2,12 @@
 The compiled binary uses a command-line interface to configure and run one of many subcommands available.
 These subcommands are:\label{sec:DesignSubcommands}
 \begin{itemize}
-    \item \texttt{makeinput}, which generates simulation input files, fulfilling \cref{req:GenerateState}.
-    \item \texttt{fixedtime}, which runs a headless simulation for a fixed time, fulfilling \cref{req:HeadlessSim}.
-    \item \texttt{compare}, which compares two simulation states for equality (see \cref{sec:Comparisons}), fulfilling \cref{req:Compare}.
-    \item \texttt{renderppm}, which visualizes a static simulation state using the techniques from \cref{sec:Research:Viz:ACA}.
-    % \item \texttt{convert2newbinary}, for converting ACA simulation state files to a potential new format (see \cref{sec:FileFormat}). Currently a no-op.
-    \item \texttt{run}, which starts a real-time visualized simulation, fulfilling \cref{req:VizSim}.
+    \item \shell{makeinput}, which generates simulation input files, fulfilling \cref{req:GenerateState}.
+    \item \shell{fixedtime}, which runs a headless simulation for a fixed time, fulfilling \cref{req:HeadlessSim}.
+    \item \shell{compare}, which compares two simulation states for equality (see \cref{sec:Comparisons}), fulfilling \cref{req:Compare}.
+    \item \shell{renderppm}, which visualizes a static simulation state using the techniques from \cref{sec:Research:Viz:ACA}.
+    % \item \shell{convert2newbinary}, for converting ACA simulation state files to a potential new format (see \cref{sec:FileFormat}). Currently a no-op.
+    \item \shell{run}, which starts a real-time visualized simulation, fulfilling \cref{req:VizSim}.
 \end{itemize}
 Splitting the program into subcommands was inspired by Git\cite{tool:Git}, and avoids creating separate binaries for each operation.
 Each subcommand can be configured with command-line options conforming to POSIX standard\cite{IEEE2018UtilityConventions}.
@@ -15,7 +15,7 @@ Examples of using the program are in \cref{fig:BashExampleUsage}.
 \input{Ch42Design/figures/usage_example}
 
 \subsection{Generating Inputs}
-The \texttt{makeinput} subcommand allows input simulation states to be generated from image files.
+The \shell{makeinput} subcommand allows input simulation states to be generated from image files.
 Each pixel of the input image represents a cell of the grid, including padding cells\footnote{This can allow the padding cells to be fluids rather than boundaries, which is incorrect. In the future this will be changed to add padding cells once the image is parsed.}, where non-black pixels are denoted as boundary cells and are fluid cells otherwise.
 The example in \cref{fig:ExampleMakeinput} shows an example file which creates a rectangular obstacle, and the visualization of the generated state.
 \input{Ch42Design/figures/example_makeinput}

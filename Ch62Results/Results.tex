@@ -15,7 +15,9 @@ These results are then used in the Evaluation (\cref{sec:Evaluation}).
 
 \pagebreak
 \section{Simulation}
-\todomark{Not sure what to put here}
+This section investigates four properties of the headless simulation: speed, accuracy, GPU utilization, and memory leaks.
+Some of these properties affect the Visualization, as the visualization runs a simulation internally.
+This is discussed in \cref{sec:Results:Viz}.
 
 \subsection{Speed}\label{sec:Results:Sim:Speed}
 
@@ -45,8 +47,6 @@ The increasing size is measured in the total amount of memory (in \si{\mega\byte
 Initially, the biggest surprise in \cref{fig:results:throughput_over_size} was the CPU performing better than CUDA between 4-\SI{16}{\mega\byte}.
 Other interesting points were the linear increase in CUDA throughput between 0.4-\SI{1.2}{\mega\byte}, and the performance plateau from \SI{4}{\mega\byte} onwards (CUDA) and \SI{32}{\mega\byte} onwards (CPU).
 These are due to multiple factors, and are best explained by separating the CUDA graph into stages (\cref{fig:results:throughput_over_size_stages}.
-\todomark{Create a separate graph with each stage separated out?}
-% (\todoref{figure with subfigures for each separate state}).
 
 % \todoref{Throughput/Poisson - Inital climb state} shows \si{\mega\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
 The first stage shows \si{\giga\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
@@ -122,7 +122,7 @@ The pressure is only used internally as a relative value, so theoretically this 
 \cite{book:griebel1998numerical} mentioned that ``nonphysical pressure values'' may be the result of noncontinuous starting velocities, and mentioned a method for resolving this (see \cref{ext:PressureValues}). This may prevent the inflation, but it doesn't explain the deviation between the CPU and CUDA.
 
 The CUDA and CPU compilers are configured to handle floating-point numbers slightly differently.
-\texttt{nvcc} compiles with the \texttt{--fmad} option turned on by default\cite{NvccFmad} which ``enables the contraction of floating-point multiplies and adds/subtracts into floating-point multiply-add operations''.
+\shell{nvcc} compiles with the \shell{--fmad} option turned on by default\cite{NvccFmad} which ``enables the contraction of floating-point multiplies and adds/subtracts into floating-point multiply-add operations''.
 This optimization performs a multiply and an addition at the same time, without a rounding step in between, resulting in a slightly more accurate result\cite{NvidiaFMAJustification}.
 It is disabled for the CPU compiler, to keep the results from the other CPU backends consistent with the original simulation.
 While the change is subtle it's present in all CUDA kernels and when applied thousands of times may have a significant effect, leading to the deviation.
@@ -141,14 +141,20 @@ Computing the timestep entirely on the GPU, instead of sending data back and for
 \subsection{Memory Leaks}\label{sec:Results:Sim:Mem}
 The program is designed to allocate all memory up-front, instead of allocating during a simulation.
 This makes memory leaks unlikely, but not impossible.
-\texttt{valgrind} was used to test if the program leaked any memory using the CPU backend.
-Support for CUDA-based memory in \texttt{valgrind} seemed to be lacking, so it was run with suppressions enabled that hid CUDA-related false positives.
+\shell{valgrind} was used to test if the program leaked any memory using the CPU backend.
+Support for CUDA-based memory in \shell{valgrind} seemed to be lacking, so it was run with suppressions enabled that hid CUDA-related false positives.
 % \todocite{\url{https://forums.developer.nvidia.com/t/valgrind-3-4-suppressions-a-little-howto/7504}}
 It did not find any leaks in the project code, but did find a potential memory leak in the OpenMP implementation\footnote{This may also be a false-positive similar to those from CUDA.}.
-\texttt{cuda-memcheck} was then used to find any leaked CUDA memory, and found no potential leaks.
+\shell{cuda-memcheck} was then used to find any leaked CUDA memory, and found no potential leaks.
 % \todomark{examples of results from both programs (check memory\_usage.tex)}
 
-\section{Visualization}
+\pagebreak
+\section{Visualization}\label{sec:Results:Viz}
+This section investigates three properties of the real-time visualization: speed, GPU utilization, and memory leaks.
+While these properties do overlap with the simulation, this section focuses only on the properties of the visualization itself.
+% Some of these properties affect the Visualization, as the Visualization runs the same code internally.
+% This is discussed in \cref{sec:Results:Viz}.
+
 \subsection{Speed}\label{sec:Results:Viz:Speed}
 The speed of each individual feature was measured by enabling just that feature, moving to the worst-case for that feature such as enabling auto-range and maximizing onscreeen instances (\cref{tab:results:vizworstcases}), and then reading off the time-to-render from the GUI.
 The rendered simulation state was the 660~x~120 original simulation input, which is rendered internally at 2x resolution in both directions i.e. 1320~x~240 then composited with the GUI onto a 1600~x~900 window.
@@ -181,12 +187,12 @@ In both cases there was no other GPU work executing for this program, or any oth
 
 \subsection{Memory Leaks}\label{sec:Results:Viz:Memory}
 Testing the visualization for memory leaks proved more difficult than for the simulation.
-Running \texttt{valgrind} with suppressions enabled found no errors in this program, but found many potential errors (or more likely false-positives) in the SDL2 windowing library and the underlying X windowing system.
-\texttt{cuda-memcheck} produced a host of ``Invalid read'' errors, which seemed to originate from CUDA/Vulkan shared memory.
+Running \shell{valgrind} with suppressions enabled found no errors in this program, but found many potential errors (or more likely false-positives) in the SDL2 windowing library and the underlying X windowing system.
+\shell{cuda-memcheck} produced a host of ``Invalid read'' errors, which seemed to originate from CUDA/Vulkan shared memory.
 The documentation stated it could not handle DirectX interoperability\cite{NvidiaCudaMemcheckIssues}, but said nothing about Vulkan.
-It suggested using the \texttt{compute-sanitizer} tool in other situations, which explicitly does not support Vulkan interoperability\cite{NvidiaComputeSanitizerRelease} and produced exactly the same errors.
+It suggested using the \shell{compute-sanitizer} tool in other situations, which explicitly does not support Vulkan interoperability\cite{NvidiaComputeSanitizerRelease} and produced exactly the same errors.
 Given that the errors were identical, it is very likely that both programs do not support Vulkan and should not be trusted.
 
 As a last resort, the Memory Usage statistic from the Nvidia NSight Systems profiler was consulted.
 This showed that the CUDA memory usage stayed constant, but had no option to show memory allocated in Vulkan.
-As the Vulkan memory is all explicitly allocated at the start with smart resource manager classes it is incredibly unlikely that any Vulkan memory is leaked, but currently there are no tools able to verify this.
+Vulkan memory should all be explicitly allocated at the start with smart resource manager classes, so it is incredibly unlikely that any Vulkan memory is leaked, but currently there are no tools able to verify this.

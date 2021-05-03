@@ -17,9 +17,9 @@ Additionally the binary format is much smaller than any text-based format, which
 The header consists of a pair of unsigned 32-bit integers specifying the resolution of the simulation, and a pair of 32-bit floating point numbers specifying the physical dimensions of the simulation.
 From there, four sets of data for each column are stored, including the boundary padding squares:
 \begin{enumerate}
-    \item Horizontal Velocity $u$ (\texttt{float32})
-    \item Vertical Velocity $v$ (\texttt{float32})
-    \item Pressure $p$ (\texttt{float32})
-    \item Cell Flags, defining which adjacent squares are boundaries (\texttt{uint8})
+    \item Horizontal Velocity $u$ (\code{float32})
+    \item Vertical Velocity $v$ (\code{float32})
+    \item Pressure $p$ (\code{float32})
+    \item Cell Flags, defining which adjacent squares are boundaries (\code{uint8})
 \end{enumerate}
 This structure is somewhat unintuitive and error-prone, an example being the Cell Flags which may end up being inconsistent between adjacent cells, but for the sake of compatibility with the original simulation it has been kept.

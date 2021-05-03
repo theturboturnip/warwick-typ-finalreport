@@ -24,11 +24,11 @@ Each element broadly represents a C++ class, and depends on the classes defined 
 
 The Command-Line layer has a Command-Line Parser, which converts the passed-in argument strings to usable representations, and a set of sub-apps.
 Each sub-app implements one of the subcommands shown in \cref{sec:DesignSubcommands}.
-The figure shows all classes relevant to the \texttt{run} subcommand, which shows a visualized simulation.
+The figure shows all classes relevant to the \shell{run} subcommand, which shows a visualized simulation.
 
 The Visualization layer contains a high-level VulkanSimApp class, which initiates all visualization-related code.
 Beneath that the Worker Thread handles most Vulkan API calls, and depends on multiple sets of data built with Vulkan helper classes.
-This layer uses classes from the Simulation layer, which are reused for the \texttt{fixedtime} subcommand to avoid code duplication.
+This layer uses classes from the Simulation layer, which are reused for the \shell{fixedtime} subcommand to avoid code duplication.
 
 The Simulation layer consists of two main elements: the Runners, and the Backends.
 The Runners use different strategies for invoking a Backend - the FixedTimeRunner runs the simulation flat out until a specific time is reached and outputs the final state, and the VulkanTickedRunner runs the simulation for a small time period while synchronising with other Vulkan elements.
@@ -42,7 +42,7 @@ These buffers are represented with Sim2DArray and SimRedBlackArray instances.
 The SimRedBlackArray splits a given grid size into two halves, one storing entirely red elements and one storing entirely black elements, and can be configured to store an additional full matrix (helpful for e.g. pressure, where both representations are useful.)
 
 All elements of the Memory layer are parameterized on the type of memory.
-This can be CPU memory allocated with \texttt{malloc} and \texttt{free}, CUDA Unified Memory (see \cref{sec:Design:Simulation}), or Vulkan on-device memory. 
+This can be CPU memory allocated with \code{malloc} and \code{free}, CUDA Unified Memory (see \cref{sec:Design:Simulation}), or Vulkan on-device memory. 
 The memory type affects not just the allocation method, but also the properties it has e.g. CPU memory cannot be accessed from the GPU.
 Using parameterized array classes allows these differences to be expressed while keeping a consistent interface.
 

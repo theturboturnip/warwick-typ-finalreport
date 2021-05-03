@@ -4,7 +4,7 @@
 % \subsection{Backends}
 To allow easy comparisons between CPU and GPU simulations the program contains multiple simulation backends.
 %which can be requested when running a headless simulation\footnote{The realtime visualization currently only supports the CUDA-based backend, violating \cref{req:GPUCapable}.}.
-The headless and visualized simulations use a \texttt{--backend} command line option to allow the user to choose the backend from this selection:\label{sec:DesignBackends}
+The headless and visualized simulations use a \shell{--backend} command line option to allow the user to choose the backend from this selection:\label{sec:DesignBackends}
 \begin{itemize}
     \item Null, a backend which does no simulation for testing purposes.
     \item CPU Simple, equivalent to the pre-optimization CPU simulation.

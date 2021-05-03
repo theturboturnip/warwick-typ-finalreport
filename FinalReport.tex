@@ -142,7 +142,7 @@ autogobble
 \usepackage{tikz}
 \usetikzlibrary{matrix}
 
-\usepackage{turniptodo}
+\usepackage[release]{turniptodo}
 % \usepackage[nofootnotes]{turniptodo}
 
 \usepackage{wrapfig}
@@ -209,13 +209,16 @@ autogobble
 
 \usepackage{listings}
 \lstset{
-    basicstyle=\color{red}\itshape
+    basicstyle=\color{gray!20!black}\ttfamily\itshape
 }
 \lstdefinestyle{inline}{
     columns=fullflexible,
     breaklines=false
 }
+% \code{} = Any code-like text that should be formatted in teletype
 \newcommand{\code}[1]{\lstinline[style=inline]!#1!}
+% \shell{} = Any other computer-like text such as file extensions, bash subcommands etc. that are not themselves code but should still be formatted similarly.
+\newcommand{\shell}[1]{\lstinline[style=inline]!#1!}
 
 
 \usepackage{pifont}% http://ctan.org/pkg/pifont

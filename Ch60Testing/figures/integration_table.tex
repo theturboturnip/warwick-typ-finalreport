@@ -1,5 +1,5 @@
 
-\newcommand{\integtest}[2]{\texttt{#1} & $\xrightarrow{}$ & \texttt{#2}}
+\newcommand{\integtest}[2]{\shell{#1} & $\xrightarrow{}$ & \shell{#2}}
 \newcommand{\successoutput}[1]{#1 & As expected & \testsuccess{}}
 
 \begin{sidewaystable}
@@ -8,12 +8,12 @@
         ID & \multicolumn{3}{l}{Integrated Modules} & Expected & Output & Result \\
         \hline
         \newtest{}\label{test:intg:input:render} & \integtest{makeinput}{renderppm} & \successoutput{Valid render image with the same obstacle squares as the initial image.} \\
-        \newtest{}\label{test:intg:input:cmp} & \integtest{makeinput}{compare} & \texttt{compare} runs successfully & \texttt{compare} ran successfully & \testsuccess{} \\
+        \newtest{}\label{test:intg:input:cmp} & \integtest{makeinput}{compare} & \shell{compare} runs successfully & \shell{compare} ran successfully & \testsuccess{} \\
         \newtest{}\label{test:intg:input:sim} & \integtest{makeinput}{fixedtime} & \successoutput{Valid simulation output with the same obstacle squares as the initial image.} \\
         \newtest{}\label{test:intg:input:viz} & \integtest{makeinput}{run} & \successoutput{Visualization of a simulation with the same obstacle squares as the initial image.} \\
         \hline
         \newtest{}\label{test:intg:sim:render} & \integtest{fixedtime}{renderppm} & \successoutput{Valid render image with the same obstacle squares as the initial state.} \\
-        \newtest{}\label{test:intg:sim:cmp} & \integtest{fixedtime}{compare} & \texttt{compare} runs successfully & \texttt{compare} ran successfully & \testsuccess{} \\
+        \newtest{}\label{test:intg:sim:cmp} & \integtest{fixedtime}{compare} & \shell{compare} runs successfully & \shell{compare} ran successfully & \testsuccess{} \\
         \newtest{}\label{test:intg:sim:sim} & \integtest{fixedtime}{fixedtime} & \successoutput{Valid simulation output with the same obstacle squares as the initial state.} \\
         \newtest{}\label{test:intg:sim:viz} & \integtest{fixedtime}{run} & \successoutput{Visualization of a simulation with the same obstacle squares as the initial state.} \\
     \end{tabular}

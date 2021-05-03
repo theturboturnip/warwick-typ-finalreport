@@ -50,7 +50,7 @@ Furthermore, each omission can be justified.
 Satisfying (\cref{req:VizSaveState}), which required saving the simulation state during a visualization, would have delayed the work on the visualization layers.
 As the visualization is a significant portion of the project, and this feature would not have had a relevant use-case during development, it was cut.
 
-\cref{req:CompareBinary} would require the \texttt{compare} tool to output a single SIMILAR/NOT~SIMILAR value rather than the more detailed metrics it now uses.
+\cref{req:CompareBinary} would require the \shell{compare} tool to output a single SIMILAR/NOT~SIMILAR value rather than the more detailed metrics it now uses.
 Using a single numeric value to convey this information would be near-impossible and would result in a significant loss of nuance, even more so if only binary options are available, and would be pointless if shown alongside the more detailed metrics.
 
 \cref{reqN:VizParticleAdvanced} was planned in the Progress Report, specifically citing BOID-like behaviour\cite{BOIDS_10.1145/37401.37406} as a potential means for reducing clumping.

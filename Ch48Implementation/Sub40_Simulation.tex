@@ -13,21 +13,21 @@ The immediate thought would be to implement a single Runner class, taking a virt
 This would meet (1) by using a virtual Backend interface, and (2) by using exactly the same class for all Backends, but would violate (3) by forcing every Backend to use virtual classes.
 Instead, a slightly more complex approach is taken.
 
-Each Runner defines a virtual interface, such as \mintinline{cpp}{IFixedTimeRunner} for the \mintinline{cpp}{FixedTimedRunner}.
-A templated implementation class is then instantiated for each compatible backend, such as \mintinline{cpp}{SimFixedTimeRunner<CpuBackend>}, \mintinline{cpp}{SimFixedTimeRunner<CUDABackendV1>}, etc.
-Each of these classes implements the virtual interface \mintinline{cpp}{IFixedTimeRunner}, but they call the simulation functions directly as they are templated on the backend type.
+Each Runner defines a virtual interface, such as \code{IFixedTimeRunner} for the \code{FixedTimedRunner}.
+A templated implementation class is then instantiated for each compatible backend, such as \code{SimFixedTimeRunner<CpuBackend>}, \code{SimFixedTimeRunner<CUDABackendV1>}, etc.
+Each of these classes implements the virtual interface \code{IFixedTimeRunner}, but they call the simulation functions directly as they are templated on the backend type.
 This setup meets (1) by using a single templated implementation, (2) by implementing a virtual interface, and (3) by only using the virtual functions where absolutely necessary i.e. on the Runner itself.
-This allows the \mintinline{cpp}{FixedTimeRunner} to define a single virtual function \mintinline{cpp}{runForTime(t)} instead of calling a virtual function every simulation tick.
+This allows the \code{FixedTimeRunner} to define a single virtual function \code{runForTime(t)} instead of calling a virtual function every simulation tick.
 
 \subsection{Backends}
 To allow the generic implementation described above, the Backend typeclass (\cref{fig:TypeclassBackend}) ensures all backends follow a consistent interface.
 Five classes implement this typeclass, matching those described in \cref{sec:DesignBackends}:
 \begin{itemize}
-    \item \mintinline{cpp}{NullSimulation}
-    \item \mintinline{cpp}{CPUSimpleSimBackend}
-    \item \mintinline{cpp}{CPUOptimizedSimBackend}
-    \item \mintinline{cpp}{CPUOptimizedAdaptedSimBackend}
-    \item \mintinline{cpp}{CudaBackendV1}
+    \item \code{NullSimulation}
+    \item \code{CPUSimpleSimBackend}
+    \item \code{CPUOptimizedSimBackend}
+    \item \code{CPUOptimizedAdaptedSimBackend}
+    \item \code{CudaBackendV1}
 \end{itemize}
 Aside from the trivial Null Simulation, these can be split into CPU and CUDA-based backends.
 
@@ -93,9 +93,9 @@ __global__ void computationKernel(
 
 The CUDA backend is where the bulk of new simulation work has been done.
 As stated in the Design section, all simulation code has been ported to CUDA Kernels.
-Each of these kernels takes a \mintinline{cpp}{CommonParams} struct as the first argument, containing run-time constants such as the simulation grid size.
-To ensure \mintinline{cpp}{const __restrict__} pointers are used wherever possible, all other kernel arguments must be either an \mintinline{cpp}{in_matrix<T>} or an \mintinline{cpp}{out_matrix<T>}.
-These templates alias to simple pointers which properly use \mintinline{cpp}{const} and \mintinline{cpp}{__restrict__} (\cref{fig:ImplMatrices}).
+Each of these kernels takes a \code{CommonParams} struct as the first argument, containing run-time constants such as the simulation grid size.
+To ensure \code{const __restrict__} pointers are used wherever possible, all other kernel arguments must be either an \code{in_matrix<T>} or an \code{out_matrix<T>}.
+These templates alias to simple pointers which properly use \code{const} and \code{__restrict__} (\cref{fig:ImplMatrices}).
 Using these enforces that each kernel has clear, distinct inputs and outputs, and that the inputs are read from fast global memory.
 
 The most intensive step in every implementation is the Poisson iterations, which are individually trivial but intensive at scale.
@@ -158,6 +158,6 @@ Allocating pinned memory, which cannot be paged to disk or moved around by the O
 % \todomark{Mention pinned memory here}
 
 \subsection{Usage in Other Layers}
-The visualization layer instantiates a \mintinline{cpp}{VulkanTickedRunner} with \mintinline{cpp}{CudaBackendV1} to run a visualized simulation.
+The visualization layer instantiates a \code{VulkanTickedRunner} with \code{CudaBackendV1} to run a visualized simulation.
 
-The command-line layer instantiates a \mintinline{cpp}{FixedTimeRunner} with any one of the backends to run a headless simulation.
+The command-line layer instantiates a \code{FixedTimeRunner} with any one of the backends to run a headless simulation.

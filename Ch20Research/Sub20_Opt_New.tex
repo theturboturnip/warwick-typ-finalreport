@@ -11,11 +11,11 @@ This should be accounted for when structuring GPU work.
 
 % Const Restrict Pointers for __ldg (https://dl.acm.org/doi/pdf/10.1145/3238147.3241533 tries to do this automatically and found a perf boost, can cite that or cite other papers on it).
 % \todomark{This seems more like a statement of an optimization than a "Future Work".}
-The CUDA C Programming Guide\cite{NVIDIAGlobalGuide} states that read-only memory can be read into a special data cache using the \texttt{\_\_ldg()} intrinsic.
+The CUDA C Programming Guide\cite{NVIDIAGlobalGuide} states that read-only memory can be read into a special data cache using the \code{\_\_ldg()} intrinsic.
 The compiler may insert this automatically when it detects that data must be read-only.
-The use of \texttt{const} and \texttt{\_\_restrict\_\_} qualifiers on pointers that are read-only is encouraged to make read-only data obvious.
+The use of \code{const} and \code{\_\_restrict\_\_} qualifiers on pointers that are read-only is encouraged to make read-only data obvious.
 In \cite{10.1145/3238147.3241533} it was found that introducing these qualifiers where possible led to large speedups in pointer heavy applications, and while our case may not use many pointers this should still be implemented wherever possible.
-This optimization can be verified by checking for the presence of the \texttt{ld.global}\cite{NvidiaPTX} instructions in the PTX assembly of compiled GPU kernels.
+This optimization can be verified by checking for the presence of the \code{ld.global}\cite{NvidiaPTX} instructions in the PTX assembly of compiled GPU kernels.
 
 % GPU Vectorization (cite).
 The CPU simulation used Intel AVX and SSE instructions\cite{IntelCorporationIntroductionExtensions} to calculate four Poisson values at once\footnote{Vectors of eight were tried but were found to be slower than four.}.

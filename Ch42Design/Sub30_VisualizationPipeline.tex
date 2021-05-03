@@ -1,5 +1,5 @@
 This section details the code implemented in order to efficiently and effectively visualize simulation results in real time.
-This is not related to the \texttt{renderppm} subcommand, which uses CPU code to render a single simulation state as an image.
+This is not related to the \shell{renderppm} subcommand, which uses CPU code to render a single simulation state as an image.
 
 \subsection{Components}
 There are four major components of the visualization which work together to create the final output.
@@ -54,7 +54,7 @@ The VulkanTickedRunner enqueues CUDA work to determine the maximum timestep for 
 If visualization requested a larger timestep than the calculated maximum, the process would be repeated until the total requested timestep had elapsed.
 Once `Sim $N$' is finished, it signals a semaphore to allow `Viz Comp $N$' to continue the frame. % Semaphore simFinishedCanCompute
 
-The worker thread asks the swapchain for an image using the \texttt{vkAcquireNextImageKHR} function.
+The worker thread asks the swapchain for an image using the \code{vkAcquireNextImageKHR} function.
 This returns an index which will eventually become available, and a semaphore which will be signalled once this happens.
 Before `Viz Gfx $N$' can render to this image, it has to wait for this semaphore to signal it is ready. % Semaphore imageAcquiredCanRender
 The thread then waits for frame $N-2$ to finish using the Vulkan resources in Resource Set 0, before it uses them to record `Viz Comp $N$' and `Viz Gfx $N$'. % Fence frameCmdBuffersInUse

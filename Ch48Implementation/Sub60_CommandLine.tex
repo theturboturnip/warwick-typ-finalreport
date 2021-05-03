@@ -1,5 +1,5 @@
 \section{Command-Line Layer}
-The command-line layer is implemented with a set of subapps, each implemented by a separate virtual class satisfying an interface \mintinline{cpp}{ISubApp}.
+The command-line layer is implemented with a set of subapps, each implemented by a separate virtual class satisfying an interface \code{ISubApp}.
 Virtual inheritance was chosen here because it is convenient and not in a performance-critical area.
 Each ISubApp instance is used to create a CLI11 subcommand with some input arguments, then CLI11 parses the command-line arguments and runs a callback on the selected subapp.
 These subapps then invoke other layers of the system to complete their execution.

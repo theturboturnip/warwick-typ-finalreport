@@ -1,12 +1,12 @@
 \section{Visualization Layer}\label{sec:ImplementationViz}
 \subsection{Multithreading}
-The worker thread is implemented with a \mintinline{cpp}{SystemWorker} class combined with a generic threading system.
+The worker thread is implemented with a \code{SystemWorker} class combined with a generic threading system.
 % While only one worker thread is ever used in the final program, earlier versions planned to use a few unique workers so a generic system was required.
-An \mintinline{cpp}{IWorkerThread} virtual interface is defined and \mintinline{cpp}{IWorkerThread_Impl<Worker>} implements this for a specific \mintinline{cpp}{Worker} class, similar to the Simulation Runners pattern.
-% A similar pattern to Simulation Runners is used, where an \mintinline{cpp}{IWorkerThread} virtual interface is defined and a \mintinline{cpp}{IWorkerThread\_Impl<Worker>} class implements this for a specific \mintinline{cpp}{Worker} class.
+An \code{IWorkerThread} virtual interface is defined and \code{IWorkerThread_Impl<Worker>} implements this for a specific \code{Worker} class, similar to the Simulation Runners pattern.
+% A similar pattern to Simulation Runners is used, where an \code{IWorkerThread} virtual interface is defined and a \code{IWorkerThread\_Impl<Worker>} class implements this for a specific \code{Worker} class.
 
-% The \mintinline{cpp}{IWorkerThread} class works with a \mintinline{cpp}{WorkerThreadController} class.
-To kick off the worker thread, a \mintinline{cpp}{WorkerThreadController} writes to a mutex-protected set of input data.
+% The \code{IWorkerThread} class works with a \code{WorkerThreadController} class.
+To kick off the worker thread, a \code{WorkerThreadController} writes to a mutex-protected set of input data.
 The `work index' of this data is incremented to signal it is new, and a condition variable is signalled to alert the worker thread and begin processing.
 Work cannot be enqueued until the thread produces an output, which is sent to the main thread in the same way as before - a mutex is taken to update the output data with the new index, and the condition variable is signalled in case the main thread is waiting for the worker to finish.
 
@@ -32,7 +32,7 @@ These buffers allow user interaction, such as moving the particle emitters and s
 % \end{landscape}
 
 Image layout transfers allow the GPU to optimize access times for an image by changing the format it's stored in.
-Images are transferred to the \mintinline{cpp}{ShaderReadOnlyOptimal} layout (listed as `Texture' rather than `Image' in \cref{fig:VizDataTransform}) for efficient sampling at arbitrary points, and kept in the \mintinline{cpp}{General} layout when accessed at 2D data arrays (see \cref{fig:VizImageRead} as a comparison).
+Images are transferred to the \code{ShaderReadOnlyOptimal} layout (listed as `Texture' rather than `Image' in \cref{fig:VizDataTransform}) for efficient sampling at arbitrary points, and kept in the \code{General} layout when accessed at 2D data arrays (see \cref{fig:VizImageRead} as a comparison).
 
 Memory barriers (not shown in \cref{fig:VizDataTransform}) are inserted between every compute shader to ensure any required data written from a previous shader is visible to the next shader\cite{TheKhronosGroupVulkanSpec}. % Could also be \cite{MaisterVulkanSyncBlog}
 % On top of that, each compute shader requires at least one \emph{memory barrier}, to ensure any data written in previous stages is visible to the next stage.
@@ -113,9 +113,9 @@ Unlike CUDA, the Vulkan API does not provide any means of type-safety when commu
 If the GPU expects data in a specific structure, it is the API user's job to create data that fits this structure.
 A naive solution might be to keep a C++ structure definition and a GLSL structure definition, and assume that one matches the other.
 This is error prone as the structures are not automatically kept in sync - if one changes, the other will not, and communication will break down.
-This project's approach is to create a GLSL file defining all interoperable structures (\texttt{structures.glsl}), and then include it into a C++ header with some extra code to define GLSL types correctly.
+This project's approach is to create a GLSL file defining all interoperable structures (\shell{structures.glsl}), and then include it into a C++ header with some extra code to define GLSL types correctly.
 Both sides will now use the same structure definitions, which are all defined in exactly one place.
-All GLSL code uses the \texttt{std430} memory layout rules, which closely matches the C++ memory layout, so the structures can be passed directly from the CPU to the GPU safely.
+All GLSL code uses the \code{std430} memory layout rules, which closely matches the C++ memory layout, so the structures can be passed directly from the CPU to the GPU safely.
 
 \subsection{Usage in Other Layers}
-The \mintinline{cpp}{VulkanSimApp} class is instantiated by the command-line layer to run the visualization.
+The \code{VulkanSimApp} class is instantiated by the command-line layer to run the visualization.

@@ -12,7 +12,7 @@
 The CUDA program attempts to arrange the threads such that they coalesce accesses, but it has not been verified to work yet.
 \todomark{Verify}
 
-Inspection of the compiled PTX\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html}} text shows that values are loaded using \texttt{ld.global} instructions which load from the global memory space\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
+Inspection of the compiled PTX\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html}} text shows that values are loaded using \code{ld.global} instructions which load from the global memory space\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
 
 % As this project is focused on improving upon the accuracy of the ACA submission, instead of producing bit-identical results, these optimizations have been implemented in different forms.
 Fused multiply-add is inserted in many places by the CUDA compiler in Release mode\todocite{NVCC inserts FMA?}, single-precision floats are used in all cases, and the residual phase is still skipped.

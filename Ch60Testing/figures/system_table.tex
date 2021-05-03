@@ -3,18 +3,18 @@
     \begin{tabular}{ll|p{0.35\linewidth}|m{0.2\linewidth}|c}
         ID & Description & Expected & Output & Result \\
         \hline
-        \newtest{}\label{test:sys:sim:gpu} & \texttt{fixedtime}: GPU Simulation & \successoutput{Simulation backend can be set to CUDA} \\
-        \newtest{}\label{test:sys:run:gpu} & \texttt{run}: GPU Simulation & \successoutput{Simulation backend can be set to CUDA} \\%Can visualize a simulation running on the GPU
+        \newtest{}\label{test:sys:sim:gpu} & \shell{fixedtime}: GPU Simulation & \successoutput{Simulation backend can be set to CUDA} \\
+        \newtest{}\label{test:sys:run:gpu} & \shell{run}: GPU Simulation & \successoutput{Simulation backend can be set to CUDA} \\%Can visualize a simulation running on the GPU
         \hline
-        \newtest{}\label{test:sys:run:pause} & \texttt{run}: Test pausing/resuming the simulation & \successoutput{Simulation can pause/resume while the visualization is running} \\
-        \newtest{}\label{test:sys:run:save} & \texttt{run}: Test saving the simulation state & Simulation state can be saved while visualizing & Couldn't save state while running & \testfail{} \\
-        \newtest{}\label{test:sys:run:manip} & \texttt{run}: Test moving the particle emitters & \successoutput{Particle emitters can be moved while the simulation is running} \\
-        \newtest{}\label{test:sys:run:lockedFPS} & \texttt{run}: Can run with a fixed framerate & Framerate can be fixed at some value & Framerate was fixed at 120FPS and did not change & \testsuccess{} \\
-        \newtest{}\label{test:sys:run:flatoutFPS} & \texttt{run}: Can run with an unlocked framerate & Framerate can be unlocked & Framerate was not locked and varied between 750-800FPS & \testsuccess{} \\
-        \newtest{}\label{test:sys:run:layerPerms} & \texttt{run}: All Viz layers work as expected. & \successoutput{All layer combinations can be used, all layers function as described in \cref{sec:Requirements}.} \\
-        \newtest{}\label{test:sys:run:autorange} & \texttt{run}: Test auto-range functionality & \successoutput{Auto-ranged Scalar and Vector quantities display all values in the sim boundary.} \\
-        \newtest{}\label{test:sys:run:colors} & \texttt{run}: Test changing colors & \successoutput{All colors used in the simulation should be modifiable} \\
-        \newtest{}\label{test:sys:run:validation} & \texttt{run}: Check Vulkan validation & \successoutput{No Vulkan validation errors in Debug mode} \\
+        \newtest{}\label{test:sys:run:pause} & \shell{run}: Test pausing/resuming the simulation & \successoutput{Simulation can pause/resume while the visualization is running} \\
+        \newtest{}\label{test:sys:run:save} & \shell{run}: Test saving the simulation state & Simulation state can be saved while visualizing & Couldn't save state while running & \testfail{} \\
+        \newtest{}\label{test:sys:run:manip} & \shell{run}: Test moving the particle emitters & \successoutput{Particle emitters can be moved while the simulation is running} \\
+        \newtest{}\label{test:sys:run:lockedFPS} & \shell{run}: Can run with a fixed framerate & Framerate can be fixed at some value & Framerate was fixed at 120FPS and did not change & \testsuccess{} \\
+        \newtest{}\label{test:sys:run:flatoutFPS} & \shell{run}: Can run with an unlocked framerate & Framerate can be unlocked & Framerate was not locked and varied between 750-800FPS & \testsuccess{} \\
+        \newtest{}\label{test:sys:run:layerPerms} & \shell{run}: All Viz layers work as expected. & \successoutput{All layer combinations can be used, all layers function as described in \cref{sec:Requirements}.} \\
+        \newtest{}\label{test:sys:run:autorange} & \shell{run}: Test auto-range functionality & \successoutput{Auto-ranged Scalar and Vector quantities display all values in the sim boundary.} \\
+        \newtest{}\label{test:sys:run:colors} & \shell{run}: Test changing colors & \successoutput{All colors used in the simulation should be modifiable} \\
+        \newtest{}\label{test:sys:run:validation} & \shell{run}: Check Vulkan validation & \successoutput{No Vulkan validation errors in Debug mode} \\
     \end{tabular}
     \caption{System Tests (Functional)}
     \label{tab:sys_tests_func}

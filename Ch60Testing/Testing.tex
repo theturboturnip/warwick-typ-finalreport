@@ -9,10 +9,10 @@ The first layer of testing splits the program into `units', that are independent
 In some systems it is practical to automate these tests, but this was not pursued for this system as the behaviour is generally too complex to be automatically verified.
 
 Helpfully the program is already split into subcommands at the command-line level (\cref{sec:DesignSubcommands}), which can all be tested individually.
-% The \texttt{compare}, \texttt{renderppm}, and \texttt{fixedtime} subcommands can each be tested completely independently of other.
-Because the file format is the same as the original simulation, the original input file can be used to test comparisons (\texttt{compare}), simple visualization (\texttt{renderppm}), and both simulations (\texttt{fixedtime} and \texttt{run}).
+% The \shell{compare}, \shell{renderppm}, and \shell{fixedtime} subcommands can each be tested completely independently of other.
+Because the file format is the same as the original simulation, the original input file can be used to test comparisons (\shell{compare}), simple visualization (\shell{renderppm}), and both simulations (\shell{fixedtime} and \shell{run}).
 These commands all have equivalents in the original program, which provides a basis for validating correctness.
-The \texttt{makeinput} subcommand, which creates a new input file based on an image, can be tested by passing the resulting input file to other known-functional subcommands and checking their behaviour.
+The \shell{makeinput} subcommand, which creates a new input file based on an image, can be tested by passing the resulting input file to other known-functional subcommands and checking their behaviour.
 This provides a coarse view of system functionality, but a finer level of detail can be obtained by testing individual code components.
 
 Unit-testing this particular codebase is difficult because many components are dependent on other components - for example, the visualization components use data gathered from the simulation output, which is impractical to extract for the sake of testing individual components.
@@ -30,7 +30,7 @@ The final set of unit tests are shown in \cref{tab:unittests}.
 \section{Integration Testing}
 Once the program units have been individually tested, Integration Testing tests if the units can interface with each other correctly.
 Again the subcommands are treated as units, and testing is performed by passing an output from one subcommand as the input to another.
-In this program only the \texttt{makeinput} and \texttt{fixedtime} subcommands produce output, so their output is exhaustively tested against the other commands.
+In this program only the \shell{makeinput} and \shell{fixedtime} subcommands produce output, so their output is exhaustively tested against the other commands.
 At the codebase level some previous unit tests can be counted as integration tests:
 the headless simulation functions as an integration test for the Memory and Simulation layers, and the visualized simulation tests the integration between the Simulation and Visualization layers.
 
@@ -46,7 +46,7 @@ This final layer of testing determines if the program upholds the functional and
 Some functional requirements such as \cref{req:VizPauseResume} require in-depth checks of the visualization not suitable for other layers, so are tested here.
 The System Tests specified in \cref{tab:sys_tests_func} cover all such tests, and combined with the previous layers of tests prove that the system meets the functional requirements.
 
-Many non-functional requirements can be tested directly: \cref{reqN:Resources} is tested with external programs \texttt{valgrind} and \texttt{cuda-memcheck}, \cref{reqN:Documented,reqN:UsageGuide} are tested by simply inspecting the program and source files, \cref{reqN:DCSCompile} is tested by attempting to compile + run the program on DCS systems.
+Many non-functional requirements can be tested directly: \cref{reqN:Resources} is tested with external programs \shell{valgrind} and \shell{cuda-memcheck}, \cref{reqN:Documented,reqN:UsageGuide} are tested by simply inspecting the program and source files, \cref{reqN:DCSCompile} is tested by attempting to compile + run the program on DCS systems.
 A few require a large amount of data collection, or at least careful attention to detail.
 % The others need special care and extra specification to measure qualitatively.
 % The nonfunctional tests (\todoref{system tests nonfunctional}) handle the non-functional requirements.
@@ -83,7 +83,7 @@ Combined these tests should give a complete picture of how the CUDA simulation's
 % Higher iteration counts ensure the Poisson stage dominates the time taken.
 % Each permutation is then run for simulations of 10, 25, and 50 seconds to determine the impact of longer simulations on accuracy.
 % To measure the time taken for each test five measurements are taken, the fastest and slowest times are removed, and the three remaining results are then averaged.
-% The similarity between tests on different backends is measured using the \texttt{compare} tool, and the Poisson residual for each output is found with a small utility that computes the Poisson RHS (see \cref{sec:Research:SimulationTick}) then immediately determines the residual using the CPU backend.
+% The similarity between tests on different backends is measured using the \shell{compare} tool, and the Poisson residual for each output is found with a small utility that computes the Poisson RHS (see \cref{sec:Research:SimulationTick}) then immediately determines the residual using the CPU backend.
 
 
 \cref{test:sys:run:vizSpeed} evaluates the speed of individual visualization features vs. the simulation.
