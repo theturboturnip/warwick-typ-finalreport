@@ -95,12 +95,15 @@ autogobble
 \usepackage{subcaption}
 
 % BibLaTeX
-\usepackage{turnipcite}
+\usepackage{csquotes}
+\usepackage[british]{babel}
+\usepackage[backend=biber,dateabbrev=false,style=numeric]{biblatex} % style=numeric
+\usepackage[notlot,notlof,nottoc]{tocbibind} % For including the bibliography in the TOC
 % \addbibresource{mendeley_references.bib}
 % \addbibresource{typ_FinalReport.bib}
-\addbibresource{sorted_old_refs.bib}
-\addbibresource{sorted_new_refs.bib}
-
+% \addbibresource{sorted_old_refs.bib}
+% \addbibresource{sorted_new_refs.bib}
+\addbibresource{final_refs.bib}
 
 \usepackage{markdown}
 
@@ -265,7 +268,7 @@ autogobble
 \include{Ch70Conclusion/Conclusion}
 
 % Bibliography
-\turnipbib{\todomark{Need to order these in a different order than alphabetical - thinking articles/inproceedings/presentations etc. first, then any official documentation, then other online sources.}}
+% \turnipbib{\todomark{Need to order these in a different order than alphabetical - thinking articles/inproceedings/presentations etc. first, then any official documentation, then other online sources.}}
 % \begingroup
 % \raggedright
 % \printbibliography[type=book,title={Books}]
@@ -275,7 +278,14 @@ autogobble
 % \printbibliography[nottype=book,nottype=article,title={Miscellaneous}]
 % \endgroup%
 
-
+\pagebreak
+\setcounter{secnumdepth}{0} % Remove numbering for bib
+\begingroup
+\raggedright
+\printbibheading[heading=bibnumbered]
+\printbibliography[heading=none]
+\endgroup%
+\setcounter{secnumdepth}{3} % Restore numbering in case needed
 
 % Appendices
 \pagebreak
