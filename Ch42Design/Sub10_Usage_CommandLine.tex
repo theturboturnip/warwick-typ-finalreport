@@ -16,8 +16,8 @@ Examples of using the program are in \cref{fig:BashExampleUsage}.
 
 \subsection{Generating Inputs}
 The \shell{makeinput} subcommand allows input simulation states to be generated from image files.
-Each pixel of the input image represents a cell of the grid, including padding cells\footnote{This can allow the padding cells to be fluids rather than boundaries, which is incorrect. In the future this will be changed to add padding cells once the image is parsed.}, where non-black pixels are denoted as boundary cells and are fluid cells otherwise.
-The example in \cref{fig:ExampleMakeinput} shows an example file which creates a rectangular obstacle, and the visualization of the generated state.
+Each pixel of the input image represents a cell of the grid, not including padding cells, where non-black pixels are denoted as boundary cells and are fluid cells otherwise.
+The example in \cref{fig:ExampleMakeinput} shows an example file denoting a rectangular obstacle, and the visualization of the generated state.
 \input{Ch42Design/figures/example_makeinput}
 
 Velocities and pressure in every cell are interpolated horizontally - \SI{1}{m/s} east at the left edge, \SI{0}{m/s} at the right.

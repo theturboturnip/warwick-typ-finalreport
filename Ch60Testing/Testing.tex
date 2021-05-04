@@ -6,7 +6,7 @@ This section also defines the means of Success Measurement for some non-function
 
 \section{Unit Tests}
 The first layer of testing splits the program into `units', that are independent of each other, which are individually tested before combining them with other units in the system.
-In some systems it is practical to automate these tests, but this was not pursued for this system as the behaviour is generally too complex to be automatically verified.
+In some systems, it is practical to automate these tests, but this was not pursued for this system as the behaviour is generally too complex to be automatically verified.
 
 Helpfully the program is already split into subcommands at the command-line level (\cref{sec:DesignSubcommands}), which can all be tested individually.
 % The \shell{compare}, \shell{renderppm}, and \shell{fixedtime} subcommands can each be tested completely independently of other.
@@ -18,7 +18,7 @@ This provides a coarse view of system functionality, but a finer level of detail
 Unit-testing this particular codebase is difficult because many components are dependent on other components - for example, the visualization components use data gathered from the simulation output, which is impractical to extract for the sake of testing individual components.
 It is easier to just test the complete visualized simulation while assuming the simulation itself is correct.
 In other cases, unit behaviour may be impractical to directly model or verify: the automated resource management classes are difficult to test individually as the creation/destruction of the resources they manage cannot be directly checked.
-However there are some areas where the codebase can be effectively unitized, the most prominent of which is the simulation itself.
+However, there are some areas where the codebase can be effectively unitized, the most prominent of which is the simulation itself.
 
 The simulation is split into stages, which are effectively independent code units.
 Each unit depends on the output of the previous unit, so they cannot be tested independently, but if the rest of the simulation units are known to be correct then an individual unit can be tested.
@@ -29,7 +29,7 @@ The final set of unit tests are shown in \cref{tab:unittests}.
 
 \section{Integration Testing}
 Once the program units have been individually tested, Integration Testing tests if the units can interface with each other correctly.
-Again the subcommands are treated as units, and testing is performed by passing an output from one subcommand as the input to another.
+Again the subcommands are treated as units, and testing is performed by passing the output from one subcommand as the input to another.
 In this program only the \shell{makeinput} and \shell{fixedtime} subcommands produce output, so their output is exhaustively tested against the other commands.
 At the codebase level some previous unit tests can be counted as integration tests:
 the headless simulation functions as an integration test for the Memory and Simulation layers, and the visualized simulation tests the integration between the Simulation and Visualization layers.
@@ -44,10 +44,10 @@ The Integration tests are shown in \cref{tab:integration_tests}.
 \section{System Testing}
 This final layer of testing determines if the program upholds the functional and non-functional requirements set out in \cref{sec:Requirements}.
 Some functional requirements such as \cref{req:VizPauseResume} require in-depth checks of the visualization not suitable for other layers, so are tested here.
-The System Tests specified in \cref{tab:sys_tests_func} cover all such tests, and combined with the previous layers of tests prove that the system meets the functional requirements.
+The System Tests specified in \cref{tab:sys_tests_func} cover all such tests, and combined with the previous layers prove that the system meets the functional requirements.
 
 Many non-functional requirements can be tested directly: \cref{reqN:Resources} is tested with external programs \shell{valgrind} and \shell{cuda-memcheck}, \cref{reqN:Documented,reqN:UsageGuide} are tested by simply inspecting the program and source files, \cref{reqN:DCSCompile} is tested by attempting to compile + run the program on DCS systems.
-A few require a large amount of data collection, or at least careful attention to detail.
+A few require a large amount of data collection or at least careful attention to detail.
 % The others need special care and extra specification to measure qualitatively.
 % The nonfunctional tests (\todoref{system tests nonfunctional}) handle the non-functional requirements.
 % Some of these tests are more complex and require more data to evaluate them.
@@ -64,7 +64,7 @@ All gathered data is specified in the next subsection, and then the results are 
 The most important kind of error they can detect are memory leaks, where memory is allocated without being released, leading to the program taking up memory it does not need anymore.
 While it is important to avoid memory leaks in all cases the most important variation is continuous memory leaks, where memory is continuously leaked over and over, or large leaks of sizes larger than 100MB.
 Single small leaks are less concerning, as they should not impact the rest of the system greatly.
-The programs used to find these leaks may themselves be bad at recognizing allocation/freeing\cite{ValgrindProblemsBlog}, and lead to false-positives.
+The programs used to find these leaks may themselves be bad at recognizing allocation/freeing\cite{ValgrindProblemsBlog}, and lead to false positives.
 Care must be taken when evaluating their results.
 \cref{test:sys:sim:speed,test:sys:sim:accuracy} evaluate the speed and accuracy of the CUDA-based simulation backend vs. the adapted CPU backend.
 The accuracy is measured by comparing the output of equivalent simulations on the original simulation input state.
@@ -94,4 +94,4 @@ Each feature is then individually enabled, brought to the worst-case scenario (u
 To ensure the results are not affected by external sources, the program is run in unlocked framerate mode with no other programs running on the system.
 This is also the case for the GPU utilization test (\cref{test:sys:run:pipeline}).
 
-These results are shown in \cref{sec:Results}, and then evaluated along with the rest of the test outcomes in \cref{sec:Evaluation}.
+These results are shown in \cref{sec:Results} and evaluated along with the rest of the test outcomes in \cref{sec:Evaluation}.

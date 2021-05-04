@@ -3,9 +3,9 @@
 \newcommand{\deltaY}[0]{$\delta{}y$}
 
 \section{An Example Simulation Tick}\label{sec:Research:SimulationTick}
-The 1998 book ``Numerical simulation in fluid dynamics : a practical introduction''\cite{book:griebel1998numerical} defines a basic structure for a discrete simulated timestep (a.k.a. a ``tick'') and provides a sample guide to implementing it in Fortran or C.
+The 1998 book ``Numerical simulation in fluid dynamics: a practical introduction''\cite{book:griebel1998numerical} defines a basic structure for a discrete simulated timestep (a.k.a. a ``tick'') and provides a sample guide to implementing it in Fortran or C.
 %To the best of the author's knowledge t
-This was used as the base of the original simulation, and continues to be the base of this project.
+This was used as the base of the original simulation and continues to be the base of this project.
 This section will explain the general structure of the simulation as defined in \cite{book:griebel1998numerical}.
 
 The simulation described specifically simulates ``\emph{laminar} flows of \emph{viscous, incompressible fluids}''\cite{book:griebel1998numerical} in 2D.
@@ -14,7 +14,7 @@ The opposite of this is Turbulent flow, where particles may move between layers 
 This adds extra viscosity (the turbulent eddy viscosity, as covered in more detail in \cite{bird2006transport}) which is much more difficult to accurately model.
 
 \emph{Incompressible} fluids have a uniform density across the entire flow, which greatly simplifies the calculations.
-This property can be assumed for low-velocity gases, and for most liquids\cite{book:griebel1998numerical}.
+This property can be assumed for low-velocity gases and most liquids\cite{book:griebel1998numerical}.
 
 \emph{Viscous} fluids have high internal friction forces that will eventually bring a moving fluid to rest.
 The viscosity is controlled by a parameter known as the Reynolds number $Re$\cite{falkovich2018fluid}, which is constant over the fluid.
@@ -22,7 +22,7 @@ As $Re \to 0$ the viscosity of the fluid approaches infinity, and as $Re \to \in
 Using high $Re$ this sim could be used to simulate inviscid fluids, although it is important for the fluid to still be laminar and incompressible.
 
 Any forces acting throughout the bulk of the fluid i.e. gravity can be simulated using the $g = (g_x, g_y)$ vector.
-However the 2D variant of the simulation has been used in this project for top-down simulations with a level plane, so this is left unused.
+However, the 2D variant of the simulation has been used in this project for top-down simulations with a level plane, so this is left unused.
 
 \subsection{The Simulation Variables}
 The simulation solves for three variables: horizontal velocity $u$, vertical velocity $v$, and pressure $p$.
@@ -52,7 +52,7 @@ Each of the variables is located at a different position on the grid cell.
 Horizontal velocity $u_{i,j}$ is at the midpoint of the right cell edge, vertical velocity $v_{i,j}$ is at the midpoint of the top cell edge, and pressure $p_{i,j}$ is at the midpoint of the cell.
 % Staggering the variables in this manner avoids oscillation in the pressure value caused by odd-even decoupling.
 This is used to solve odd-even decoupling\cite{Harlow1965NumericalSurface}: for a fluid at rest (i.e. $u = v = 0$) the continuous solution is that the pressure $p$ is a constant across the grid.
-However were this to be discretized using central differences with all variables in the same locations, it would also be possible for a checkerboard of pressure values to form, and for oscillation to take place\cite{book:griebel1998numerical}.
+However, were this to be discretized using central differences with all variables in the same locations, it would also be possible for a checkerboard of pressure values to form, and for oscillation to take place\cite{book:griebel1998numerical}.
 This is prevented by staggering the variables.
 \cite{peric1988comparison} shows that this is also preventable through colocated grids, where a single grid is used for all variables and the velocities of each side of the cell are found using interpolation.
 These cell sides are implicitly staggered relative to the pressure and so avoid this problem.
@@ -64,7 +64,7 @@ For a finite domain of size $(imax, jmax)$ this leads to a final grid size of $(
 $i \in \{1..imax\}$, $j \in \{1..jmax\}$.
 
 The physical dimensions of each grid space are represented by \deltaX{}, \deltaY{}.
-This allows the derivatives of $u$ and $v$ to be calculated by finding the centered differences.
+This allows the derivatives of $u$ and $v$ to be calculated by finding the centred differences.
 \begin{align}
     \left[\frac{\partial{u}}{\partial{x}}\right]_{i,j} := \frac{u_{i,j}-u_{i-1,j}}{\delta{x}}, 
     & \quad %
@@ -91,8 +91,7 @@ These stages are described in detail in the following sections.
 \subsection{Timestep Calculation}
 \label{sec:TimestepCalculation}
 Each simulation tick simulates a discrete amount of time known as a timestep \deltaT{}.
-This timestep is not a fixed value, and typically one would want to select as large a timestep as possible.
-However, there are constraints on it's maximum value which depend on the simulation state.
+This timestep is not a fixed value, and typically one would want to select as large a timestep as possible, but there are constraints on its maximum value which depend on the simulation state.
 
 As the derivatives are calculated between adjacent grid points, it is impossible to accurately simulate a timestep where fluid moves between non-adjacent grid cells.
 %[Peyret&Taylor,1983]or[Roache,1976].Anadaptivestepsizecontrolbasedonthesestabilityconditionsis usedin[Tome&McKee,1994].
@@ -127,7 +126,8 @@ The final values of $u$ and $v$ are defined as
 \end{aligned}
 \end{equation}
 However, as these depend on the partial derivatives of $p$, which itself depends on velocity, they cannot be solved analytically.
-In order to iteratively find $p$ the variables $f$ and $g$, for horizontal and vertical ``tentative velocity'', are introduced.
+Variables $f$ and $g$, for horizontal and vertical ``tentative velocity'', are introduced to remove the dependency on $p$.
+% In order to iteratively find $p$ the variables $f$ and $g$, for horizontal and vertical ``tentative velocity'', are introduced.
 \begin{equation}
 \begin{aligned}
     f^{(n)} := u^{(n)} + \delta{t}
@@ -163,7 +163,7 @@ Substituting the formulae in \cref{eq:uv_modified} into this relation and rearra
 \begin{equation}
     \frac{\partial^2{p^{(n+1)}}}{\partial{x^2}} + \frac{\partial^2{p^{(n+1)}}}{\partial{y^2}} = \frac{1}{\delta{t}}\left(\frac{\partial{f^{(n)}_{i,j}}}{\partial{x}} + \frac{\partial{g^{(n)}_{i,j}}}{\partial{y}}\right)
 \end{equation}
-The right hand side of this equation is constant for timestep $n$, so can be precalculated and assigned to its own variable $rhs$.
+The right-hand side of this equation is constant for timestep $n$, so can be precalculated and assigned to the variable $rhs$.
 \begin{equation}
 rhs_{i,j} := \frac{1}{\delta{t}}\left(\frac{\partial{f^{(n)}_{i,j}}}{\partial{x}} + \frac{\partial{g^{(n)}_{i,j}}}{\partial{y}}\right)
 \end{equation}
@@ -219,7 +219,8 @@ where $\epsilon_{i,j}^{\{N,S,E,W\}}$ represents the boundary squares (shown here
 \input{Ch20Research/figures/checkerboard}
 Over the whole grid, this results in a linear system of equations over the inputs $p_{i,j} \forall i \in \{1..i_{max}\}, j \in \{1..j_{max}\}$.
 These can be decoupled by partitioning $p$ into red and black squares by a checkerboard pattern (see \cref{fig:redblack_checkerboard}).
-As each individual cell only depends on the adjacent values, iterations of Successive Over-Relaxation (SOR) can be performed on red and black in turn to reach a final value\footnote{This could equally be done without partitioning $p$, but the partitioning splits the SOR into separate phases which can then be parallelized. Normal SOR cannot be parallelized\cite{Adams1982AMS}.}\cite{young1971iterative}:
+% As each individual cell only depends on the adjacent values, iterations of Successive Over-Relaxation (SOR) can be performed on red and black in turn to reach a final value\footnote{This could equally be done without partitioning $p$, but the partitioning splits the SOR into separate phases which can then be parallelized. Normal SOR cannot be parallelized\cite{Adams1982AMS}.}\cite{young1971iterative}:
+As each cell's equation only depends on the adjacent values, iterations of Successive Over-Relaxation (SOR) can be performed on red and black in turn to reach a final value\footnote{This could equally be done without partitioning $p$, but the partitioning splits the SOR into separate phases which can then be parallelized. Normal SOR cannot be parallelized\cite{Adams1982AMS}.}\cite{young1971iterative}:
 \begin{equation}
     \beta_{i,j} := \frac{\omega}{\left(\frac{\epsilon_{i,j}^E+\epsilon_{i,j}^W}{(\delta{x})^2} + \frac{\epsilon_{i,j}^N+\epsilon_{i,j}^S}{(\delta{y})^2}\right)}
     \label{eq:poisson_beta}

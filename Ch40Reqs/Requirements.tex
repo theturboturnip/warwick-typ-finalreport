@@ -8,7 +8,7 @@
 \chapter{Project Requirements}
 \label{sec:Requirements}
 Ahead of initial development, a set of requirements were created to further specify the project goals.
-These requirements evolved as more research was completed, for example the visualization-related requirements were only determined after visualization research completed (see \cref{sec:ProjectManagement}).
+These requirements evolved as more research was completed, for example, the visualization-related requirements were only determined after visualization research completed (see \cref{sec:ProjectManagement}).
 This chapter shows the functional and non-functional requirements, prioritized as either \must{}-have or \should{}-have.
 Complex requirements have sub-requirements, which clarify certain features that must/should be present for the top-level requirement to be met.
 %  which  into sub-requirements in some cases to clarify the broad points.
@@ -85,7 +85,7 @@ Non-functional Requirements do not define actions, but rather define properties 
 \label{sec:Requirements_HardwareSoftware}
 As this simulation uses a GPU, the developer must have one available for debugging and testing the program.
 As the CUDA API is used to implement the simulation (see \cref{sec:LibrarySelection}), the program requires an NVIDIA GPU to run.
-Due to the COVID situation the only hardware used to test the device was the researcher's GTX~1080.
+Due to COVID-19 restrictions, the only hardware available to test the device was the researcher's GTX~1080, but it should function on all devices which support CUDA 10.
 
 The high-speed rendering requirements of the program necessitated the use of Vulkan over OpenGL.
 Vulkan gives the developer more fine control over scheduling, and allows the hardware to take shortcuts that it may not be able to do under OpenGL.

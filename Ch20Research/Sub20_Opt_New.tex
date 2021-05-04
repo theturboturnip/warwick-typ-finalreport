@@ -4,16 +4,17 @@ CPUs and GPUs have very distinct designs, so when moving programs between them i
 This section sums up the research into optimizing CUDA programs, which should be applied when designing/implementing the final program.
 
 % CUDA devices are split into many threads, which are split into groups of 32 that are executed concurrently as a warp\cite{tool:CUDAProgrammingV1}.
-CUDA devices combine groups of 32 threads into a `warp', and executes them concurrently\cite{tool:CUDAProgrammingV1}.
+CUDA devices combine groups of 32 threads into a `warp' and execute them concurrently\cite{tool:CUDAProgrammingV1}.
 If the threads in a warp attempt to access multiple words in the same cache line, the access is \textit{coalesced}\cite{NVIDIAHowBlog} and only one cache line needs to be fetched for the warp to continue.
-Otherwise if the accesses all touch different cache lines, every cache line needs to be fetched before execution can continue for any of the threads.
+Otherwise, if the accesses all touch different cache lines, every cache line needs to be fetched before execution can continue for any of the threads.
 This should be accounted for when structuring GPU work.
 
 % Const Restrict Pointers for __ldg (https://dl.acm.org/doi/pdf/10.1145/3238147.3241533 tries to do this automatically and found a perf boost, can cite that or cite other papers on it).
 % \todomark{This seems more like a statement of an optimization than a "Future Work".}
 The CUDA C Programming Guide\cite{NVIDIAGlobalGuide} states that read-only memory can be read into a special data cache using the \code{\_\_ldg()} intrinsic.
-The compiler may insert this automatically when it detects that data must be read-only.
-The use of \code{const} and \code{\_\_restrict\_\_} qualifiers on pointers that are read-only is encouraged to make read-only data obvious.
+The compiler may insert this automatically if it detects that data \emph{must} be read-only, which is preferable to inserting it manually.
+Applying the \code{const} and \code{\_\_restrict\_\_} qualifiers on pointers to read-only data acts as a strong hint for the compiler to add the intrinsic.
+% The use of \code{const} and \code{\_\_restrict\_\_} qualifiers on pointers that are read-only is encouraged to make read-only data obvious.
 In \cite{10.1145/3238147.3241533} it was found that introducing these qualifiers where possible led to large speedups in pointer heavy applications, and while our case may not use many pointers this should still be implemented wherever possible.
 This optimization can be verified by checking for the presence of the \code{ld.global}\cite{NvidiaPTX} instructions in the PTX assembly of compiled GPU kernels.
 
@@ -23,7 +24,7 @@ The CPU simulation used Intel AVX and SSE instructions\cite{IntelCorporationIntr
 At the start of the project it was believed that CUDA cores could use SIMD on four-element floating-point vectors, and that this could be exploited similarly.
 However, this is not the case.
 The only SIMD instructions CUDA allows are for integer vectors of 2x16-bit or 4x8-bit\cite{NvidiaCUDASIMD}.%\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
-As both simulations operate on 32-bit signed floating point, these instructions are not suitable.
+As both simulations operate on 32-bit signed floating-point, these instructions are not suitable.
 
 % Mention parallelization with OpenMP
 % did already?

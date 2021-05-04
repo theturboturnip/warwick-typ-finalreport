@@ -6,11 +6,12 @@ Some of these were adapted into the original CPU simulation\cite{modules:aca257s
 
 
 Given the definition of $\beta$ in \cref{eq:poisson_beta}, the value of $\beta_{i,j}$ does not change over the course of the simulation and so can be precalculated before the simulation starts.
-Additionally if it can be guaranteed that for every boundary square $p = 0$, which can be done either by never updating their pressure values or by updating them with $\beta_{i,j} = 0$, then $\epsilon_{i,j}$ doesn't need to be evaluated during the simulation at all.
+Additionally, if it can be guaranteed that for every boundary square $p = 0$, which can be done either by never updating their pressure values or by updating them with $\beta_{i,j} = 0$, then $\epsilon_{i,j}$ doesn't need to be evaluated during the simulation at all.
 These optimizations increased the runtime speed of the Poisson evaluation by 2.24x\footnote{The $\beta$ precalculation increased speed by 1.4x, and the removal of $\epsilon$ increased speed by 1.6x.\cite{modules:aca257submission}}, and they have been kept in the CUDA program.
 
 The book states an alternate solution where $\epsilon$ is set to 1 at all times and pressure values on boundaries are copied from adjacent fluid squares\cite{book:griebel1998numerical}.
-This apparently stops noncontinuous starting velocities from producing nonphysical pressure values.
+% This apparently stops noncontinuous starting velocities from producing nonphysical pressure values.
+Using this method may prevent noncontinuous starting velocities from producing nonphysical pressure values.
 Due to timing constraints this was not implemented for the simulation, but could be done in the future.
 \label{ext:PressureValues}
 
@@ -26,7 +27,7 @@ As stated in \cref{sec:SimulationPoisson}, red/black SOR is used to iteratively 
 % The red and black operations can be performed in parallel, but in both the ACA coursework and the CUDA program this has not been done\footnote{It has also been marked as a potential extension}.
 % In the initial ACA coursework the values ($f$, $g$, $p$, $rhs$) for red and black data were stored in the same arrays.
 In the initial CPU simulation the values ($f$, $g$, $p$, $rhs$) for red and black data were stored in the same arrays.
-This was problematic as data of the same color was never contiguous, and any iteration looking for just red values would get a cache line with both colors, leading to half of each cache line being wasted.
+This was problematic as data of the same colour was never contiguous, and any iteration looking for just red values would get a cache line with both colours, leading to half of each cache line being wasted.
 To fix this, red and black data is split into separate arrays before starting the Poisson solver.
 This has been carried over into the CUDA implementation.
 
@@ -36,7 +37,7 @@ The CPU simulation used OpenMP\cite{OpenMPHomeOpenMP} to automatically paralleli
 That is, each thread was given a group of columns to process.
 This was not needed in the CUDA version as each GPU kernel is implicitly parallelized over many GPU threads.
 
-The CPU simulation included optimizations exploiting properties of the original code, such as floating point precision, to speed up calculations while producing identical results.
+The CPU simulation included optimizations exploiting properties of the original code, such as floating-point precision, to speed up calculations while producing identical results.
 These optimizations include using fused multiply-add\cite{Muller2010TheInstruction} in some places (but not all), precalculating divisions with double-precision floats, and skipping the residual calculation phase altogether.
 As this project is focused on improving upon the accuracy and speed of the original simulation instead of producing bit-identical results, these optimizations may be removed or made redundant.
 

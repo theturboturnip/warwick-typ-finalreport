@@ -6,18 +6,18 @@
 
 % Introduce in-situ visualization
 
-One of the earliest CFD interactive visualizations was in 2002, which had a simulation running slower than real time on a separate computer to the real-time visualization\cite{paper:2002vis:10.5555/509740.509745}.
+One of the earliest CFD interactive visualizations was in 2002, which had a simulation running slower than real-time on a separate computer to the real-time visualization\cite{paper:2002vis:10.5555/509740.509745}.
 %\todocite{https://dl.acm.org/doi/10.5555/509740.509745}
-Decoupling the simulation speed from the visualization speed allowed for high framerates to be achieved for the user interface, however any changes made from the user interface had a delay of 0.5 seconds before being reflected in the simulation.
-This qualifies as a loosely-coupled in-situ visualization, because simulation data is streamed to a separate visualization system while the simulation completes.
+Decoupling the simulation speed from the visualization speed allowed for high framerates to be achieved for the user interface, but any changes made from the user interface had a delay of 0.5 seconds before being reflected in the simulation.
+This qualifies as a loosely-coupled in-situ visualization because simulation data is streamed to a separate visualization system while the simulation completes.
 
 % Introduce current industrial tools (autodesk CFD, VTK)
-A significant open-source toolkit is VTK, first introduced in 1993\cite{VTKBook}, which powers multiple tools such as ParaView and VisIt.
+VTK is a significant open-source toolkit, first introduced in 1993\cite{VTKBook}, which powers multiple tools such as ParaView and VisIt.
 Both of these programs support tightly-coupled in-situ visualization of an external simulation with plugins, but the VTK base is not well suited to in-situ integration\cite{kress2017situ}.
 
-Autodesk CFD is a closed-source tool which integrates its own simulation and visualization together.
+Autodesk CFD is a closed-source tool that integrates a simulation with a standard visualization.%its own simulation and visualization together.
 It's based on ALGOR FEA, created by ALGOR Inc which was acquired by Autodesk in 2008\cite{AutodeskAcquiresALGOR}.
-The latest iteration is targeted at the manufacturing industry, unlike VTK which is a generic toolkit, and does not support in-situ visualization.
+The latest iteration is targeted at the manufacturing industry, unlike VTK, and does not support in-situ visualization.
 
 Both of the above examples are not built for in-situ visualization, but these programs still represent the industry standard for visualization capabilities.
 A novel element of this project is building a program from the ground up for in-situ visualization, and the visualization components will be based on Autodesk.

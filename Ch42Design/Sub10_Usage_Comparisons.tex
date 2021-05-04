@@ -3,8 +3,9 @@ In the comparison subcommand heuristics are used to judge if one simulation is a
 This does not quite fulfil \cref{req:CompareBinary}, as there are two results and two heuristics used instead of just one, but it is useful for comparisons regardless so was not changed.
 
 This assumes one of the supplied states is a known-valid simulation state, and the other is not.
-The velocity and pressure values $u, v, p$ of two simulation states are compared separately.
-The simulation states must be of the same resolution, and should use the same boundary squares (although this is not checked).
+The velocity and pressure values $u, v, p$ of the two simulation states are compared separately.
+% The simulation states must be of the same resolution, and should use the same boundary squares (although this is not checked).
+The simulation states must be of the same size and use the same obstacle squares.
 
 The comparison is performed by calculating the mean and standard deviation of the square error between the datasets.
 These are then compared to tolerance values to produce two binary outputs: ACCURATE if the mean is below tolerance, and PRECISE if the standard deviation is below tolerance.

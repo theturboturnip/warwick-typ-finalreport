@@ -15,8 +15,8 @@ Work cannot be enqueued until the thread produces an output, which is sent to th
 \cref{fig:VizDataTransform} expands on the coarse GPU work breakdown from \cref{sec:Design:Viz:Breakdown}.
 Each rectangle represents a piece of memory, and each arrow represents a transformation from input to output via a compute shader, an image layout transfer, or a graphics pipeline.
 Most memory is global rather than per-frame, as the system does not run any visualization stages in parallel.
-Some per-frame memory is used to allow race-free accesses at record-time.
-These buffers allow user interaction, such as moving the particle emitters and setting the quantity ranges, and are highlighted in bold.
+Some per-frame buffers (highlighted in bold) are used to allow race-free accesses at record-time.
+These buffers allow user interaction, such as moving the particle emitters and setting the quantity ranges.
 % \begin{landscape}
 % \thispagestyle{empty}
 \pagebreak
@@ -95,14 +95,14 @@ fullMemoryBarrier(computeCmdBuffer,
     \caption{Breakdown of particle-related GPU work}
     \label{fig:VizDataParticles}
 \end{figure}
-The particle system implentation in \cref{fig:VizDataTransform} is a simplified view for compactness, \cref{fig:VizDataParticles} shows a full breakdown of this subsystem.
+The particle system implementation in \cref{fig:VizDataTransform} is a simplified view for compactness, \cref{fig:VizDataParticles} shows a full breakdown of this subsystem.
 This maintains three growable/shrinkable lists, plus a buffer containing particle positions.
 \begin{enumerate}
     \item The Draw list, a list of particle indices to draw on screen
     \item The Inactive list, a list of inactive particle indices
     \item The Simulate list, a list of particle indices which take part in Simulation.
 \end{enumerate}
-The previous Draw list is the authority on which pariticles currently exist, and is used for the Kickoff shader to determine how many particles will be emitted/simulated\footnote{This isn't known at record time, because the last frame may still be simulating the particles}.
+The previous Draw list is the authority on which particles currently exist, and is used for the Kickoff shader to determine how many particles will be emitted/simulated\footnote{This isn't known at record time, because the last frame may still be simulating the particles}.
 It is also copied into the Simulate particle list, which is grown by the Emit Particles shader.
 The particles are then moved by the Simulate Particles shader as shown in \cref{sec:Research:Viz:Particles}.
 These particles are added to the inactive list if out-of-bounds, and the new Draw list otherwise.
@@ -110,9 +110,10 @@ These particles are added to the inactive list if out-of-bounds, and the new Dra
 
 \subsection{Safe CPU/GPU Communication}\label{sec:Impl:Viz:CPUGPUSafety}
 Unlike CUDA, the Vulkan API does not provide any means of type-safety when communicating between the CPU and GPU.
-If the GPU expects data in a specific structure, it is the API user's job to create data that fits this structure.
+If the GPU expects data in a specific structure, it is the CPU's job to create data that fits this structure.
+%API user instead of CPU
 A naive solution might be to keep a C++ structure definition and a GLSL structure definition, and assume that one matches the other.
-This is error prone as the structures are not automatically kept in sync - if one changes, the other will not, and communication will break down.
+This is error-prone as the structures are not automatically kept in sync - if one changes, the other will not, and communication will break down.
 This project's approach is to create a GLSL file defining all interoperable structures (\shell{structures.glsl}), and then include it into a C++ header with some extra code to define GLSL types correctly.
 Both sides will now use the same structure definitions, which are all defined in exactly one place.
 All GLSL code uses the \code{std430} memory layout rules, which closely matches the C++ memory layout, so the structures can be passed directly from the CPU to the GPU safely.

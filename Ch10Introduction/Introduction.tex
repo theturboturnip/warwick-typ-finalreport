@@ -2,7 +2,7 @@
 
 \chapter{Introduction}
 \label{sec:Introduction} 
-The development of equations and mathematical constructs that model natural phenomena has been a large research space for centuries.
+Developing equations and mathematical constructs that model natural phenomena has been a large research space for centuries.
 As digital computers have developed, programs have been built to use these equations and find the results much faster than previously possible\cite{AtomicHeritageFoundationComputingProject}.
 Computational Fluid Dynamics (CFD) programs are programs that simulate fluid flow in some form, usually using the Navier-Stokes equations (reproduced in \cref{eq:NavierStokesContinuity,eq:NavierStokesMomentum}).
 
@@ -20,27 +20,30 @@ Tightly coupled visualizations share memory directly with the simulation on the 
 Both configurations reduce the required storage space, but they have separate advantages and disadvantages.
 
 Most cases generally do not require simulations at interactive speeds, except for those found in the games industry.
-While the games industry does use fluid simulation\cite{paper:GameFluidSummary:medveckyreal}\footnote{As these methods all share the simulation and visualization memory, they are tightly-coupled in-situ visualizations}, many uses do not precisely integrate the Navier-Stokes equations but approximates them \cite{paper:StableFluids:10.1145/311535.311548} using a Lagrangian method.
+While the games industry does use fluid simulation\cite{paper:GameFluidSummary:medveckyreal}\footnote{As these methods all share the simulation and visualization memory, they are tightly-coupled in-situ visualizations}, many uses do not precisely integrate the Navier-Stokes equations but approximate them using a Lagrangian method\cite{paper:StableFluids:10.1145/311535.311548}.
 An exception to this is \cite{presentation:RealtimeFluidSimTombRaider}, which uses a Jacobi solver for the Navier-Stokes equations. This is used to simulate character interaction with different substances floating on the water surface\cite{presentation:RealtimeFluidSimTombRaider}, not to simulate large blocks of water.
 By and large, interactive speeds and precise simulation for large fields are not pursued together.
 
 \section{Motivation}
-The Advanced Computer Architecture coursework last year presented a fluid simulation and tasked the students with optimizing it for a 6-core Intel i5-8500 CPU\cite{modules:CS257Coursework}.
-The original code ran very slowly, taking 80 seconds to simulate 10 seconds of time. % or 8x faster?
-After optimizations, the code simulated 10 seconds of time in just 1.26 seconds, 64x faster than the original and 7.9x faster than real time.\cite{modules:aca257submission}
+The 2020 Advanced Computer Architecture coursework presented a fluid simulation and tasked the students with optimizing it for a 6-core Intel i5-8500 CPU\cite{modules:CS257Coursework}.
+% The original code ran very slowly, taking 80 seconds to simulate 10 seconds of time. % or 8x faster?
+% After optimizations, the code simulated 10 seconds of time in just 1.26 seconds, 64x faster than the original and 7.9x faster than real time.\cite{modules:aca257submission}
+The original code ran very slowly, taking 80 seconds to simulate 10 simulation-seconds.
+After optimizations, the code performed the same simulation in just 1.26 seconds, 64x faster than the original and 7.9x faster than real-time\cite{modules:aca257submission}.
 
-However the simulation purposefully limited itself in some aspects, such as iteration count for an equation solver, which prevented it from converging to an accurate solution for the test data.
+This original simulation purposefully limited itself in some aspects, such as iteration count for an equation solver, which prevented it from converging to an accurate solution for the test data.
 Students were also explicitly prevented from accelerating the simulation using a GPU, which could have made it much faster as each simulation phase is embarrassingly parallel.
 
 Another limitation was that the simulation state could only be visualized once the full simulation had completed,
-instead of in real time, even though the final simulation was fast enough.
+instead of in real-time, even though the final simulation was fast enough.
 This made the results much more difficult to understand, especially for people who don't understand the underlying code or mathematics.
 
 \section{Project Aims}
 This project has three overarching goals: to port the original simulation to the GPU, use the speedup to increase the simulation accuracy, and implement a real-time tightly-coupled in-situ visualization.
 The combined simulation-visualization is the core contribution of this project, and is referred to as ``the program'' throughout the rest of the report.
 
-To the researcher's knowledge while real-time in-situ visualizations exist in games, where graphical fidelity is the priority, there has not been an attempt to implement one in an industrial or academic context.
+% To the researcher's knowledge while real-time in-situ visualizations exist in games, where graphical fidelity is the priority, there has not been an attempt to implement one in an industrial or academic context.
+While real-time in-situ visualizations exist in games, where graphical fidelity is the priority, there has not been an attempt to implement one in an industrial or academic context to the researcher's knowledge.
 The main novelty of this project is the combination of an accurate simulation with real-time visualization methods that aim to communicate important data instead of just looking pretty.
 % The goal of this project is to implement a high-speed tightly-coupled in-situ visualization for the CS257 simulation, without loss of accuracy.
 % To acheive this, the simulation was ported to the GPU with CUDA and optimized.
@@ -55,7 +58,9 @@ The main novelty of this project is the combination of an accurate simulation wi
 
 \section{Stakeholders}
 The main stakeholders are the researcher and the project supervisor.
-They are both invested into the project due to their own personal interest, and in the case of the researcher the effect this project has on final year grades.
+Both stakeholders are invested in the project due to personal interest, and in the case of the researcher the effect this project has on final year grades.
+%They are both invested in the project due to their own personal interest, and in the case of the researcher the effect this project has on final year grades.
+% Both stakeholders are personally interested in the project content, and in particular the researcher 
 % Me
 % Matt Leeke
 % People who will use the simualtion?

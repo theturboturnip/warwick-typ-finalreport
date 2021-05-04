@@ -6,9 +6,10 @@
 while building a large project it's important to develop a consistent, logical, and properly separated design; both to make initial development easy and to make it intuitive for any future developers to understand.
 This applies to all aspects of the program including the codebase (i.e. which classes exist and how they communicate), how the program implement complex processes (such as the simulation/visualization), and how the end user will eventually use the program.
 
-This section first separates the codebase into layers, then analyses these layers in order from the lowest-level to the highest-level.
+This section first separates the codebase into layers and analyses them in order.%from lowest to highest.%in order from the lowest-level to the highest-level.
+% This section first separates the codebase into layers, then analyses these layers in order from the lowest-level to the highest-level.
 All notable design decisions for each layer are noted, and the means of interaction between these layers are documented.
-The final section, for the Command-Line layer, also documents the design of the command-line interface and the file formats used to store simulation state.
+The final section, for the Command-Line layer, also documents the design of the command-line interface and the file formats used to store simulation states.
 
 
 \section{Code Structure}
@@ -20,24 +21,24 @@ The final section, for the Command-Line layer, also documents the design of the 
 \end{figure}
 % The overall structure of the project is shown in \cref{fig:designstructure}.
 The project structure, shown in \cref{fig:designstructure}, is split into four layers: Command-Line, Visualization, Simulation, and Memory.
-Each element broadly represents a C++ class, and depends on the classes defined below it.
+Each element broadly represents a C++ class which depends on the classes defined below it.
 
 The Command-Line layer has a Command-Line Parser, which converts the passed-in argument strings to usable representations, and a set of sub-apps.
 Each sub-app implements one of the subcommands shown in \cref{sec:DesignSubcommands}.
 The figure shows all classes relevant to the \shell{run} subcommand, which shows a visualized simulation.
 
-The Visualization layer contains a high-level VulkanSimApp class, which initiates all visualization-related code.
+The Visualization layer contains a high-level \code{VulkanSimApp} class, which initiates all visualization-related code.
 Beneath that the Worker Thread handles most Vulkan API calls, and depends on multiple sets of data built with Vulkan helper classes.
 This layer uses classes from the Simulation layer, which are reused for the \shell{fixedtime} subcommand to avoid code duplication.
 
 The Simulation layer consists of two main elements: the Runners, and the Backends.
-The Runners use different strategies for invoking a Backend - the FixedTimeRunner runs the simulation flat out until a specific time is reached and outputs the final state, and the VulkanTickedRunner runs the simulation for a small time period while synchronising with other Vulkan elements.
+The Runners use different strategies for invoking a Backend - the \code{FixedTimeRunner} runs the simulation flat out until a specific time is reached and outputs the final state, and the \code{VulkanTickedRunner} runs the simulation for a small timesteps while synchronising with other Vulkan elements.
 Each Backend implements the same interface, so Runner implementations can be Backend-agnostic.
-The FixedTimeRunner supports all of the defined Backends (see \cref{sec:DesignBackends}), but the VulkanTickedRunner can only use the Vulkan-compatible CUDA backend.
+The \code{FixedTimeRunner} supports all of the defined Backends (see \cref{sec:DesignBackends}), but the \code{VulkanTickedRunner} can only use the Vulkan-compatible CUDA backend.
 
-Finally the Memory layer exposes APIs for the Backends to allocate their own memory.
+Finally, the Memory layer exposes APIs for the Backends to allocate simulation memory.
 Runners decide how many `frames' to create (see \cref{sec:DesignSimNBuffer}), and use the FrameSetAllocator to create a set of FrameAllocators.
-The Backends then use each FrameAllocator to allocate a set of buffers, which are then used to store simulation data.
+The Backends use each FrameAllocator to allocate a set of buffers, which are then used to store simulation data.
 These buffers are represented with Sim2DArray and SimRedBlackArray instances.
 The SimRedBlackArray splits a given grid size into two halves, one storing entirely red elements and one storing entirely black elements, and can be configured to store an additional full matrix (helpful for e.g. pressure, where both representations are useful.)
 

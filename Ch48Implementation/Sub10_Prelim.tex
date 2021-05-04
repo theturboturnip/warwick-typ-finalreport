@@ -4,7 +4,7 @@ This section will explain key elements of C++17 used in the program, the build s
 
 \subsection{C++ Primer}
 Virtual classes use virtual functions to allow subclasses to override behaviour in the parent.
-The seminal example is creating a parent class \code{Animal} which can \code{talk()}, and a subclass \code{Dog} which overrides \code{talk()} to bark.
+The seminal example is creating a parent class \code{Animal} that can \code{talk()}, and a subclass \code{Dog} that overrides \code{talk()} to bark.
 When a virtual function is called on an object, instead of statically determining which function to call at compile-time, the \emph{vtable} of the object is read out at run-time with the correct function pointer\cite{presentation:RuntimePolymorphism}.
 %Citation formerly \todocite{https://pabloariasal.github.io/2017/06/10/understanding-virtual-tables/}
 In Java and Python all functions are considered virtual, but in C++ virtual behaviour can be selectively enabled.
@@ -16,6 +16,7 @@ Virtual functions are avoided where possible in the codebase.
 One of C++'s greatest innovations over C is the template system.
 Classes and functions can be `templated' on types or values, and then `instantiated' when these parameters are known.
 When such a class or function is instantiated a complete copy is created with the new parameter values, which is compiled and optimized separately from any other instantiations.
+Some classes can also be ``specialized'' to implement custom behaviour for specific parameter values.
 This is useful for encoding extra information in a type for safety, e.g. \code{VulkanShader<Vertex>} cannot be passed to a function expecting \code{VulkanShader<Compute>} because they're independent types.
 It's also useful for static function dispatch, as instead of taking a virtual class with a \code{talk()} function you can instead template a function on the type of animal it uses, and call the function directly.
 This technique is used in the Simulation to efficiently use Backends.
@@ -23,7 +24,7 @@ This technique is used in the Simulation to efficiently use Backends.
 \input{Ch48Implementation/figures/template_vfunc_example}
 
 \subsubsection{``Typeclasses''}
-In other languages, like Haskell, a typeclass defines some behaviour a class should fit. From \cite{learnyouahaskell}: ``If a type is a part of a typeclass, that means that it supports and implements the behavior the typeclass describes''.
+In other languages, like Haskell, a typeclass defines some behaviour a class should fit. From \cite{learnyouahaskell}: ``If a type is a part of a typeclass, that means that it supports and implements the behaviour the typeclass describes''.
 C++17 does not have a convenient way of denoting this but it is especially helpful when building generic code with templates, as it allows the generic code to make assumptions about what behaviour types will support.
 The rest of this chapter will define typeclasses where convenient to describe behaviour shared by certain classes.
 

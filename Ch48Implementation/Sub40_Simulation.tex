@@ -10,7 +10,7 @@ Runners had three major design constraints:
     \item Virtual functions should be avoided where possible.
 \end{enumerate}
 The immediate thought would be to implement a single Runner class, taking a virtual Backend class and uses virtual functions to start each tick.
-This would meet (1) by using a virtual Backend interface, and (2) by using exactly the same class for all Backends, but would violate (3) by forcing every Backend to use virtual classes.
+This would meet (1) by using a virtual Backend interface, and (2) by using the same class for all Backends, but would violate (3) by forcing every Backend to use virtual function calls.
 Instead, a slightly more complex approach is taken.
 
 Each Runner defines a virtual interface, such as \code{IFixedTimeRunner} for the \code{FixedTimedRunner}.
@@ -57,7 +57,7 @@ typeclass Backend {
 
 \subsubsection{CPU Backends}
 Most of the simulation code for these backends has been directly copied from the original simulation\cite{modules:CS257Coursework}\cite{modules:aca257submission}.
-Some templates and template specializations have been added for the Adapted backend, but for the most part the simulation is unchanged.
+Some templates and template specializations have been added for the Adapted backend, but for the most part, the simulation is unchanged.
 The backend classes simply wrap up this code to be compatible with the typeclass.
 
 \subsubsection{CUDA Backend}

@@ -2,8 +2,8 @@
 \label{sec:LibrarySelection}
 \input{Ch48Implementation/figures/compat_matrix}
 CUDA and Vulkan have been chosen as backend, but other backends were also considered.
-As the simulation would have to run on DCS systems (\cref{reqN:DCSCompile}), and thus run on Linux, the only possible GPU rendering backends were OpenGL and Vulkan.
-However there were still multiple choices of compute backend:
+As the simulation would have to run on DCS systems (\cref{reqN:DCSCompile}) and thus run on Linux, the only possible GPU rendering backends were OpenGL and Vulkan.
+However, there were still multiple choices of compute backend:
 \begin{itemize}
     \item OpenCL\cite{tool:OpenCL1.0PressRelease} is an ``Open Standard for Parallel Programming of Heterogeneous Systems''\cite{TheKhronosGroupOpenCLInc}.
     \item CUDA\cite{tool:CUDA} is a closed-source library for running parallel code on NVIDIA GPUs.
@@ -19,14 +19,13 @@ A Vulkan compute backend is used for the visualization portion of the code.
 
 % Not for now, but note that the C++ vulkan bindings are nice. They do end up wrapped in other classes, but they remove the need to remember boilerplate as much.
 
-In other cases there were clear choices: the SDL2\cite{SimpleHomepage} window and input library and the Dear ImGUI\cite{CornutDearImGui} UI library were chosen due to personal experience.
-The \shell{stb\_image.h} header was found to be a simple method of importing image color data as byte arrays, used for the input generator (\cref{req:GenerateState}).
+In other cases, there were clear choices: the SDL2\cite{SimpleHomepage} window and input library and the Dear ImGUI\cite{CornutDearImGui} UI library were chosen due to personal experience.
+The \shell{stb\_image.h} header was found to be a simple method of importing image colour data as byte arrays, used for the input generator (\cref{req:GenerateState}).
 
 There are a great many options for Command-Line parsing libraries, even more so because C++ is used instead of C.
 A recent survey of the possibilities\cite{attractivechaos2018AC/C++} was whittled down to five options.
 
 \code{getopt}\cite{FreeSoftwareFoundationGetopt3:Page}, \code{argp}\cite{GNUProjectArgpLibrary}, and \code{gopt}\cite{VajzovicGoptLibrary} are C libraries that use arrays of structures to define the required arguments.
 Of them, only \code{argp} can automatically generate a \shell{--help} argument, which is a very valuable feature.
-
-\code{cxxopts}\cite{jarro2783Cxxopts:Parser} was considered as a C++ alternative, but used very odd syntax for defining arguments.
+\code{cxxopts}\cite{jarro2783Cxxopts:Parser} was considered as a C++ alternative but used very odd syntax for defining arguments.
 Ultimately CLI11\cite{CLIUtilsCLI11} was chosen as a modern C++11 library that had native support for subcommands, which were used heavily for separating program components (see \cref{sec:DesignSubcommands}).

@@ -4,7 +4,7 @@
 % \subsection{Backends}
 To allow easy comparisons between CPU and GPU simulations the program contains multiple simulation backends.
 %which can be requested when running a headless simulation\footnote{The realtime visualization currently only supports the CUDA-based backend, violating \cref{req:GPUCapable}.}.
-The headless and visualized simulations use a \shell{--backend} command line option to allow the user to choose the backend from this selection:\label{sec:DesignBackends}
+The headless and visualized simulations use a \shell{--backend} command-line option to allow the user to choose the backend from this selection:\label{sec:DesignBackends}
 \begin{itemize}
     \item Null, a backend which does no simulation for testing purposes.
     \item CPU Simple, equivalent to the pre-optimization CPU simulation.
@@ -13,8 +13,8 @@ The headless and visualized simulations use a \shell{--backend} command line opt
     \item CUDA Backend V1, the only GPU-based backend.
 \end{itemize}
 
-The only modification present in the CPU Optimized Adapted backend is the removal of double-precision floating point logic, which is not present on the GPU for speed concerns.
-It still isn't identical to the CUDA environment, as CUDA aggressively contracts floating point operations to fused multiply-add while the CPU compiler does not.
+The only modification present in the CPU Optimized Adapted backend is the removal of double-precision floating-point logic, which is not present on the GPU for speed concerns.
+It still isn't identical to the CUDA environment, as CUDA aggressively contracts floating-point operations to fused multiply-add while the CPU compiler does not.
 The other CPU optimizations are present on the GPU where possible: the residual check between each Poisson phase is still removed, and the red-black data is still separated into separate arrays. 
 % However once the GPU introduces residual checking for the iterative solver, or any other major changes to the pipeline, they will be introduced into this backend to ensure a like-for-like comparison.
 
@@ -30,25 +30,26 @@ Each CUDA Kernel represents a computation for a single grid cell, which is execu
 The grid is split into small `blocks' of threads, and the threads within each block are executed by a Streaming Multiprocessor (SM) in groups of 32 (a `warp').% in parallel over the entire grid.
 % These threads are split into a hierarchy as described in \todocite{https://www.nvidia.com/content/PDF/fermi_white_papers/NVIDIA_Fermi_Compute_Architecture_Whitepaper.pdf}.
 % ``A GPU executes one or more kernel grids; a streaming multiprocessor (SM) executes one or more thread blocks; and CUDA cores and other execution units in the SM execute threads.''
-The grids and blocks can be specified in 1D, 2D, or 3D depending on the dimensionality of the problem.
-Our program uses a 2D grid for most kernels, because each computation reads adjacent data in 2D space.
-Reduction kernels treat the 2D grid as a flat 1D array, because there is no need for adjacent data.
+Grid and blocks dimensions can be specified in 1D, 2D, or 3D depending on the dimensionality of the problem.
+The program uses a 2D grid for most kernels because each computation reads adjacent data in 2D space.
+Reduction kernels treat the 2D grid as a flat 1D array, because there is no need to retrieve `adjacent' data.
 
 The CUDA backend must execute both with Vulkan (when visualized) and without Vulkan (when headless).
 This affects the type of memory used in the simulation.
 When visualized, crucial data such as velocity and pressure are stored in shared Vulkan-CUDA memory, to allow direct usage from both APIs without copying the data.
-In all other cases CUDA Unified Memory is used, which can be paged between the CPU and GPU on-demand without manually mapping it across\cite{Harris2017UnifiedBlog}.
+In all other cases, CUDA Unified Memory is used, which can be paged between the CPU and GPU on-demand without manually mapping it across\cite{Harris2017UnifiedBlog}.
 This allowed for granular debugging during development, as GPU kernels could be easily swapped out for known-correct CPU implementations without having to move memory manually.
 
 % \todomark{CUDA Unified memory allows for granular debugging by combining known-correct CPU implementations with GPU kernels} 
 
 \subsection{N-Buffering}\label{sec:DesignSimNBuffer}
 When developing the Visualization, it was noted that keeping a separate copy of the simulation output would allow the visualization to run in parallel with the simulation, without the simulation overwriting data currently being visualized.
-To allow this, N-buffering was introduced to the simulation backends and to aspects of the visualization.
+To allow this, N-buffering was introduced to the simulation backends and aspects of the visualization.
 Multiple `frames' are stored, where each one contains all data used in a simulation tick.
 Each simulation tick is assigned to a specific frame chosen by the Runner, and only the data in this frame is written to.
-The index of the last-written frame is tracked, and is used as the input for the next simulation tick.
-During a simulation of frame \#N, the contents of the other frames is constant and can be read out without any race conditions.
+The last-written frame is then used as the input for the next simulation tick.
+% The index of the last-written frame is tracked, and is used as the input for the next simulation tick.
+During a simulation of frame \#N, all other frames contain constant data and can be read out without any race conditions.
 
 % \subsection{Design Optimizations}
 % The residual check after every Poisson phase is still removed, although it was planned to be 
