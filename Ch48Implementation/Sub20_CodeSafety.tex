@@ -91,7 +91,7 @@ Smart resource classes alleviate this by tying the resource lifetime to a C++ ob
 The prime example of this is \code{std::unique_ptr<T>}, which holds a \code{T*} object and \code{free()}-s it when the object leaves scope (\cref{fig:ImplUniquePtr}).
 However this does not easily map to other deletion methods, and the pointer adds an unwanted extra level of indirection.
 \code{vulkan.hpp}, included in the Vulkan SDK, includes similar classes for each type of Vulkan resource, but still requires a lot of boilerplate to initially create objects\footnote{Vulkan objects require a full CreateInfo struct to create, rather than taking function arguments.}.
-In some cases it's also more convenient to store multiple resources together, such as a buffer and the device memory it uses, which cannot be directly achieved with either method.
+In some cases, it's also more convenient to store multiple resources together, such as a buffer and the device memory it uses, which cannot be directly achieved with either method.
 To solve these problems custom smart resource classes are implemented for individual resources and aggregates, with more convenient constructors (see \cref{sec:appx_resourceclasses}).
 
 These smart classes are affected by C++ copy/move semantics.

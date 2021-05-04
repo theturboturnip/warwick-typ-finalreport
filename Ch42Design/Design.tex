@@ -32,15 +32,15 @@ Beneath that the Worker Thread handles most Vulkan API calls, and depends on mul
 This layer uses classes from the Simulation layer, which are reused for the \shell{fixedtime} subcommand to avoid code duplication.
 
 The Simulation layer consists of two main elements: the Runners, and the Backends.
-The Runners use different strategies for invoking a Backend - the \code{FixedTimeRunner} runs the simulation flat out until a specific time is reached and outputs the final state, and the \code{VulkanTickedRunner} runs the simulation for a small timesteps while synchronising with other Vulkan elements.
+The Runners use different strategies for invoking a Backend - the \code{FixedTimeRunner} runs the simulation flat out until a specific time is reached and outputs the final state, and the \code{VulkanTickedRunner} runs the simulation for small timesteps while synchronising with other Vulkan elements.
 Each Backend implements the same interface, so Runner implementations can be Backend-agnostic.
 The \code{FixedTimeRunner} supports all of the defined Backends (see \cref{sec:DesignBackends}), but the \code{VulkanTickedRunner} can only use the Vulkan-compatible CUDA backend.
 
 Finally, the Memory layer exposes APIs for the Backends to allocate simulation memory.
-Runners decide how many `frames' to create (see \cref{sec:DesignSimNBuffer}), and use the FrameSetAllocator to create a set of FrameAllocators.
-The Backends use each FrameAllocator to allocate a set of buffers, which are then used to store simulation data.
-These buffers are represented with Sim2DArray and SimRedBlackArray instances.
-The SimRedBlackArray splits a given grid size into two halves, one storing entirely red elements and one storing entirely black elements, and can be configured to store an additional full matrix (helpful for e.g. pressure, where both representations are useful.)
+Runners decide how many `frames' to create (see \cref{sec:DesignSimNBuffer}), and use the \code{FrameSetAllocator} to create a set of \code{FrameAllocator}s.
+The Backends use each \code{FrameAllocator} to allocate a set of buffers, which are then used to store simulation data.
+These buffers are represented with \code{Sim2DArray} and \code{SimRedBlackArray} instances.
+The \code{SimRedBlackArray} splits a given grid size into two halves, one storing entirely red elements and one storing entirely black elements, and can be configured to store an additional full matrix (helpful for e.g. pressure, where both representations are useful.)
 
 All elements of the Memory layer are parameterized on the type of memory.
 This can be CPU memory allocated with \code{malloc} and \code{free}, CUDA Unified Memory (see \cref{sec:Design:Simulation}), or Vulkan on-device memory. 
