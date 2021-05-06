@@ -28,18 +28,14 @@ Overall, while unit tests are not always suitable for elements of the codebase, 
 The final set of unit tests are shown in \cref{tab:unittests}.
 
 \section{Integration Testing}
-Once the program units have been individually tested, Integration Testing tests if the units can interface with each other correctly.
+Once the program units have been individually tested, the Integration Tests in \cref{tab:integration_tests} test that the units can interface with each other correctly.
 Again the subcommands are treated as units, and testing is performed by passing the output from one subcommand as the input to another.
 In this program only the \shell{makeinput} and \shell{fixedtime} subcommands produce output, so their output is exhaustively tested against the other commands.
 At the codebase level some previous unit tests can be counted as integration tests:
 the headless simulation functions as an integration test for the Memory and Simulation layers, and the visualized simulation tests the integration between the Simulation and Visualization layers.
 
 The C++ type system ensures that low-level connections between CPU code use the correct types, making integration testing at this level redundant.
-Moving data between the CPU and GPU is more complicated, but the elements put in place in (\cref{sec:Impl:Viz:CPUGPUSafety}) and the Vulkan validation layers (\cref{sec:Impl:CodeSafety}) ensure that any integration errors are caught when simply running the program in Debug mode.
-
-The Integration tests are shown in \cref{tab:integration_tests}.
-
-
+Moving data between the CPU and GPU is more complicated, but the elements put in place in \cref{sec:Impl:Viz:CPUGPUSafety} with the Vulkan validation layers (\cref{sec:Impl:CodeSafety}) ensure that any integration errors are caught when simply running the program in Debug mode.
 
 \section{System Testing}
 This final layer of testing determines if the program upholds the functional and non-functional requirements set out in \cref{sec:Requirements}.
@@ -54,18 +50,17 @@ A few require a large amount of data collection or at least careful attention to
 These tests are specified in \cref{tab:sys_tests_nonfunc}.
 All gathered data is specified in the next subsection, and then the results are shown in \cref{sec:Results}.
 
-\input{Ch60Testing/figures/unit_table}
-\input{Ch60Testing/figures/integration_table}
-\input{Ch60Testing/figures/system_table}
-\input{Ch60Testing/figures/system_table_nonfunc}
-
 \subsection{Success Measurement}\label{sec:Testing:SuccessMeasurement}
+Some non-functional requirements require more in-depth testing.
+These tests are planned here, and the results are shown in \cref{sec:Results}.
+The results are then evaluated in \cref{sec:Evaluation} along with the rest of the test outcomes.
+
 \cref{test:sys:sim:valgrind,test:sys:sim:cudamemcheck} test the memory usage of the system.
 The most important kind of error they can detect are memory leaks, where memory is allocated without being released, leading to the program taking up memory it does not need anymore.
-While it is important to avoid memory leaks in all cases the most important variation is continuous memory leaks, where memory is continuously leaked over and over, or large leaks of sizes larger than 100MB.
+While it is important to avoid memory leaks in all cases, the most important variations are continuous memory leaks, where memory is continuously leaked over and over, and large leaks of sizes larger than 100MB.
 Single small leaks are less concerning, as they should not impact the rest of the system greatly.
-The programs used to find these leaks may themselves be bad at recognizing allocation/freeing\cite{ValgrindProblemsBlog}, and lead to false positives.
-Care must be taken when evaluating their results.
+The programs used to find these leaks may themselves be bad at recognizing allocation/freeing\cite{ValgrindProblemsBlog}, and lead to false positives, so care must be taken when evaluating their results.
+
 \cref{test:sys:sim:speed,test:sys:sim:accuracy} evaluate the speed and accuracy of the CUDA-based simulation backend vs. the adapted CPU backend.
 The accuracy is measured by comparing the output of equivalent simulations on the original simulation input state.
 Other states were tested, but any newly generated states with obstacles proved to be unstable and produce Not-a-Number outputs on both backends.
@@ -94,4 +89,10 @@ Each feature is then individually enabled, brought to the worst-case scenario (u
 To ensure the results are not affected by external sources, the program is run in unlocked framerate mode with no other programs running on the system.
 This is also the case for the GPU utilization test (\cref{test:sys:run:pipeline}).
 
-These results are shown in \cref{sec:Results} and evaluated along with the rest of the test outcomes in \cref{sec:Evaluation}.
+% These results are shown in \cref{sec:Results}.
+% They are then evaluated along with the rest of the test outcomes in \cref{sec:Evaluation}.
+
+\input{Ch60Testing/figures/unit_table}
+\input{Ch60Testing/figures/integration_table}
+\input{Ch60Testing/figures/system_table}
+\input{Ch60Testing/figures/system_table_nonfunc}

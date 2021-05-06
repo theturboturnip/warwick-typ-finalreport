@@ -4,7 +4,7 @@ This was accomplished by creating an enum \code{MType} and a set of classes temp
 These templates were then specialized for each type of memory, implementing the logic for each type separately.
 Separate implementations were required due to the unique constraints and allocation methods of each memory type.
 
-\begin{figure}
+\begin{figure}[hb]
     \centering
 \begin{minted}{cpp}
 enum MType {
@@ -25,12 +25,15 @@ typeclass DataArray {
     static size_t sizeBytesOf(Size<uint32_t> size);
 }
 
+class Sim2DArray<T, MType> fits DataArray;
+class SimRedBlackArray<T, MType, RedBlackStorage> fits DataArray;
+
 typeclass FrameAllocator<MType> {
     // Function for allocating a 2D array
     Sim2DArray<T, MType> allocate2D(Size);
     
     // Function for allocating a red/black array
-    SimRedBlackArray<T, MType, RedBlackStorage> allocateRedBlack(Size);
+    SimRedBlackArray<T, MType, RBStorage> allocateRedBlack(Size);
 }
 
 typeclass FrameSetAllocator<MType, TFrame> {
@@ -42,19 +45,21 @@ typeclass FrameSetAllocator<MType, TFrame> {
 \end{figure}
 
 \subsection{Array Handles}
-The \code{Sim2DArray<T, MType>} and \code{SimRedBlackArray<T, MType, RedBlackStorage>} classes represent handles to 2D arrays of values of type \code{T}.
-They implement a common \emph{DataArray} typeclass (\cref{fig:TypeclassMemory}).
+The \code{Sim2DArray<...>} and \code{SimRedBlackArray<...>} classes represent handles to 2D arrays of values of arbitrary types.
+% \code{T}.
+Both implement a common \emph{DataArray} typeclass (\cref{fig:TypeclassMemory}).
 They do not own the data they point to, so if a \code{Sim2DArray} is destroyed the referenced memory isn't freed.
 Freeing memory is handled by the \code{FrameAllocator} instead.
 
 \code{SimRedBlackArray} serves as an aggregate of \code{Sim2DArray}s, without defining any special behaviour.
 It does not specialize on the memory type, but provides two storage variants \code{RedBlackOnly} and \code{WithJoined} (\cref{fig:TypeclassMemory}).
 
-\code{Sim2DArray} implements a set of functions for accessing data from the CPU, CUDA, and Vulkan.%GPU, and as Vulkan handles.
+\code{Sim2DArray} implements a set of functions for accessing data from the CPU, CUDA, and Vulkan.
+%GPU, and as Vulkan handles.
 These functions are only present if that access type is supported, so trying to use an unsupported function results in a compile-time error.
-Other more generic operations are also supported such as zeroing out memory, copying memory in from different sources, and copying memory out to the CPU.
+Other generic operations are also supported such as zeroing out memory, copying memory in from different sources, and copying memory out to the CPU.
 Each of these is implemented differently based on the memory type, and may not be implemented if the operation is impossible.
-For example attempting to `prefetch', i.e. move CUDA Unified Memory to the GPU, is only supported for CUDA Unified Memory and not the other types.
+For example, attempting to `prefetch', i.e. move CUDA Unified Memory to the GPU before usage, is only supported for CUDA Unified Memory and not the other types.
 % \todomark{Matrix of supported operations}
 
 \subsection{\texttt{FrameAllocator}}
@@ -69,8 +74,8 @@ The fixed amount is calculated by the \code{FrameSetAllocator}, which assumes on
 The associated CUDA pointer is \emph{not} compatible with Unified Memory, so cannot be paged to the CPU.
 
 \subsection{\texttt{FrameSetAllocator}}
-\code{FrameSetAllocator<MType, TFrame>} creates a set of TFrame objects which are each allocated using separate \code{FrameAllocator<MType>} objects.
-The CPU and CUDA variants simply construct N \code{TFrame}s using N \code{FrameAllocator}s.
+\code{FrameSetAllocator<MType, TFrame>} creates a set of \code{TFrame} objects which are each allocated using separate \code{FrameAllocator<MType>} objects.
+The simple CPU and CUDA variants simply construct $N$ \code{TFrame}s using $N$ \code{FrameAllocator}s.
 The Vulkan variant is more advanced as it has to check the \code{TFrame} exposes the correct data, calculate the amount of Vulkan data to allocate per frame, and expose this data by implementing a virtual \code{VulkanFrameSetAllocator} interface.
 The Vulkan variant also passes in a CUDA \code{FrameAllocator} with the Vulkan one to allow the other buffers to be allocated.
 

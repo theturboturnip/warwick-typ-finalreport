@@ -5,7 +5,7 @@
 %     \label{fig:results:mse_rel_pressure}
 % \end{figure}
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \begin{tikzpicture}
     \begin{axis}[
@@ -28,11 +28,11 @@
         legend pos = north east
     ]
     \addplot table [x=iters, y=pres-mean-10, col sep=space] {Ch62Results/figures/data/MSE.csv};
-    % \addlegendentry{\SI{10}{\second}};
+    \addlegendentry{\SI{10}{\second}};
     \addplot table [x=iters, y=pres-mean-25, col sep=space] {Ch62Results/figures/data/MSE.csv};
-    % \addlegendentry{\SI{25}{\second}};
+    \addlegendentry{\SI{25}{\second}};
     \addplot table [x=iters, y=pres-mean-50, col sep=space] {Ch62Results/figures/data/MSE.csv};
-    % \addlegendentry{\SI{50}{\second}};
+    \addlegendentry{\SI{50}{\second}};
     \end{axis}
     \end{tikzpicture}
     \caption{MSE for Pressure when adjusted to use relative values}

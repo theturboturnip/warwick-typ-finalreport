@@ -31,10 +31,11 @@ This proves that ticks-per-second can be used to accurately compare CUDA/CPU per
 \input{Ch62Results/figures/ticks_per_second_bar_aca}
 \input{Ch62Results/figures/ticks_per_second_bar_rel_cpu_aca}
 
-The ticks-per-second for CPU and CUDA are shown in \cref{fig:results:ticks_per_second_bar_aca}, varying $\npoisson \in {100, 200, 300, 1000}$.
+The ticks-per-second for CPU and CUDA are shown in \cref{fig:results:ticks_per_second_bar_aca}, for $\npoisson$ values of ${100, 200, 300, 1000}$.
 As expected the ticks-per-second decreases as more iterations are added, and CUDA is consistently faster than the CPU.
 When normalized relative to the CPU speed (\cref{fig:results:ticks_per_second_bar_rel_cpu_aca}), CUDA is shown to consistently have \textasciitilde{}2.6x the ticks-per-second of the CPU, i.e. CUDA is consistently 2.6x faster than the CPU. 
 The Poisson stage is likely less sped up than the others, as the speedup for $\npoisson{} = 1000$ (where the Poisson stage dominates) is less than that for lower $\npoisson{}$ values.
+When running at $\npoisson{} = 300$ the speed is close to the CPU speed for $\npoisson = 100$, so the original goal of ``using the speedup to increase simulation accuracy'' can be met.
 
 \subsubsection{Scaling}
 To determine how the implementations scale with grid resolution, a simple simulation with no obstacle squares was performed for resolutions between 260~x~130 and 4096~x~2048.
@@ -43,21 +44,11 @@ The increasing size is measured in the total amount of memory (in \si{\mega\byte
 \cref{fig:results:throughput_over_size} shows \si{\giga\op\per\second} for CUDA and CPU against the memory required in \si{\mega\byte}.
 
 \input{Ch62Results/figures/poisson_throughput_vs_size}
+\input{Ch62Results/figures/poisson_throughput_vs_size_split}
 
-Initially, the biggest surprise in \cref{fig:results:throughput_over_size} was the CPU performing better than CUDA between 4-\SI{16}{\mega\byte}.
-Other interesting points were the linear increase in CUDA throughput between 0.4-\SI{1.2}{\mega\byte}, and the performance plateau from \SI{4}{\mega\byte} onwards (CUDA) and \SI{32}{\mega\byte} onwards (CPU).
-These are due to multiple factors, which are best explained by separating the CUDA graph into stages (\cref{fig:results:throughput_over_size_stages}).
+\pagebreak
 
-% \todoref{Throughput/Poisson - Inital climb state} shows \si{\mega\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
-The first stage shows \si{\giga\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
-This is due to the GPU's parallelization not being fully utilized.
-This data was measured on a GTX 1080 which has 2560 CUDA cores separated into 20 Streaming Multiprocessors of 128 cores each\cite{nvidia1080Whitepaper}.
-Each Multiprocessor can execute 2048~threads at once\cite{NvidiaCudaOccupancyCalc}, thus the GPU can execute at most 40,960~threads in parallel.
-The first data point uses a 260~x~130 grid with only 33,800~cells, thus 16,900 threads per Poisson colour stage\footnote{The red and black stages only write to the 1/2 of the grid corresponding to their colour.}, so the GPU isn't saturated and isn't producing as many outputs as possible per second.
-This is also the case for the second data point, with 36,100 threads per colour stage.
-Beyond this point, the GPU is saturated and the throughput plateaus at 2.6x the CPU value.
-
-\begin{table}[]
+\begin{table}[ht]
     \centering
     \begin{tabular}{c|ccc}
         Grid Size & Poisson Data Size (\si{\mega\byte}) & Total Cells & CUDA Threads per Colour Stage \\
@@ -80,6 +71,20 @@ Beyond this point, the GPU is saturated and the throughput plateaus at 2.6x the 
     \label{tab:results:speeddata}
 \end{table}
 
+Initially, the biggest surprise in \cref{fig:results:throughput_over_size} was the CPU performing better than CUDA between 4-\SI{16}{\mega\byte}.
+Other interesting points were the linear increase in CUDA throughput between 0.4-\SI{1.2}{\mega\byte}, and the performance plateau from \SI{4}{\mega\byte} onwards (CUDA) and \SI{32}{\mega\byte} onwards (CPU).
+These are due to multiple factors, which are best explained by separating the CUDA graph into stages (\cref{fig:results:throughput_over_size_stages}).
+
+% \todoref{Throughput/Poisson - Inital climb state} shows \si{\mega\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
+The first stage shows \si{\giga\op\per\second} increasing almost linearly before plateauing at 1.2-\SI{1.5}{\mega\byte}.
+This is due to the GPU's parallelization not being fully utilized.
+This data was measured on a GTX 1080, which has 2560 CUDA cores separated into 20 Streaming Multiprocessors (SMs) of 128 cores each\cite{nvidia1080Whitepaper}.
+Each SM can execute 2048~threads at once\cite{NvidiaCudaOccupancyCalc}, thus the GPU can execute at most 40,960~threads in parallel.
+The first data point uses a 260~x~130 grid with only 33,800~cells, thus 16,900 threads per Poisson colour stage\footnote{The red and black stages only write to the 1/2 of the grid corresponding to their colour.}, so the GPU isn't saturated and isn't producing as many outputs as possible per second.
+This is also the case for the second data point, with 36,100 threads per colour stage.
+Beyond this point, the GPU is saturated and the throughput plateaus at 2.6x the CPU value.
+
+
 % The researcher believes is also the case for the second datapoint, a 380~x~190 grid with 72,200~cells, as the ramp-up time to fully saturate the GPU with threads (64 threads/mp / (32threads/warp * 2 warps/cycle) = 640 cycles) is significant compared to the time required to execute each thread.
 % The decrease in \todoref{Throughput/Poisson - falling due to cache} begins after \SI{2}{\mega\byte}, which is the size of the GTX ~1080 L2 cache\cite{nvidia1080Whitepaper}.
 The throughput decreases after \SI{2}{\mega\byte}, which is the size of the GTX~1080 L2 cache\cite{nvidia1080Whitepaper}.
@@ -92,8 +97,6 @@ Caching is vital to performance, and this program is no exception.
 Adapting the implementation to better utilize cache is crucial to improving simulation speed at scale, and would be excellent to investigate this as future work.
 
 \subsection{Accuracy}\label{sec:Results:Sim:Accuracy}
-\input{Ch62Results/figures/acc_table}
-\input{Ch62Results/figures/mse_initial}
 
 Initially, accuracy was measured by comparing the Mean Square Error (MSE) between CPU and CUDA outputs after equivalent simulations (see \cref{tab:results:accuracy_mse}).
 Ideally, the CUDA and CPU results would be similar, and the MSE would be low (perhaps around $10^{-14}$, as expected in \cref{sec:Comparisons}.)
@@ -103,6 +106,8 @@ In both cases, the divergence between CPU and CUDA increases as more iterations 
 However, this isn't the whole story.
 Measuring the difference between the CPU and CUDA doesn't show which one is more accurate.
 
+\input{Ch62Results/figures/acc_table}
+\input{Ch62Results/figures/mse_initial}
 \input{Ch62Results/figures/residual_table}
 
 The true measure of accuracy for a differential equation solver is the precision of the solution - how close the values come to fulfilling the constraints of the equation.
@@ -119,7 +124,7 @@ The actual pressure values increase as more Poisson iterations are performed, fo
 CUDA's values inflate slightly more slowly, giving each grid cell a high square error, resulting in a large MSE.
 When the MSE is calculated \emph{after} subtracting the mean from both datasets, i.e. comparing the relative values, the results are closer to the velocity MSE (\cref{fig:results:mse_rel_pressure}).
 The pressure is only used internally as a relative value so in theory this inflation is fine, but in practice if it increases too much it could reach the limits of IEEE-754 floating point\cite{IEEEFloat75419} and cause accuracy/precision loss in the solver.
-\cite{book:griebel1998numerical} mentioned that ``nonphysical pressure values'' may be the result of noncontinuous starting velocities, and mentioned a method for resolving this (see \cref{ext:PressureValues}). This may prevent inflation, but it doesn't explain the deviation between the CPU and CUDA.
+The original book mentioned that ``nonphysical pressure values'' may be the result of noncontinuous starting velocities\cite{book:griebel1998numerical}, and mentioned a method for resolving this (see \cref{ext:PressureValues}). This may prevent inflation, but it doesn't explain the deviation between the CPU and CUDA.
 
 The CUDA and CPU compilers are configured to handle floating-point numbers slightly differently.
 \shell{nvcc} compiles with the \shell{--fmad} option turned on by default\cite{NvccFmad} which ``enables the contraction of floating-point multiplies and adds/subtracts into floating-point multiply-add operations''.
@@ -128,9 +133,12 @@ It is disabled for the CPU compiler, to keep the results from the other CPU back
 While the change is subtle it's present in all CUDA kernels, and when applied thousands of times may have a significant effect, leading to the deviation.
 In the future, this could be verified by compiling the CPU simulation with this option enabled.
 
+\clearpage
+\pagebreak
+
 \subsection{GPU Utilization}\label{sec:Results:Sim:Efficiency}
 \input{Ch62Results/figures/profile_sim}
-GPU Utilization is close to 100\% where possible.
+% GPU Utilization is close to 100\% where possible.
 During the Poisson iterations the GPU utilization is 100\% thanks to the CUDA Graph optimization.
 At the tick boundaries, a bubble is unavoidable (see \cref{fig:results:sim_profile_bubble}) where the CPU has to wait for the GPU reductions to finish before calculating the timestep for the next tick and invoking the next kernels.
 This bubble is approximately \SI{10}{\micro\second} long, combined with another \SI{10}{\micro\second} bubble between the Tentative Velocity stage finishing and the Poisson stage beginning.
@@ -159,7 +167,10 @@ While these properties do overlap with the simulation, this section focuses only
 The speed of each feature was measured by enabling only that feature, moving to the worst-case for that feature such as enabling auto-range and maximizing onscreen instances (\cref{tab:results:vizworstcases}), and then reading off the time-to-render from the GUI.
 The rendered simulation state was the 660~x~120 original simulation input, which is rendered internally at 2x resolution in both directions i.e. 1320~x~240 then composited with the GUI onto a 1600~x~900 window.
 
-\begin{table}[]
+The individual features are all faster than the simulation, even when combined, and are significantly shorter than the \SI{16.6}{\milli\second} required for a 60FPS visualization.
+Even at scale, the visualization features should not have a significant impact on the visualization speed.
+
+\begin{table}
     \centering
     \begin{tabular}{c|p{0.7\textwidth}}
         Feature & Worst-Case \\
@@ -174,9 +185,6 @@ The rendered simulation state was the 660~x~120 original simulation input, which
 
 \input{Ch62Results/figures/viz_speed_table}
 
-The individual features are all faster than the simulation, even when combined, and are significantly shorter than the \SI{16.6}{\milli\second} required for a 60FPS visualization.
-Even at scale, the visualization features should not have a significant impact on the visualization speed.
-
 \subsection{GPU Utilization}\label{sec:Results:Viz:Efficiency}
 \input{Ch62Results/figures/profile_viz}
 Just like the Simulation, the GPU utilization is 100\% where possible.
@@ -190,7 +198,7 @@ Testing the visualization for memory leaks proved more difficult than for the si
 Running \shell{valgrind} with suppressions enabled found no errors in this program, but found many potential errors (or more likely false positives) in the SDL2 windowing library and the underlying X windowing system.
 \shell{cuda-memcheck} produced a host of ``Invalid read'' errors, which seemed to originate from CUDA/Vulkan shared memory.
 The documentation stated it could not handle DirectX interoperability\cite{NvidiaCudaMemcheckIssues}, but said nothing about Vulkan.
-It suggested using the \shell{compute-sanitizer} tool in other situations, which explicitly does not support Vulkan interoperability\cite{NvidiaComputeSanitizerRelease} and produced exactly the same errors.
+It suggested using the \shell{compute-sanitizer} tool in other situations, which explicitly does not support Vulkan interoperability\cite{NvidiaComputeSanitizerRelease}, and that tool produced exactly the same errors.
 Given that the errors were identical, it is very likely that both programs do not support Vulkan and should not be trusted.
 
 As a last resort, the Memory Usage statistic from the Nvidia NSight Systems profiler was consulted.

@@ -4,6 +4,7 @@
 \label{sec:Research} 
 % Before designing the program, understanding the current state of the art is crucial to proper
 
+Research was a key element of this project.
 Implementing and optimizing a fluid simulation without losing correctness required a complete understanding of the mathematics the sim evaluates.
 From this base, optimizations were applied to speed up the program without accidentally changing the result.
 As GPU-based optimization is a wide-reaching problem that has been investigated before, researching optimizations that others have found effective was the first step taken before designing the program.
@@ -17,8 +18,10 @@ The next section collates research into the possible optimizations for the GPU i
 % \cref{sec:Research:SimulationTick} describes the mathematics backing the fluid simulation, and \cref{sec:Research:Optimization} describes previous CPU optimizations and state-of-the-art GPU optimization techniques.
 % \cref{sec:Research:Visualization} then investigates the current standard for visualization techniques and a games industry method for particle simulation, which are used to inform the program requirements and design.
 
+\pagebreak
 \input{Ch20Research/Sub10_SimulationExpl}
 
+\pagebreak
 \section{Optimization}
 \label{sec:Research:Optimization}
 Optimizing simulations is important in all cases, even those that are not real-time, as it allows the engineers using the software to iterate faster on their designs.
@@ -31,6 +34,12 @@ This section explores how CFD simulations started moving to the GPU, the previou
 \input{Ch20Research/Sub20_Opt_ACA}
 \input{Ch20Research/Sub20_Opt_New}
 
+\subsection{Conclusion}
+The original CPU simulation used both algorithmic optimizations (such as precomputing $\beta$) and CPU architecture-specific optimizations (multithreading, floating-point tricks, and vectorization).
+Algorithmic optimizations map well to CUDA unlike some architecture-specific optimizations, but CUDA makes up for these with its own suite of optimizations.
+As with the original CPU simulation, profiling and inspecting the compiled program was required to check the optimizations provided the expected benefits.
+
+\pagebreak
 \section{Visualization}\label{sec:Research:Visualization}
 % For the engineers and scientists developing simulations, it is important for a visualization to be completely accurate and show the data in as much detail as possible.
 % However there are other groups that may not have as deep of an understanding, but whose actions and decisions should still be informed by the simulation results.

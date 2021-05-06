@@ -4,19 +4,24 @@
 
 \begin{sidewaystable}
     \centering
-    \begin{tabular}{lccl|p{0.4\linewidth}|m{0.2\linewidth}|c}
-        ID & \multicolumn{3}{l}{Integrated Modules} & Expected & Output & Result \\
+    \begingroup
+    \raggedright
+    \begin{tabular}{lccl|p{0.5\linewidth}|c|c}
+        ID & \multicolumn{3}{l|}{Integrated Modules} & \multicolumn{1}{c|}{Output} & \multicolumn{1}{c|}{Expected} & Result \\
         \hline
         \newtest{}\label{test:intg:input:render} & \integtest{makeinput}{renderppm} & \successoutput{Valid render image with the same obstacle squares as the initial image.} \\
-        \newtest{}\label{test:intg:input:cmp} & \integtest{makeinput}{compare} & \shell{compare} runs successfully & \shell{compare} ran successfully & \testsuccess{} \\
+        % \newtest{}\label{test:intg:input:cmp} & \integtest{makeinput}{compare} & \shell{compare} runs successfully & \shell{compare} ran successfully & \testsuccess{} \\
+        \newtest{}\label{test:intg:input:cmp} & \integtest{makeinput}{compare} & \successoutput{\shell{compare} runs successfully}\\
         \newtest{}\label{test:intg:input:sim} & \integtest{makeinput}{fixedtime} & \successoutput{Valid simulation output with the same obstacle squares as the initial image.} \\
         \newtest{}\label{test:intg:input:viz} & \integtest{makeinput}{run} & \successoutput{Visualization of a simulation with the same obstacle squares as the initial image.} \\
         \hline
         \newtest{}\label{test:intg:sim:render} & \integtest{fixedtime}{renderppm} & \successoutput{Valid render image with the same obstacle squares as the initial state.} \\
-        \newtest{}\label{test:intg:sim:cmp} & \integtest{fixedtime}{compare} & \shell{compare} runs successfully & \shell{compare} ran successfully & \testsuccess{} \\
+        % \newtest{}\label{test:intg:sim:cmp} & \integtest{fixedtime}{compare} & \shell{compare} runs successfully & \shell{compare} ran successfully & \testsuccess{} \\
+        \newtest{}\label{test:intg:sim:cmp} & \integtest{fixedtime}{compare} & \successoutput{\shell{compare} runs successfully} \\
         \newtest{}\label{test:intg:sim:sim} & \integtest{fixedtime}{fixedtime} & \successoutput{Valid simulation output with the same obstacle squares as the initial state.} \\
         \newtest{}\label{test:intg:sim:viz} & \integtest{fixedtime}{run} & \successoutput{Visualization of a simulation with the same obstacle squares as the initial state.} \\
     \end{tabular}
+    \endgroup
     \caption{Integration Tests}
     \label{tab:integration_tests}
 \end{sidewaystable}

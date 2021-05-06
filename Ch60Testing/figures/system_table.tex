@@ -1,7 +1,9 @@
 \begin{sidewaystable}
     \centering
+    \begingroup
+    \raggedright
     \begin{tabular}{ll|p{0.35\linewidth}|m{0.2\linewidth}|c}
-        ID & Description & Expected & Output & Result \\
+        ID & Description & \multicolumn{1}{c|}{Expected} & \multicolumn{1}{c|}{Output} & Result \\
         \hline
         \newtest{}\label{test:sys:sim:gpu} & \shell{fixedtime}: GPU Simulation & \successoutput{Simulation backend can be set to CUDA} \\
         \newtest{}\label{test:sys:run:gpu} & \shell{run}: GPU Simulation & \successoutput{Simulation backend can be set to CUDA} \\%Can visualize a simulation running on the GPU
@@ -16,6 +18,7 @@
         \newtest{}\label{test:sys:run:colors} & \shell{run}: Test changing colors & \successoutput{All colors used in the simulation should be modifiable} \\
         \newtest{}\label{test:sys:run:validation} & \shell{run}: Check Vulkan validation & \successoutput{No Vulkan validation errors in Debug mode} \\
     \end{tabular}
+    \endgroup
     \caption{System Tests (Functional)}
     \label{tab:sys_tests_func}
 \end{sidewaystable}

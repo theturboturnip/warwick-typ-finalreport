@@ -28,7 +28,7 @@ The full description of each requirement can be found in \cref{sec:Requirements}
 % Similarly to functional requirements, these are laid out in \cref{tab:nonfunctional_req}.
 
 % \subsection{Failed Requirements}
-\begin{table}[h]
+\begin{table}[ht]
     \centering
     \begin{tabular}{l|c|l|c}%ccl|p{0.4\linewidth}|m{0.2\linewidth}|c}
         ID & Priority & Tests & Status \\
@@ -47,11 +47,12 @@ This is an overwhelming success, showing the core functionality of the program i
 The 3 failed \should{}-have requirements, shown in \cref{tab:failed_req}, are relatively minor.
 Furthermore, each omission can be justified.
 
-Satisfying (\cref{req:VizSaveState}), which required saving the simulation state during a visualization, would have delayed the work on the visualization layers.
+\pagebreak
+Satisfying \cref{req:VizSaveState}, which required saving the simulation state during a visualization, would have delayed the work on the visualization layers.
 As the visualization is a significant portion of the project, and this feature would not have had a relevant use-case during development, it was cut.
 
 \cref{req:CompareBinary} would require the \shell{compare} tool to output a single SIMILAR/NOT~SIMILAR value rather than the more detailed metrics it now uses.
-Using a single numeric value to convey this information would be near-impossible and would result in a significant loss of nuance, even more so if only binary options are available, and would be pointless if shown alongside the more detailed metrics.
+Using a single numeric value to convey this information would be near-impossible and result in a significant loss of nuance, even more so if only binary options are available, so would be pointless if shown alongside the more detailed metrics.
 
 \cref{reqN:VizParticleAdvanced} was planned in the Progress Report, specifically citing BOID-like behaviour\cite{BOIDS_10.1145/37401.37406} as a potential means for reducing clumping.
 This would have greatly increased the complexity of the particle system.

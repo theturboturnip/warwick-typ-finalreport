@@ -53,13 +53,15 @@ Horizontal velocity $u_{i,j}$ is at the midpoint of the right cell edge, vertica
 % Staggering the variables in this manner avoids oscillation in the pressure value caused by odd-even decoupling.
 This is used to solve odd-even decoupling\cite{Harlow1965NumericalSurface}: for a fluid at rest (i.e. $u = v = 0$) the continuous solution is that the pressure $p$ is a constant across the grid.
 However, were this to be discretized using central differences with all variables in the same locations, it would also be possible for a checkerboard of pressure values to form, and for oscillation to take place\cite{book:griebel1998numerical}.
-This is prevented by staggering the variables.
-\cite{peric1988comparison} shows that this is also preventable through colocated grids, where a single grid is used for all variables and the velocities of each side of the cell are found using interpolation.
+% This is prevented by staggering the variables.
+Staggering the variables prevents this.
+\citeauthor{peric1988comparison}\cite{peric1988comparison} show that this is also preventable through colocated grids, where a single grid is used for all variables and the velocities of each side of the cell are found using interpolation.
 These cell sides are implicitly staggered relative to the pressure and so avoid this problem.
 
-To allow for derivatives to be accurately calculated for cells on the edges of the grid, boundary cells are added around each grid.%\todomark{figure}
+To allow for derivatives to be accurately calculated for cells on the edges of the grid, boundary cells are added around each grid.
+%\todomark{figure}
 The cells on the edges of any obstacles in the simulation are also marked as boundary squares.
-For a finite domain of size $(imax, jmax)$ this leads to a final grid size of $(imax + 2)$ by $(jmax + 2)$, where valid fluid values fall in the ranges %
+For a finite domain of size $(imax, jmax)$ this leads to a final grid size of $(imax + 2)$ by $(jmax + 2)$, where valid fluid values fall in the ranges
 %$1 \leq i \leq imax$, $1 \leq j \leq jmax$
 $i \in \{1..imax\}$, $j \in \{1..jmax\}$.
 
@@ -82,11 +84,11 @@ This allows the derivatives of $u$ and $v$ to be calculated by finding the centr
 The partial derivatives for pressure $\partial{p}/\partial{x}, \partial{p}/\partial{y}$ are found in the same way.
 The remaining derivatives, including second derivatives and $\partial{uv}/\partial{x}, \partial{uv}/\partial{y}$, can also be discretized by taking the difference across midpoints of their respective dimensions\cite{hirt1976}.
 %
-
-\subsection{Simulation Stages}
-\input{Ch20Research/figures/sim_pipeline_stages}
+\subsection{Overall Simulation Structure}
 Each simulation tick can be split into multiple stages, shown in \cref{fig:SimStages}.
 These stages are described in detail in the following sections.
+\input{Ch20Research/figures/sim_pipeline_stages}
+\pagebreak
 
 \subsection{Timestep Calculation}
 \label{sec:TimestepCalculation}
@@ -96,7 +98,7 @@ This timestep is not a fixed value, and typically one would want to select as la
 As the derivatives are calculated between adjacent grid points, it is impossible to accurately simulate a timestep where fluid moves between non-adjacent grid cells.
 %[Peyret&Taylor,1983]or[Roache,1976].Anadaptivestepsizecontrolbasedonthesestabilityconditionsis usedin[Tome&McKee,1994].
 % The simulation cannot accurately solve a timestep in which particles move completely over a cell (see Figure \todocite{}).
-To prevent this the timestep \deltaT{} is calculated from the fluid velocities to make it impossible.
+To prevent this, the timestep \deltaT{} is calculated from the fluid velocities to make it unlikely.
 \begin{equation}
     \delta{t} = \tau * \text{min}\left(
         \frac{Re}{2}\left(
@@ -157,7 +159,7 @@ For continuity to be achieved, the final velocity values must fulfil the continu
 \begin{equation}
     \frac{\partial{u^{(n+1)}}}{\partial{x}} + \frac{\partial{v^{(n+1)}}}{\partial{y}} = 0
 \end{equation}
-This means that the total amount of fluid entering a cell in tick $n+1$ is equal to the amount of fluid leaving, which must be the case otherwise the amount of fluid per cell wouldn't be constant and the fluid would be compressed.
+This means that the total amount of fluid entering a cell in tick $n+1$ is equal to the amount of fluid leaving, which must be the case otherwise the amount of fluid per cell wouldn't be constant and the fluid would become compressed.
 
 Substituting the formulae in \cref{eq:uv_modified} into this relation and rearranging gives
 \begin{equation}
@@ -207,18 +209,25 @@ resolves the equation to:
     = rhs_{i,j}
     \label{eq:poisson_pre_sor}
 \end{multline}
-where $\epsilon_{i,j}^{\{N,S,E,W\}}$ represents the boundary squares (shown here for North, but it extends to the other directions)
-\begin{equation}
+where $\epsilon_{i,j}^{\{N,S,E,W\}}$ represents the boundary squares.
+The equation shown on page~\pageref{eq:epsilon} is for North, but the definition extends to other directions.
+\pagebreak
+% \begin{figure}[t]
+%     \centering
+    \begin{equation}
     \epsilon_{i,j}^{N} = \begin{cases}
-        0 & \text{The square directly above $i,j$ is a boundary}\\
-        1 & \text{The square directly above $i,j$ is \emph{not} a boundary}
-   \end{cases}
-\end{equation}
-
-
+        0 & \text{The square directly north of $i,j$ is a boundary}\\
+        1 & \text{The square directly north of $i,j$ is \emph{not} a boundary}
+    \end{cases}
+    \label{eq:epsilon}
+    \end{equation}
+%     \caption{Definition of $\epsilon_{i,j}^{N}$}
+%     \label{fig:eq:epsilon}
+% \end{figure}
 \input{Ch20Research/figures/checkerboard}
-Over the whole grid, this results in a linear system of equations over the inputs $p_{i,j} \forall i \in \{1..i_{max}\}, j \in \{1..j_{max}\}$.
-These can be decoupled by partitioning $p$ into red and black squares by a checkerboard pattern (see \cref{fig:redblack_checkerboard}).
+
+Over the whole grid, this results in a linear system of equations over the inputs $p_{i,j}\quad \forall \quad i \in \{1..i_{max}\}, j \in \{1..j_{max}\}$.
+These can be decoupled by partitioning $p$ into red and black squares with a checkerboard pattern (see \cref{fig:redblack_checkerboard}).
 % As each individual cell only depends on the adjacent values, iterations of Successive Over-Relaxation (SOR) can be performed on red and black in turn to reach a final value\footnote{This could equally be done without partitioning $p$, but the partitioning splits the SOR into separate phases which can then be parallelized. Normal SOR cannot be parallelized\cite{Adams1982AMS}.}\cite{young1971iterative}:
 As each cell's equation only depends on the adjacent values, iterations of Successive Over-Relaxation (SOR) can be performed on red and black in turn to reach a final value\footnote{This could equally be done without partitioning $p$, but the partitioning splits the SOR into separate phases which can then be parallelized. Normal SOR cannot be parallelized\cite{Adams1982AMS}.}\cite{young1971iterative}:
 \begin{equation}

@@ -1,7 +1,7 @@
 \subsection{Previous Work}\label{sec:Research:Viz:ACA}
 The original simulation\cite{modules:CS257Coursework} included a simple image visualizer for a static state, which evaluated one of two quantities over the grid and produced a \shell{.ppm} image with the result.
 These quantities were Vorticity ($\zeta$), the strength of vortical (a.k.a. rotational) motion at each point in the grid; and Stream Function ($\psi$), the contours of which define streamlines.
-Streamlines are lines that are parallel to the velocity vector at each point, allowing the long-term flow of particles to be represented with a single line, and thus in a static image.\cite{NASADefinitionStreamlines}
+Streamlines are lines that are parallel to the velocity vector at each point, allowing the long-term flow of particles to be represented with a single line, and thus in a static image\cite{NASADefinitionStreamlines}.
 The quantities are defined by \cref{eq:zeta,eq:vorticity}, as specified in \cite{book:griebel1998numerical}.
 Examples of these modes are shown in \cref{fig:ppms}.
 
@@ -21,7 +21,7 @@ Unfortunately, near the edges of the obstacle circle (shown in green) the edges 
 These are due to the imprecise nature of the original code, which only uses the differences to the East and South to find $\zeta$.
 This breaks down when the squares in these directions are boundaries, and the program defaults to zero.
 A better solution would be to take the central difference whenever possible and to fall back to using only one side when adjacent to a boundary.
-This would mean the only points where this breaks down are where a square is surrounded by boundaries on opposite sides, which is much less likely and would also likely break other areas of the simulation.
+This would mean the only points where this breaks down are where a square is surrounded by boundaries on opposite sides, which is very unlikely and would also likely break other areas of the simulation.
 
 The Stream Function visualization (\cref{fig:psi_ppm}) is nearly impossible to visually parse, which makes sense as the velocity information is encoded in the differences between adjacent squares and not directly in the colours.
 The Stream Function is not intended to be directly visualized but instead used to find streamlines, which can be visualized directly.
@@ -34,4 +34,4 @@ This overall increase in pressure values is ignored by the simulation, but the v
 In this example, the pressure values have all increased so even the lowest pressure value is a mid-grey.
 If the program simulated for too long, the pressure values would become too high and the visualization would be entirely white.
 This should be accounted for in the visualization, but also implies the base simulation is unstable.
-The simulation stability will be touched on in Results/Evaluation (\cref{sec:Results,sec:Evaluation}).
+The simulation stability will be touched on in the Results and Evaluation (\cref{sec:Results,sec:Evaluation}).

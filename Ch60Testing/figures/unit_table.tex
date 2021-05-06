@@ -17,6 +17,8 @@
 
 \begin{sidewaystable}
     \centering
+    \begingroup
+    \raggedright
     \begin{tabular}{ll|c|c|c}
         ID & Description & Expected & Output & Result \\
         \hline
@@ -27,6 +29,7 @@
         \newtest{}\label{test:unit:fixedtime} & \shell{fixedtime}: simulate from an input state for 25 seconds. & Valid simulation state & Valid simulation state & \testsuccess{} \\
         \newtest{}\label{test:unit:run} & \shell{run}: visualize a simulation from an input state for 25 seconds. & Valid simulation state & Valid simulation state & \testsuccess{} \\
     \end{tabular}
+    \endgroup
     \caption{Unit Tests}
     \label{tab:unittests}
 \end{sidewaystable}

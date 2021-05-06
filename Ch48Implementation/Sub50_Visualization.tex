@@ -2,7 +2,7 @@
 \subsection{Multithreading}
 The worker thread is implemented with a \code{SystemWorker} class combined with a generic threading system.
 % While only one worker thread is ever used in the final program, earlier versions planned to use a few unique workers so a generic system was required.
-An \code{IWorkerThread} virtual interface is defined and \code{IWorkerThread_Impl<Worker>} implements this for a specific \code{Worker} class, similar to the Simulation Runners pattern.
+An \code{IWorkerThread} virtual interface is defined, and then implemented by the \code{IWorkerThread_Impl<Worker>} template for a specific \code{Worker} class, similar to the Simulation Runners pattern.
 % A similar pattern to Simulation Runners is used, where an \code{IWorkerThread} virtual interface is defined and a \code{IWorkerThread\_Impl<Worker>} class implements this for a specific \code{Worker} class.
 
 % The \code{IWorkerThread} class works with a \code{WorkerThreadController} class.
@@ -31,14 +31,7 @@ These buffers allow user interaction, such as moving the particle emitters and s
 \pagebreak
 % \end{landscape}
 
-Image layout transfers allow the GPU to optimize access times for an image by changing the format it's stored in.
-Images are transferred to the \code{ShaderReadOnlyOptimal} layout (listed as `Texture' rather than `Image' in \cref{fig:VizDataTransform}) for efficient sampling at arbitrary points, and kept in the \code{General} layout when accessed at 2D data arrays (see \cref{fig:VizImageRead} as a comparison).
-
-Memory barriers (not shown in \cref{fig:VizDataTransform}) are inserted between every compute shader to ensure any required data written from a previous shader is visible to the next shader\cite{TheKhronosGroupVulkanSpec}. % Could also be \cite{MaisterVulkanSyncBlog}
-% On top of that, each compute shader requires at least one \emph{memory barrier}, to ensure any data written in previous stages is visible to the next stage.
-These memory barriers are quite granular, as shown in \cref{fig:VizMemoryBarrier}.
-
-\begin{figure}
+\begin{figure}[ht]
     \centering
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
@@ -67,10 +60,19 @@ vec2 velocity = texture(simDataSampler, sampleAt).xy;
 \caption{With a Sampler}
         %  \label{fig:vizimagesample}
      \end{subfigure}
-  \caption{Reading from an image directly vs. using a sampler.}
+  \caption{Reading from an image directly vs. using a sampler}
     \label{fig:VizImageRead}
 \end{figure}
-\begin{figure}
+
+Image layout transfers allow the GPU to optimize access times for an image by changing the format it's stored in.
+% Images are transferred to a \code{ShaderReadOnlyOptimal} layout (listed as `Texture' rather than `Image' in \cref{fig:VizDataTransform}) for efficient sampling at arbitrary points, and kept in the \code{General} layout when accessed at 2D data arrays (see \cref{fig:VizImageRead} as a comparison).
+Images are transferred to a ``read-only optimial'' layout (listed as `Texture' rather than `Image' in \cref{fig:VizDataTransform}) for efficient sampling at arbitrary points, and kept in the ``General'' layout when accessed at 2D data arrays (see \cref{fig:VizImageRead} as a comparison).
+
+Memory barriers (not shown in \cref{fig:VizDataTransform}) are inserted between every compute shader to ensure any required data written from a previous shader is visible to the next shader\cite{TheKhronosGroupVulkanSpec}. % Could also be \cite{MaisterVulkanSyncBlog}
+% On top of that, each compute shader requires at least one \emph{memory barrier}, to ensure any data written in previous stages is visible to the next stage.
+These memory barriers are quite granular, as shown in \cref{fig:VizMemoryBarrier}.
+
+\begin{figure}[hb]
     \centering
     \begin{cppcode}
 // Make ShaderWrites from the ComputeShader stage available + visible to 
@@ -84,7 +86,7 @@ fullMemoryBarrier(computeCmdBuffer,
     vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eComputeShader,
     vk::AccessFlagBits::eTransferWrite, vk::AccessFlagBits::eShaderRead);
     \end{cppcode}
-    \caption{Example showing the granularity of Memory Barriers.}
+    \caption{Example showing the granularity of Memory Barriers}
     \label{fig:VizMemoryBarrier}
 \end{figure}
 
@@ -114,7 +116,7 @@ If the GPU expects data in a specific structure, it is the CPU's job to create d
 %API user instead of CPU
 A naive solution might be to keep a C++ structure definition and a GLSL structure definition, and assume that one matches the other.
 This is error-prone as the structures are not automatically kept in sync - if one changes, the other will not, and communication will break down.
-This project's approach is to create a GLSL file defining all interoperable structures (\shell{structures.glsl}), and then include it into a C++ header with some extra code to define GLSL types correctly.
+This project's approach is to create a GLSL file defining all interoperable structures (\shell{global\_structures.glsl}), and then include it into a C++ header with some extra code to define GLSL types correctly.
 Both sides will now use the same structure definitions, which are all defined in exactly one place.
 All GLSL code uses the \code{std430} memory layout rules, which closely matches the C++ memory layout, so the structures can be passed directly from the CPU to the GPU safely.
 

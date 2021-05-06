@@ -10,20 +10,21 @@ This chapter details these plans including a complete schedule, the development 
 Plan-driven solutions depend on a rigid specification being completed before development\cite{modules:CS261}, which did not fit with the more abstract goals of the visualization portion.
 Additionally, some of the main advantages of plan-driven approaches only apply when introducing new team members and handling large teams.
 Neither scenario applies here, as only one person is undertaking active development.
-
 For these reasons, an Agile approach was taken with a development cycle completing every two weeks.
 The goals for each development cycle were documented using Trello.
+
 It was planned that the supervisor would be contacted every week with the current status of the project and the progress made in the current cycle.
 These contacts would either take place over e-mail if there were no pressing questions to ask, and otherwise take place on Microsoft Teams.
 Unfortunately, this did not happen for the first few weeks, as other work was vying for attention and preventing project work from taking place.
-This was resolved in Week 5, and there is now frequent email correspondence.
+This was resolved in Week 5, and from then on there was frequent email correspondence.
 
 \section{Project Timeline}
 The project was split into multiple tasks to schedule it effectively.
 These tasks are scheduled on both a Gantt Chart in \cref{fig:project schedule gantt}, and as a table in \cref{tab:project schedule table}.
 The timeline has been well followed, and this schedule has been left unchanged over the course of the project. 
-Over the Christmas break no work was scheduled, to allow time to be spent on other assignments.%time on the other courseworks the researcher will have due.
 
+No programming was scheduled over the Christmas break to allow time to be spent on other assignments.
+%time on the other courseworks the researcher will have due.
 The development of the visualization was scheduled concurrently with optimizing the simulation, in case some strides in visualization required extra optimizations to run in real-time.
 While not strictly required, some optimizations were developed in this time to push performance further.
 % This was not strictly the case, but some optimizations were developed in this time period to push performance further.
@@ -32,7 +33,13 @@ A Code Freeze was set for Week 22, to focus the researcher entirely on the prese
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{Ch50ProjectManagement/cs311_gantt_chart.svg.pdf}
+    % \begin{tikzpicture}
+    % \node[inner sep=0pt] (gantt) at (0,0)
+    % {\includegraphics[width=1.0\linewidth]{Presentation/presentation_gantt.pdf}};
+    % \draw[line width=0.5mm] (5.4, -1.25) -- ++(0, 3) node[anchor=north east,align=right,fill=white] {Code Freeze};
+    % \node[text width=1.2cm,minimum height=2.35cm,fill opacity=0.5, fill=gray, font=\small,align=center, text opacity=1] at (-0.1,-0.02) {Christmas break and other work};
+    % \end{tikzpicture}
+    \includegraphics[width=\linewidth, trim={0 0 0 2.7cm},clip]{Ch50ProjectManagement/cs311_gantt_chart.svg.pdf}
     \caption{Project Schedule as a Gantt Chart}
     \label{fig:project schedule gantt}
 \end{figure}
@@ -97,11 +104,13 @@ This is especially relevant to the Visualization portion of the project, which w
 \textbf{Risk} = 2 * 2 = 4
 
 \textbf{Avoidance:}
-Previous projects were used as a reference to predict how long implementing features will take, and inform the schedule.
+
+\hspace{20pt}Previous projects were used as a reference to predict how long implementing features will take, and inform the schedule.
 As new Visualization features were discussed, the impact on scheduling they each have were considered.
 
 \textbf{Contingency:}
-The scope of the project could have been reduced to allow the report to be completed in time.
+
+\hspace{20pt}The scope of the project could have been reduced to allow the report to be completed in time.
 A ``code freeze'' was implemented close to the presentation deadline to ensure enough time is spent polishing the presentation and report.
 
 \subsection{Other Pressures}
@@ -113,13 +122,15 @@ This did not impact the schedule.
 \textbf{Risk} = 2 * 1 = 2
 
 \textbf{Avoidance:}
+
 % A more balanced set of modules between Term 1 and Term 2 could have helped resolve this, however on the other side of the coin the researcher had fewer modules in Term 2.
 % Balancing modules between Term 1 and Term 2 could have resolved this, but as Term 2 had fewer mo
 % Next term the researcher will try to maintain a schedule for working on other module content, which should make up for a lack of in-person lectures.
-This could have been avoided by better balancing the modules between Term 1 and Term 2, but on the flip-side having fewer modules in Term 2 allowed for more project work to be completed.
+\hspace{20pt}This could have been avoided by better balancing the modules between Term 1 and Term 2, but on the flip-side having fewer modules in Term 2 allowed for more project work to be completed.
 
 \textbf{Contingency:}
-As before, the scope of the project could have been reduced to allow the report to be completed in time.
+
+\hspace{20pt}As before, the scope of the project could have been reduced to allow the report to be completed in time.
 If module work took more time than expected by week 20, the code freeze could have been pulled forwards to week 20 or 21 to spend more time on the presentation.
 
 
@@ -132,10 +143,12 @@ Under normal circumstances, the Department of Computer Science labs would be use
 \textbf{Risk} = 5 * 1 = 5
 
 \textbf{Avoidance:}
-Not possible.
+
+\hspace{20pt}Not possible.
 
 \textbf{Contingency:}
-Student insurance could have been used to purchase a new GPU/computer if it is stolen.
+
+\hspace{20pt}Student insurance could have been used to purchase a new GPU/computer if it is stolen.
 Failing this, the DCS clusters could be used, but these would likely have high contention from other students who need to use GPUs remotely.
 
 \subsection{Illness}
@@ -148,9 +161,11 @@ However the bulk of the current work had been completed by that point, so this m
 \textbf{Risk} = 4 * 2 = 8
 
 \textbf{Avoidance:}
-Not possible.
+
+\hspace{20pt}Not possible.
 
 \textbf{Contingency:}
-The schedule would need to be changed to account for the lack of time spent working.
+
+\hspace{20pt}The schedule would need to be changed to account for the lack of time spent working.
 Some requirements could be reduced or removed entirely.
 

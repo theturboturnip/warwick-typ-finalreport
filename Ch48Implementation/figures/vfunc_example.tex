@@ -1,11 +1,10 @@
-\begin{figure}[ht]
+\begin{figure}[p]
     \centering
     \begin{subfigure}{0.49\linewidth}%
         \begin{cppcode}
 class Animal {
 public:
     virtual void talk() = 0;
-
     virtual ~Animal() = default;
 };
 
@@ -14,7 +13,9 @@ public:
     void talk() override {
         printf("bark\n");
     }
-
+    void talk_static() {
+        printf("bark\n");
+    }
     ~Dog() override = default;
 };
 
@@ -25,13 +26,13 @@ int main() {
     delete animal;
 
     Dog dog = {};
-    dog.talk();
+    dog.talk_static();
 
     return 0;
 }
         \end{cppcode}
         \caption{C++ implementation}
-    \end{subfigure}%
+    \end{subfigure}
     \begin{subfigure}{0.49\linewidth}%
         \begin{minted}{gas}
 # Calling the function virtually (animal->talk())
@@ -42,13 +43,13 @@ mov     rax, QWORD PTR [rbp-24]
 mov     rdi, rax
 call    rdx
         
-# Calling the function statically (dog.talk())
+# Calling the function statically (dog.talk_static())
 lea     rax, [rbp-32]
 mov     rdi, rax
-call    Dog::talk()
+call    Dog::talk_static()
         \end{minted}
         \caption{x86 Assembly for calling the functions}
     \end{subfigure}%
-    \caption{Inefficiencies of virtual inheritance\\(x86 assembly code generated from \url{https://godbolt.org/z/5hvE896aj})}
+    \caption{Inefficiencies of virtual inheritance\\(x86 assembly code generated from \url{https://godbolt.org/z/PfEq3TPdn})}
     \label{fig:virtual_inheritance}
 \end{figure}

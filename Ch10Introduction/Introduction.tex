@@ -5,9 +5,9 @@
 Developing equations and mathematical constructs that model natural phenomena has been a large research space for centuries.
 As digital computers have developed, programs have been built to use these equations and find the results much faster than previously possible\cite{AtomicHeritageFoundationComputingProject}.
 Computational Fluid Dynamics (CFD) programs are programs that simulate fluid flow in some form, usually using the Navier-Stokes equations (reproduced in \cref{eq:NavierStokesContinuity,eq:NavierStokesMomentum}).
-
 These fluid simulations have a variety of uses,
-including in aerodynamics\cite{jameson2002},%\todocite{AirShaper},%\todocite{https://www.plm.automation.siemens.com/global/en/industries/automotive-transportation/aerodynamics.html}
+including in aerodynamics\cite{jameson2002},
+%\todocite{AirShaper},%\todocite{https://www.plm.automation.siemens.com/global/en/industries/automotive-transportation/aerodynamics.html}
 fire spread modelling\cite{Sullivan_2009},
 and in the entertainment industry (albeit with a focus on artistic input rather than physical accuracy\cite{article:FluidDynamicsOnBigScreen}).
 
@@ -20,7 +20,7 @@ Tightly coupled visualizations share memory directly with the simulation on the 
 Both configurations reduce the required storage space, but they have separate advantages and disadvantages.
 
 Most cases generally do not require simulations at interactive speeds, except for those found in the games industry.
-While the games industry does use fluid simulation\cite{paper:GameFluidSummary:medveckyreal}\footnote{As these methods all share the simulation and visualization memory, they are tightly-coupled in-situ visualizations}, many uses do not precisely integrate the Navier-Stokes equations but approximate them using a Lagrangian method\cite{paper:StableFluids:10.1145/311535.311548}.
+While the games industry does use fluid simulation\cite{paper:GameFluidSummary:medveckyreal}\footnote{As these methods all share the simulation and visualization memory, they are tightly-coupled in-situ visualizations.}, many uses do not precisely integrate the Navier-Stokes equations but approximate them using a Lagrangian method\cite{paper:StableFluids:10.1145/311535.311548}.
 An exception to this is \cite{presentation:RealtimeFluidSimTombRaider}, which uses a Jacobi solver for the Navier-Stokes equations. This is used to simulate character interaction with different substances floating on the water surface\cite{presentation:RealtimeFluidSimTombRaider}, not to simulate large blocks of water.
 By and large, interactive speeds and precise simulation for large fields are not pursued together.
 

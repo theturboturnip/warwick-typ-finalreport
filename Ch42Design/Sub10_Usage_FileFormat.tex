@@ -11,7 +11,7 @@ An example is shown in \cref{fig:FluidParamsExample}.
 
 \subsubsection{Simulation State}
 Data unique to an individual state such as simulation resolution, physical size, and velocity fields are stored in a binary format reused from the original simulation.
-As the data is much more sensitive to individual modifications\footnote{i.e. changing a single value in the velocity field can introduce discontinuities}, it makes more sense to store this data in a binary format where it cannot be easily modified by a user.
+As the data is much more sensitive to individual modifications\footnote{For example, changing a single value in the velocity field can introduce discontinuities.}, it makes more sense to store this data in a binary format where it cannot be easily modified by a user.
 Additionally, the binary format is much smaller than any text-based format, which helps as the volume of data stored is much larger than that stored in the fluid parameters.
 
 The header consists of a pair of unsigned 32-bit integers specifying the resolution of the simulation, and a pair of 32-bit floating-point numbers specifying the physical dimensions of the simulation.

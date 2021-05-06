@@ -1,3 +1,4 @@
+\pagebreak
 \subsection{Current State-of-the-Art}
 The nature of this project required the visualizations to be rebuilt from the ground up, both to work on the GPU correctly and to synchronize with the concurrent simulation.
 This allowed new visualization features to be added.
@@ -26,19 +27,20 @@ This section will explain these features in more detail.
         Parts & Text \\
         Points & Text \\
     \end{tabular}
-    \caption{Summary of results tools from Autodesk CFD.}
+    \caption{Summary of results tools from Autodesk CFD}
     \label{tab:AutodeskCFDSummary}
 \end{table}
 
-Autodesk CFD is a 3D simulation/visualization, typically involving one or more 3D surfaces (a 'model') and simulating the fluid movement around these surfaces.
+Autodesk CFD is a 3D simulation and visualization program, typically involving one or more 3D surfaces (a 'model') and simulating the fluid movement around these surfaces.
 The simulation process creates multiple quantities, including scalar quantities Speed, Temperature, Pressure; and Vector quantities such as Velocity.
 
 \textbf{Global Controls}\cite[Global Controls]{AutodeskCFDManual} visualize selected quantities on all model surfaces.
 A scalar quantity can be displayed by changing the surface colour according to a scale (\cref{fig:AutodeskCFDGlobalControlsScalar}).
-A vector quantity can be displayed by creating small arrows on the surfaces that represent the direction and magnitude of the quantity.
+A vector quantity can be displayed by creating small arrows on the surfaces that represent the quantity's direction and magnitude.
+%of the quantity.
 The range of displayed values can be changed for both the scalar and vector quantities.
 
-A key limitation of this method is it does only shows the quantities on the surface, not the quantities inside the fluid.
+A key limitation of this method is it only shows the quantities on the surface, not the quantities inside the fluid.
 Result Planes, Iso Surfaces, and Iso Volumes address this by calculating new surfaces/volumes which visualize quantities.
 % These principles extend to most of the other visual tools, which generally define new surfaces to display quantities.
 
@@ -49,31 +51,33 @@ Result Planes, Iso Surfaces, and Iso Volumes address this by calculating new sur
     \label{fig:AutodeskCFDGlobalControlsScalar}
 \end{figure}
 
-\textbf{Results Planes}\cite[Planes]{AutodeskCFDManual} define a flat cross-section of the model which can visualize a single scalar quantity with a single vector quantity (\cref{fig:AutodeskCFDResultsPlane}).
-
-\begin{figure}
-    \centering
-    \subcaptionbox{Scalar Quantity}[\linewidth]{\includegraphics[width=\linewidth]{Ch20Research/figures/autodesk_cfd_results_planes_scalar.png}}
-    \subcaptionbox{Vector Quantity}[\linewidth]{\includegraphics[width=\linewidth]{Ch20Research/figures/autodesk_cfd_results_planes_vector.png}}
-    \caption{Result Planes displaying different types of Quantity}
-    \label{fig:AutodeskCFDResultsPlane}
-\end{figure}
+\textbf{Results Planes}\cite[Planes]{AutodeskCFDManual} define a flat cross-section of the model which can visualize a single scalar quantity and a single vector quantity (\cref{fig:AutodeskCFDResultsPlane}).
 
 \textbf{Iso surfaces} define a surface based on the value of a result scalar quantity, e.g. $T = \SI{5}{\celsius}$.
 This surface can then display a separate scalar and vector quantity, just like a Result Plane (\cref{fig:AutodeskCFDIsosurface}).
 
+\textbf{Iso volumes} are similar to an isosurface but define a volume based on a value range ($\SI{0}{\celsius} \leq T \leq \SI{5}{\celsius}$).
+A vector quantity can be displayed at points within the volume, and the surfaces of the volume can show a scalar quantity.
+
+\textbf{Particle Traces} show the path particles would take through the flow after being emitted at certain points (or `seeds').
+Autodesk allows these paths to be traced forwards or backwards, allows particles to be simulated both with mass and without, and allows a variety of particle trails to be shown (\cref{fig:AutodeskCFDParticles}).
+
+\begin{figure}
+    \centering
+    \subcaptionbox{Scalar Quantity}[\linewidth]{\includegraphics[width=0.9\linewidth]{Ch20Research/figures/autodesk_cfd_results_planes_scalar.png}}
+    \subcaptionbox{Vector Quantity}[\linewidth]{\includegraphics[width=0.9\linewidth]{Ch20Research/figures/autodesk_cfd_results_planes_vector.png}}
+    \caption{Result Planes displaying different types of Quantity}
+    \label{fig:AutodeskCFDResultsPlane}
+\end{figure}
+
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Ch20Research/figures/isosurface.png}
-    \caption{An example of an Isosurface, defined by a velocity magnitude and displaying static pressure.}% ``The iso-surface shape indicates everywhere in the model that has a specific velocity magnitude. The colours indicate the static pressure at these locations.''
+    \caption{Example of an Isosurface, defined by a velocity magnitude and displaying static pressure.}% ``The iso-surface shape indicates everywhere in the model that has a specific velocity magnitude. The colours indicate the static pressure at these locations.''
     \label{fig:AutodeskCFDIsosurface}
 \end{figure}
 
-\textbf{Iso volumes} are similar to an isosurface but define a volume based on a value range ($\SI{0}{\celsius} \leq T \leq \SI{5}{\celsius}$).
-A vector quantity can be displayed at points within the volume, and the surface of the volume can show a scalar quantity.
-
-
-\begin{figure}
+\begin{figure}[p]
     \centering
     \begin{subfigure}{0.45\textwidth}%
         \includegraphics[width=\linewidth]{Ch20Research/figures/autodesk_particle_comets.png}%
@@ -92,15 +96,13 @@ A vector quantity can be displayed at points within the volume, and the surface 
     \label{fig:AutodeskCFDParticles}
 \end{figure}
 
-\textbf{Particle Traces} show the path particles would take through the flow after being emitted at certain points (or `seeds').
-Autodesk allows these paths to be traced forwards or backwards, allows particles to be simulated both with mass and without, and allows a variety of particle trails to be shown (\cref{fig:AutodeskCFDParticles}).
-
+\pagebreak
 \subsection{Stagnation \& Composition}
 The techniques described above have been well known for at least 20 years.
 The most prevalent algorithm for computing iso-surfaces was published in 1987\cite{LorensenMarching}.
 % Source for marching-cubes being first? is https://www.routledge.com/Isosurfaces-Geometry-Topology-and-Algorithms/Wenger/p/book/9781466570979
 Particle Traces and Results Planes were used in 1999\cite{Schulz1999}, although this is not the origin of either technique.
-In some cases, there has been extensive research into optimizing visualization techniques\cite{Ueng1996}, and in domain-specific areas there is academic research into creating new techniques\cite{Chen16}, but research into new generic visualization techniques has stagnated.
+In some cases, there has been extensive research into optimizing visualization techniques\cite{Ueng1996}, and in domain-specific areas there is recent academic research into creating new techniques\cite{Chen16}, but research into new generic visualization techniques has stagnated.
 This stagnation was noted in \cite{vizRole2004} from 2004, which concluded the primary challenges facing visualization were ``identifying and characterizing features'' to visualize rather than developing new techniques.
 The MET Office's weather reports demonstrate this principle, and show that composing multiple techniques together can increase information density while remaining easy to understand.
 
@@ -112,6 +114,7 @@ The MET Office's weather reports demonstrate this principle, and show that compo
 \end{figure}
 
 \cref{fig:MetOffice} shows at least three visualization techniques used in the same image, each of which has been filtered to relevant points.
+\pagebreak
 \begin{enumerate}
     \item The large blue, orange, and mauve lines show weather `fronts' moving in, the blue line particularly shows a cold front moving in from the north-east.
     \item The arrows show the wind direction, and only appear in areas with high wind speeds. In the video they also move, making it easier to understand at a glance.
@@ -129,7 +132,7 @@ for the following variables:
     \item $\vec{V}(p, t) = $ fluid velocity at point $p$ and time $t$.
 \end{itemize}
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \[ \frac{dp}{dt} = \vec{V}(p, t) \]
 
@@ -146,7 +149,7 @@ This takes a constant step size $0 < c \leq 1$ which can be changed to control a
     t = t + h, \qquad k = k + 1
 \end{multline}
 
-A key issue with implementing this method in the program is that $\vec{V}$ is only kept in memory for one value of $t$, so interpolating between $\vec{V}(p_k, t) \text{and} \vec{V}(p^{*}, t + h)$ is impossible.
+A key issue with implementing this method in the program is that $\vec{V}$ is only kept in memory for one value of $t$, so interpolating between $\vec{V}(p_k, t)$ and $\vec{V}(p^{*}, t + h)$ is impossible.
 This also requires an indeterminate amount of steps, and potentially a different amount of steps for each particle, which is not GPU friendly.
 Instead, a simpler version was chosen based on the steady-state variant.
 At the instant the particle is simulated, the fluid is modelled as steady, and the particle moves with the same timestep taken by the simulation.
@@ -159,10 +162,13 @@ If $p$ does not align with a grid space, $\vec{V}(p)$ is chosen using trilinear 
 
 In addition to the particle simulation, particles must also be spawned and deleted when necessary.
 GPU-based particle simulations are standard in video games, which need to run at high frame rates just like our visualization, so their techniques are a natural fit.
-A notable method, which has been adapted for this program, is outlined in \cite{WickedEngineParticles}.
-This splits the simulation into three phases:
+% A notable method, which has been adapted for this program, is outlined in \cite{WickedEngineParticles}.
+% This splits the simulation into three phases:
+\citeauthor{WickedEngineParticles}\cite{WickedEngineParticles} proposed a three-phase model:
+%splits the simulation into three phases:
 \begin{enumerate}
     \item The kickoff phase, which determines the amount of new particles to create.
     \item The emission phase, which adds the required amount of new particles to the set by pulling from a queue of inactive particles.
     \item The simulation phase, which updates particle positions, adds dead particles to the inactive queue, and adds alive particles to a render queue.
 \end{enumerate}
+This approach has been used in the final visualization.

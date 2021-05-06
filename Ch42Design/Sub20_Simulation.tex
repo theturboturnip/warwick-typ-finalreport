@@ -8,7 +8,7 @@ The headless and visualized simulations use a \shell{--backend} command-line opt
 \begin{itemize}
     \item Null, a backend which does no simulation for testing purposes.
     \item CPU Simple, equivalent to the pre-optimization CPU simulation.
-    \item CPU Optimized, equivalent to the initial optimized CPU simulation, bit-equivalent to CPU Simple.
+    \item CPU Optimized, equivalent to the initial optimized CPU simulation, which produces identical results to CPU Simple.%and bitwise-equivalent to CPU Simple.
     \item CPU Optimized Adapted, a version of CPU Optimized slightly modified to be closer to the GPU version.
     \item CUDA Backend V1, the only GPU-based backend.
 \end{itemize}
@@ -27,23 +27,25 @@ The other CPU optimizations are present on the GPU where possible: the residual 
 
 The CUDA backend implements each stage of the simulation (\cref{fig:SimStages}) as one or more CUDA Kernels.
 Each CUDA Kernel represents a computation for a single grid cell, which is executed by a GPU thread.
-The grid is split into small `blocks' of threads, and the threads within each block are executed by a Streaming Multiprocessor (SM) in groups of 32 (a `warp').% in parallel over the entire grid.
+The grid is split into small `blocks' of threads, and the threads within each block are executed by a Streaming Multiprocessor (SM) in groups of 32 (a `warp').
+% in parallel over the entire grid.
 % These threads are split into a hierarchy as described in \todocite{https://www.nvidia.com/content/PDF/fermi_white_papers/NVIDIA_Fermi_Compute_Architecture_Whitepaper.pdf}.
 % ``A GPU executes one or more kernel grids; a streaming multiprocessor (SM) executes one or more thread blocks; and CUDA cores and other execution units in the SM execute threads.''
-Grid and blocks dimensions can be specified in 1D, 2D, or 3D depending on the dimensionality of the problem.
+Grid and block dimensions can be specified in 1D, 2D, or 3D depending on the dimensionality of the problem.
 The program uses a 2D grid for most kernels because each computation reads adjacent data in 2D space.
 Reduction kernels treat the 2D grid as a flat 1D array, because there is no need to retrieve `adjacent' data.
 
-The CUDA backend must execute both with Vulkan (when visualized) and without Vulkan (when headless).
-This affects the type of memory used in the simulation.
+% The CUDA backend must execute both with Vulkan (when visualized) and without Vulkan (when headless).
+The CUDA backend must execute both with and without Vulkan, depending if a visualization is used, which affects the type of memory used in the simulation.
+% This affects the type of memory used in the simulation.
 When visualized, crucial data such as velocity and pressure are stored in shared Vulkan-CUDA memory, to allow direct usage from both APIs without copying the data.
-In all other cases, CUDA Unified Memory is used, which can be paged between the CPU and GPU on-demand without manually mapping it across\cite{Harris2017UnifiedBlog}.
+In all other cases CUDA Unified Memory is used, which can be paged between the CPU and GPU on-demand without manually mapping it across\cite{Harris2017UnifiedBlog}.
 This allowed for granular debugging during development, as GPU kernels could be easily swapped out for known-correct CPU implementations without having to move memory manually.
 
 % \todomark{CUDA Unified memory allows for granular debugging by combining known-correct CPU implementations with GPU kernels} 
 
 \subsection{N-Buffering}\label{sec:DesignSimNBuffer}
-When developing the Visualization, it was noted that keeping a separate copy of the simulation output would allow the visualization to run in parallel with the simulation, without the simulation overwriting data currently being visualized.
+When developing the Visualization, it was noted that keeping a separate copy of the simulation output could allow the visualization to run in parallel with the simulation\footnote{This was unfortunately for other reasons discussed in \cref{sec:Design:Viz:Timing}}, without the simulation overwriting data currently being visualized.
 To allow this, N-buffering was introduced to the simulation backends and aspects of the visualization.
 Multiple `frames' are stored, where each one contains all data used in a simulation tick.
 Each simulation tick is assigned to a specific frame chosen by the Runner, and only the data in this frame is written to.

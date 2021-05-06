@@ -16,19 +16,22 @@
         xtick=data,
         symbolic x coords={100, 200, 300, 1000},
         width=\linewidth,
-        height=15em,
+        height=20em,
         bar width=30pt,
         x tick style = transparent,
         ybar,
         enlarge x limits=0.25,
-        ymin=0
+        ymin=0, ymax=3
     ]
-    \addplot[ fill=blue] table [x=iters, y=cuda_speed_rel, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
-    \addlegendentry{CUDA};
-    \addplot[ fill=red] table [x=iters, y=cpu_speed_rel, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
+    
+    \addplot[ fill=blue] table [x=iters, y=cpu_speed_rel, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
     \addlegendentry{CPU};
     
-    \draw [red, style={line width=2pt}] ({rel axis cs:0,0}|-{axis cs:100,1.0}) -- ({rel axis cs:1,0}|-{axis cs:100,1.0});% node [pos=0.33, above] {KPI};
+    \addplot[ fill=red] table [x=iters, y=cuda_speed_rel, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
+    \addlegendentry{CUDA};
+
+    
+    \draw [black, style={line width=2pt}] ({rel axis cs:0,0}|-{axis cs:100,1.0}) -- ({rel axis cs:1,0}|-{axis cs:100,1.0});% node [pos=0.33, above] {KPI};
     
     \end{axis}
     \end{tikzpicture}

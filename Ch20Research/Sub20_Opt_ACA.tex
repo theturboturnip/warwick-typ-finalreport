@@ -2,7 +2,8 @@
 \label{research:prev_work}
 As work on CFD progressed some optimizations were developed that change the simulation pipeline and provide an overall speedup.
 % Some of these were adapted into my ACA coursework submission\cite{modules:aca257submission}, which this project is based on, and carry over into the CUDA version.
-Some of these were adapted into the original CPU simulation\cite{modules:aca257submission}, which this project is based on, and carry over into the CUDA version.
+Some of these were adapted into the original CPU simulation\cite{modules:aca257submission} and carry over into the CUDA version.
+%, which this project is based on, and carry over into the CUDA version.
 
 
 Given the definition of $\beta$ in \cref{eq:poisson_beta}, the value of $\beta_{i,j}$ does not change over the course of the simulation and so can be precalculated before the simulation starts.
@@ -39,7 +40,7 @@ This was not needed in the CUDA version as each GPU kernel is implicitly paralle
 
 The CPU simulation included optimizations exploiting properties of the original code, such as floating-point precision, to speed up calculations while producing identical results.
 These optimizations include using fused multiply-add\cite{Muller2010TheInstruction} in some places (but not all), precalculating divisions with double-precision floats, and skipping the residual calculation phase altogether.
-As this project is focused on improving upon the accuracy and speed of the original simulation instead of producing bit-identical results, these optimizations may be removed or made redundant.
+As this project was focused on improving upon the accuracy and speed of the original simulation, instead of producing bit-identical results, some of these optimizations were removed or made redundant.
 
 % Paragraph on ACA-specific (FMA tricks, removing divisions, residual removal)
 % "Other courseworks specifically tied to the ACA coursework were"...

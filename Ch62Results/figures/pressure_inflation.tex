@@ -21,15 +21,16 @@
         xmin=0, xmax=5000000,
         legend pos=north west
     ]
+    \addplot+[only marks]%,draw=red] 
+        plot [error bars/.cd, y dir=both, y explicit] 
+        table [x=iters, y=cpu_mid, y error minus=delta_min_cpu, y error plus=delta_max_cpu, col sep=space, ignore chars={\,}] {Ch62Results/figures/data/pressure_inflation_cpu.csv};
+    \addlegendentry{CPU};
     \addplot+[only marks]%,draw=blue] forget plot?
             plot [error bars/.cd, y dir=both, y explicit] 
             table [x=iters, y=cuda_mid, y error plus=delta_max_cuda, y error minus=delta_min_cuda, col sep=space, ignore chars={\,}] {Ch62Results/figures/data/pressure_inflation_cuda.csv};% 
     % \addplot table [x=cache, y=cuda, col sep=space, ignore chars={\,}] {Ch62Results/figures/data/pressure_inflation_cuda.csv};
     \addlegendentry{CUDA};
-    \addplot+[only marks]%,draw=red] 
-            plot [error bars/.cd, y dir=both, y explicit] 
-            table [x=iters, y=cpu_mid, y error minus=delta_min_cpu, y error plus=delta_max_cpu, col sep=space, ignore chars={\,}] {Ch62Results/figures/data/pressure_inflation_cpu.csv};
-    \addlegendentry{CPU};
+
     \end{axis}
     \end{tikzpicture}
     \caption{Inflation of pressure values with Poisson iterations}

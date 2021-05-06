@@ -26,7 +26,7 @@ The hardware and software constraints for the program are also shown.
 % Non-functional Requirements do not define actions, but rather define properties of those actions that must be met.
 % As an example \cref{reqN:SimSpeed} states that with the same initial input, the CUDA simulation ``should run at least 2x as fast as the original coursework''.
 
-
+\pagebreak
 \section{Functional Requirements}
 Functional Requirements define actions a program must/should be able to perform.
 \begin{reqF}
@@ -59,7 +59,7 @@ Functional Requirements define actions a program must/should be able to perform.
         \item \label[reqFi]{req:VizLayersVector} The visualization \must{} be able to display an optional vector quantity (e.g. velocity) using a vector field, where the magnitude is within a user-defined range.
         \item \label[reqFi]{req:VizLayersParticle} The visualization \must{} feature an optional particle simulation, where particles are continuously emitted and move with the velocity of the field.
     \end{reqF}
-    \item \label{req:VizAutoRange} The scalar and vector quantities (\cref{req:VizLayersScalar,req:VizLayersVector}) \should{} have an auto-range function to automatically calculate the range based on the values present.
+    \item \label{req:VizAutoRange} Range-based quantities (\cref{req:VizLayersScalar,req:VizLayersVector}) \should{} have an auto-range function to automatically calculate the range based on the values present.
     \item \label{req:VizColors} All colors used in the visualization (e.g. particle colors, the scalar color scale) \should{} be user-controlled.
     \item \label{req:VizParticleEmission} The locations of particle emitters \should{} be user-controllable.
 \end{reqF}
@@ -69,7 +69,7 @@ Functional Requirements define actions a program must/should be able to perform.
 Non-functional Requirements do not define actions, but rather define properties of those actions or the program that must be met.
 \begin{reqNF}
     \item \label{reqN:LargeData} The system \must{} be capable of operating on large datasets (e.g. 4096x4096 grids) without failing.
-    \item \label{reqN:Resources} The system \must{} be efficient and avoid wasting any resources allotted to it.
+    \item \label{reqN:Resources} The system \must{} be efficient and avoid wasting any resources allocated to it.
     \item \label{reqN:SimilarOutput} The simulation \must{} produce similar results to the original simulation when equivalent initial state is used.
     \item \label{reqN:SimSpeed} The simulation \should{} run at least 2x as fast as the original simulation when equivalent initial state is used.
     \item \label{reqN:Realtime} The visualized simulation \must{} run in real-time at framerates~$\ge$~30 FPS for some outputs.

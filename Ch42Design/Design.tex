@@ -3,49 +3,61 @@
 \chapter{Design}
 \label{sec:Design} 
 
-while building a large project it's important to develop a consistent, logical, and properly separated design; both to make initial development easy and to make it intuitive for any future developers to understand.
-This applies to all aspects of the program including the codebase (i.e. which classes exist and how they communicate), how the program implement complex processes (such as the simulation/visualization), and how the end user will eventually use the program.
+When building a large project it's important to develop a consistent, logical, and properly separated design; both to make initial development easy and to make it intuitive for any future developers to understand.
+This applies to all aspects of the program including the codebase (i.e. which classes exist and how they communicate), how the program implements complex processes (such as the simulation/visualization), and how the end user will eventually use the program.
 
-This section first separates the codebase into layers and analyses them in order.%from lowest to highest.%in order from the lowest-level to the highest-level.
+This section first separates the codebase into layers and analyses them in order.
+%from lowest to highest.%in order from the lowest-level to the highest-level.
 % This section first separates the codebase into layers, then analyses these layers in order from the lowest-level to the highest-level.
 All notable design decisions for each layer are noted, and the means of interaction between these layers are documented.
 The final section, for the Command-Line layer, also documents the design of the command-line interface and the file formats used to store simulation states.
 
 
 \section{Code Structure}
-\begin{figure}
+% The overall structure of the project is shown in \cref{fig:designstructure}.
+The project structure, shown in \cref{fig:designstructure}, is split into four layers: Command-Line, Visualization, Simulation, and Memory.
+Each element broadly represents a C++ class which depends on the classes defined below it.
+
+\begin{figure}[p]
     \centering
     \makebox[\textwidth][c]{\includegraphics[width=1\linewidth]{Ch42Design/figures/FinalReport_DesignStructure.pdf}}
     \caption{Overall Code Structure}
     \label{fig:designstructure}
 \end{figure}
-% The overall structure of the project is shown in \cref{fig:designstructure}.
-The project structure, shown in \cref{fig:designstructure}, is split into four layers: Command-Line, Visualization, Simulation, and Memory.
-Each element broadly represents a C++ class which depends on the classes defined below it.
+\pagebreak
 
-The Command-Line layer has a Command-Line Parser, which converts the passed-in argument strings to usable representations, and a set of sub-apps.
-Each sub-app implements one of the subcommands shown in \cref{sec:DesignSubcommands}.
+The Command-Line layer has a Command-Line Parser, which converts the input command-line arguments to suitable representations, and a set of sub-apps implementing the subcommands shown in \cref{sec:DesignSubcommands}.
+% Each sub-app implements one of the subcommands shown in \cref{sec:DesignSubcommands}.
 The figure shows all classes relevant to the \shell{run} subcommand, which shows a visualized simulation.
 
 The Visualization layer contains a high-level \code{VulkanSimApp} class, which initiates all visualization-related code.
-Beneath that the Worker Thread handles most Vulkan API calls, and depends on multiple sets of data built with Vulkan helper classes.
-This layer uses classes from the Simulation layer, which are reused for the \shell{fixedtime} subcommand to avoid code duplication.
+Beneath that, the Worker Thread handles most Vulkan API calls, and depends on multiple sets of data built with Vulkan helper classes.
+This layer uses classes from the Simulation layer, which are reused for the headless simulation to avoid code duplication.
+%\shell{fixedtime} subcommand to avoid code duplication.
 
-The Simulation layer consists of two main elements: the Runners, and the Backends.
-The Runners use different strategies for invoking a Backend - the \code{FixedTimeRunner} runs the simulation flat out until a specific time is reached and outputs the final state, and the \code{VulkanTickedRunner} runs the simulation for small timesteps while synchronising with other Vulkan elements.
-Each Backend implements the same interface, so Runner implementations can be Backend-agnostic.
-The \code{FixedTimeRunner} supports all of the defined Backends (see \cref{sec:DesignBackends}), but the \code{VulkanTickedRunner} can only use the Vulkan-compatible CUDA backend.
+The Simulation layer consists of two main elements: Runners and Backends.
+%the Runners, and the Backends.
+% The Runners use different strategies for invoking a Backend - the fixed-time Runner runs the simulation flat out until a specific time is reached and outputs the final state, and the Vulkan ticked Runner runs the simulation for small timesteps while synchronising with other Vulkan elements.
+The Runners use different strategies for invoking a Backend - the fixed-time Runner runs the simulation flat out until a specific time is reached, and the Vulkan ticked Runner runs the simulation for small timesteps while synchronising with the visualization.
+%other Vulkan elements.
+Each Backend implements the same functions, so Runner implementations can be Backend-agnostic.
+The fixed-time Runner supports all defined Backends (\cref{sec:DesignBackends}), but the Vulkan ticked Runner only supports the CUDA backend.
+%can only use the Vulkan-compatible CUDA backend.
 
 Finally, the Memory layer exposes APIs for the Backends to allocate simulation memory.
 Runners decide how many `frames' to create (see \cref{sec:DesignSimNBuffer}), and use the \code{FrameSetAllocator} to create a set of \code{FrameAllocator}s.
-The Backends use each \code{FrameAllocator} to allocate a set of buffers, which are then used to store simulation data.
-These buffers are represented with \code{Sim2DArray} and \code{SimRedBlackArray} instances.
-The \code{SimRedBlackArray} splits a given grid size into two halves, one storing entirely red elements and one storing entirely black elements, and can be configured to store an additional full matrix (helpful for e.g. pressure, where both representations are useful.)
+The Backends use each \code{FrameAllocator} to allocate a set of buffers, which are then used to store simulation data, represented with \code{Sim2DArray} and \code{SimRedBlackArray} instances.
+The \code{SimRedBlackArray} splits a given grid size into two halves, storing red elements and black elements separately, and can be configured to store an additional full matrix (helpful for e.g. pressure, where both representations are useful).
+
+% The Backends use each \code{FrameAllocator} to allocate a set of buffers, which are then used to store simulation data.
+% These buffers are represented with \code{Sim2DArray} and \code{SimRedBlackArray} instances.
+% The \code{SimRedBlackArray} splits a given grid size into two halves, one storing entirely red elements and one storing entirely black elements, and can be configured to store an additional full matrix (helpful for e.g. pressure, where both representations are useful.)
 
 All elements of the Memory layer are parameterized on the type of memory.
-This can be CPU memory allocated with \code{malloc} and \code{free}, CUDA Unified Memory (see \cref{sec:Design:Simulation}), or Vulkan on-device memory. 
+This can be CPU memory, CUDA Unified Memory, or Vulkan on-device memory. 
 The memory type affects not just the allocation method, but also the properties it has e.g. CPU memory cannot be accessed from the GPU.
 Using parameterized array classes allows these differences to be expressed while keeping a consistent interface.
+%  allocated with \code{malloc} and \code{free}
 
 \input{Ch42Design/Sub20_Simulation}
 

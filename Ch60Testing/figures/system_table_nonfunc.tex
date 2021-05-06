@@ -1,7 +1,9 @@
 \begin{sidewaystable}
     \centering
+    \begingroup
+    \raggedright
     \begin{tabular}{lp{0.2\linewidth}|p{0.4\linewidth}|m{0.2\linewidth}|c}
-        ID & Description & Expected & Output & Result \\
+        ID & Description & \multicolumn{1}{c|}{Expected} & \multicolumn{1}{c|}{Output} & Result \\
         \hline
         \newtest{}\label{test:sys:sim:large} & \shell{run}: Large Simulation & \successoutput{Simulation can run on a 4096x4096 input.} \\
         \newtest{}\label{test:sys:sim:valgrind} & \shell{run}: No CPU memory leaks & Visualization run under \shell{valgrind} should have no program-controlled memory leaks. & See \cref{sec:Results:Sim:Mem,sec:Results:Viz:Memory} & \testsuccess{} \\
@@ -10,6 +12,7 @@
         
         
         \newtest{}\label{test:sys:sim:speed} & \shell{fixedtime}: Simulation is faster than original simulation & CUDA simulation should run 2x faster than the original simulation on the original input. &See \cref{sec:Results:Sim:Speed} & \testsuccess{} \\
+
         \newtest{}\label{test:sys:sim:accuracy} & \shell{fixedtime}: Simulation produces similar results to original simulation &
         CUDA simulation solver residual should be within 5\% of adapted CPU backend.
         & See \cref{sec:Results:Sim:Accuracy} & \testsuccess{} \\
@@ -19,6 +22,7 @@
         \newtest{}\label{test:sys:run:vizSpeed} & \shell{run}: Visualization features are faster than simulation & See \cref{sec:Testing:SuccessMeasurement} & See \cref{sec:Results:Viz:Speed} & \testsuccess{} \\
         \newtest{}\label{test:sys:run:dcsComp} & Try to compile on DCS systems & Should be able to compile and run the simulation on elements of the DCS system. & Successfully compiled non-CUDA sim on DCS. & \testsuccess{} \\
     \end{tabular}
+    \endgroup
     \caption{System Tests (Non-Functional)}
     \label{tab:sys_tests_nonfunc}
 \end{sidewaystable}

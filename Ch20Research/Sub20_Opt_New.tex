@@ -1,13 +1,13 @@
 \subsection{New Optimizations}
 \label{sec:FutureOptimization}
 CPUs and GPUs have very distinct designs, so when moving programs between them it's important to acknowledge optimization techniques that apply to one and not the other.
-This section sums up the research into optimizing CUDA programs, which should be applied when designing/implementing the final program.
+This section sums up the research into optimizing CUDA programs, which were applied when designing/implementing the final program.
 
 % CUDA devices are split into many threads, which are split into groups of 32 that are executed concurrently as a warp\cite{tool:CUDAProgrammingV1}.
 CUDA devices combine groups of 32 threads into a `warp' and execute them concurrently\cite{tool:CUDAProgrammingV1}.
 If the threads in a warp attempt to access multiple words in the same cache line, the access is \textit{coalesced}\cite{NVIDIAHowBlog} and only one cache line needs to be fetched for the warp to continue.
 Otherwise, if the accesses all touch different cache lines, every cache line needs to be fetched before execution can continue for any of the threads.
-This should be accounted for when structuring GPU work.
+This was accounted for when structuring GPU work.
 
 % Const Restrict Pointers for __ldg (https://dl.acm.org/doi/pdf/10.1145/3238147.3241533 tries to do this automatically and found a perf boost, can cite that or cite other papers on it).
 % \todomark{This seems more like a statement of an optimization than a "Future Work".}
@@ -15,16 +15,17 @@ The CUDA C Programming Guide\cite{NVIDIAGlobalGuide} states that read-only memor
 The compiler may insert this automatically if it detects that data \emph{must} be read-only, which is preferable to inserting it manually.
 Applying the \code{const} and \code{\_\_restrict\_\_} qualifiers on pointers to read-only data acts as a strong hint for the compiler to add the intrinsic.
 % The use of \code{const} and \code{\_\_restrict\_\_} qualifiers on pointers that are read-only is encouraged to make read-only data obvious.
-In \cite{10.1145/3238147.3241533} it was found that introducing these qualifiers where possible led to large speedups in pointer heavy applications, and while our case may not use many pointers this should still be implemented wherever possible.
-This optimization can be verified by checking for the presence of the \code{ld.global}\cite{NvidiaPTX} instructions in the PTX assembly of compiled GPU kernels.
+\citeauthor{10.1145/3238147.3241533}\cite{10.1145/3238147.3241533} found that introducing these qualifiers where possible led to large speedups in pointer heavy applications, and while our case may not use many pointers this should still be implemented wherever possible.
+This optimization was verified by checking for the presence of \code{ld.global}\cite{NvidiaPTX} instructions in the PTX assembly of compiled GPU kernels.
 
 % GPU Vectorization (cite).
 The CPU simulation used Intel AVX and SSE instructions\cite{IntelCorporationIntroductionExtensions} to calculate four Poisson values at once\footnote{Vectors of eight were tried but were found to be slower than four.}.
 % In the Progress Report\todocite{progress report} it was asserted that CUDA cores could use SIMD on four-element floating-point vectors, and that this could be exploited similarly.
-At the start of the project it was believed that CUDA cores could use SIMD on four-element floating-point vectors, and that this could be exploited similarly.
-However, this is not the case.
-The only SIMD instructions CUDA allows are for integer vectors of 2x16-bit or 4x8-bit\cite{NvidiaCUDASIMD}.%\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
-As both simulations operate on 32-bit signed floating-point, these instructions are not suitable.
+At the start of the project it was believed that CUDA cores could use SIMD on four-element floating-point vectors, and that this could be exploited similarly, but this is not the case.
+% However, this is not the case.
+The only SIMD instructions CUDA allows are for integer vectors of 2x16-bit or 4x8-bit\cite{NvidiaCUDASIMD}.
+%\todocite{\url{https://docs.nvidia.com/cuda/parallel-thread-execution/index.html\#data-movement-and-conversion-instructions-ld}}.
+As the simulation operates on 32-bit signed floating-point, these instructions are not suitable.
 
 % Mention parallelization with OpenMP
 % did already?
@@ -32,8 +33,9 @@ As both simulations operate on 32-bit signed floating-point, these instructions 
 % Highly optimized reductions (cite).
 Calculating the simulation timestep and calculating the residual for a Poisson iteration both require a reduction over large blocks of data.
 Highly parallel GPU optimizations have already been studied extensively, so it is trivial to implement a fast generic reduction kernel.
-In \cite{CUDAParallelReduction} seven kernels are described, in ascending order of speed, and this should be used as the basis for the implementation.
+In \cite{CUDAParallelReduction} seven kernels are described, in ascending order of speed, and the second kernel was used in the CUDA simulation.
+% is should be used as the basis for the implementation.
 
-CUDA Graphs \cite{GrayCUDAGraph2019Blog} are a CUDA feature that reduces CPU overhead by invoking a large amount of GPU work all at once, rather than with individual invocations.
-Running a CUDA graph will always use the same arguments as when initially recorded, so any work that depends on data that changes quickly (such as a timestep) would not be suitable.
-Profiling should be used to determine when CUDA graphs are suitable, then applied only in these cases to avoid overcomplicating the program.
+CUDA Graphs\cite{GrayCUDAGraph2019Blog} are a CUDA feature that reduce CPU overhead by invoking a large amount of GPU work all at once, rather than with individual invocations.
+Running a CUDA graph will always use the same arguments as when initially recorded, so any work that depends on data that changes quickly (such as a timestep) might not be suitable.
+Profiling was used to determine when CUDA graphs are suitable, then applied only in these cases to avoid overcomplicating the program.

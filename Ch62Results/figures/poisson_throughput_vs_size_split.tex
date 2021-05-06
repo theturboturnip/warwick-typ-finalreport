@@ -1,0 +1,41 @@
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Throughput vs. Poisson Data Size (N = 1000)},
+        ylabel={Throughput (\si{\giga\op\per\second})},
+        xlabel={Poisson Data Size (\si{\mega\byte})},
+        ymin=0, ymax=20000,
+        xmin=0.35, xmax=128,
+        xmode=log,
+        xtick={0.4,0.8,1.2,1.6,2.0,4.0,8.0,16.0,32.0,64.0,128.0},
+        scaled y ticks=base 10:-3,
+        ytick scale label code/.code={},
+        log basis x={2},
+        log ticks with fixed point,
+        width=\linewidth,
+        height=15em,
+        axis x line=bottom,
+        axis y line=left,
+    ]
+    \addplot[mark=square*, red] table [x=cache, y=cuda, col sep=space, ignore chars={\,}] {Ch62Results/figures/data/throughput_cache.csv};
+    \addlegendentry{CUDA};
+    
+    % \fill [opacity=0.5,blue] (axis cs:0.35,0) -- (axis cs:0.35,20000) -- (axis cs:2,20000) -- (axis cs:2,0);
+    % \fill [opacity=0.5,red] (axis cs:2,0) -- (axis cs:2,20000) -- (axis cs:4,20000) -- (axis cs:4,0);
+    % \fill [opacity=0.5,green] (axis cs:4,0) -- (axis cs:4,20000) -- (axis cs:128,20000) -- (axis cs:128,0);
+    
+    \draw[dashed] (axis cs:2,20000) -- (axis cs:2,0);
+    \draw[dashed] (axis cs:4,20000) -- (axis cs:4,0);
+    
+    \node[fill=white] at (axis cs:1,5000) {Stage 1};
+    \node[fill=white] at (axis cs:2.8,5000) {Stage 2};
+    \node[fill=white] at (axis cs:23,5000) {Stage 3};
+    
+    % \node at (axis cs:1,1) [anchor=north east] {test};
+    
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Simulation Throughput for CUDA, split into stages}
+    \label{fig:results:throughput_over_size_stages}
+\end{figure}

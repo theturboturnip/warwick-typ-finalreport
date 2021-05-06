@@ -16,17 +16,20 @@
         xtick=data,
         symbolic x coords={100, 200, 300, 1000},
         width=\linewidth,
-        height=15em,
+        height=20em,
         bar width=30pt,
         x tick style = transparent,
         ybar,
         enlarge x limits=0.25,
-        ymin=0
+        ymin=0, ymax=2000
     ]
-    \addplot[ fill=blue] table [x=iters, y=cuda_speed, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
-    \addlegendentry{CUDA};
-    \addplot[ fill=red] table [x=iters, y=cpu_speed, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
+    
+    \addplot[fill=blue] table [x=iters, y=cpu_speed, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
     \addlegendentry{CPU};
+    
+    \addplot[fill=red] table [x=iters, y=cuda_speed, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
+    \addlegendentry{CUDA};
+
     
     % \addplot[mark=none, black] {1.0};
     \end{axis}
