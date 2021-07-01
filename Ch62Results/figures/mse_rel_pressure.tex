@@ -7,6 +7,7 @@
 
 \begin{figure}[ht]
     \centering
+    \resizebox{\linewidth}{!}{%
     \begin{tikzpicture}
     \begin{axis}[
         title={Pressure (Relative) MSE},
@@ -35,6 +36,8 @@
     \addlegendentry{\SI{50}{\second}};
     \end{axis}
     \end{tikzpicture}
+    }
+    
     \caption{MSE for Pressure when adjusted to use relative values}
     \label{fig:results:mse_rel_pressure}
 \end{figure}

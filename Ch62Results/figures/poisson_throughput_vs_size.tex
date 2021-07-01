@@ -7,6 +7,7 @@
 
 \begin{figure}
     \centering
+    \resizebox{\linewidth}{!}{%
     \begin{tikzpicture}
     \begin{axis}[
         title={Throughput vs. Poisson Data Size (N = 1000)},
@@ -31,6 +32,7 @@
     \addlegendentry{CUDA};
     \end{axis}
     \end{tikzpicture}
+    }
     % \caption{Simulation Throughput for CPU and CUDA as required data size increases}
     \caption{Simulation Throughput for CPU and CUDA vs Poisson cache size}
     \label{fig:results:throughput_over_size}

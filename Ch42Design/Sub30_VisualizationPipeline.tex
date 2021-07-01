@@ -33,7 +33,7 @@ If the CPU failed to do this, the GPU would waste time idling when it could be d
 \begin{figurepage}
 \begin{figure}[p]
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.1\linewidth]{Ch42Design/figures/FinalReport_Timing.pdf}}
+    \makebox[\textwidth][c]{\includegraphics[width=1\linewidth]{Ch42Design/figures/FinalReport_Timing_Cropped.pdf}}
     \caption{Timing Breakdown of four visualization frames, assuming two sets of per-frame data}
     \label{fig:DesignTiming}
 \end{figure}
@@ -60,7 +60,8 @@ Once `Sim $N$' is finished, it signals a semaphore to allow `Viz Comp $N$' to co
 The worker thread uses the \code{vkAcquireNextImageKHR} function to ask the swapchain\footnote{The swapchain is a set of images provided by the OS that are shown in the windowing system} for an image.
 This returns the index of a swapchain image that will eventually become available, and a semaphore that will be signalled once this happens.
 Before `Viz Gfx $N$' can render to this image, it has to wait for this semaphore to signal it is ready. % Semaphore imageAcquiredCanRender
-The thread then waits for frame $N-2$ to finish using the Vulkan resources in Resource Set 0 before it uses them to record `Viz Comp $N$' and `Viz Gfx $N$'. % Fence frameCmdBuffersInUse
+The thread then waits for frame $N-2$ to finish using the Vulkan resources in Resource Set 0 before it uses them to record `Viz Comp $N$' and `Viz~Gfx~$N$'. % Fence frameCmdBuffersInUse
+\clearpage
 
 The Viz jobs use semaphores to guarantee ordering:
 `Viz Gfx $N$' must start after `Viz Comp $N$' finishes, which must start after `Sim $N$' finishes. % Semaphore simFinishedCanCompute, computeFinishedCanRender

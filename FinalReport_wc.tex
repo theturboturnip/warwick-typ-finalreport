@@ -1,7 +1,7 @@
 \documentclass[]{article}
 
 \usepackage{turnipwordcount}
-\usepackage{geometry}
+\usepackage[margin=2cm]{geometry}
 
 
 \usepackage{morewrites}
@@ -18,10 +18,39 @@
 % and https://github.com/borisveytsman/acmart/issues/410
 \usepackage{bera}% optional: just to have a nice mono-spaced font
 \usepackage[libertine]{newtxmath}
+% Mathematic Double-Stroke font
+\usepackage{dsfont}
+% \usepackage{newtxmath}
 \usepackage[tt=false]{libertine}
 \setmonofont[StylisticSet=3]{inconsolata}
 % (3) load symbol definitions
 \usepackage{textcomp}
+
+\usepackage{minted}
+\usemintedstyle{pastie}%emacs%friendly
+% \usepackage{xpatch,letltxmacro}
+% \LetLtxMacro{\cminted}{\minted}
+% \let\endcminted\endminted
+% \xpretocmd{\cminted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
+\setminted{
+frame=lines,
+baselinestretch=1.2,
+% bgcolor=LightGray,
+fontsize=\footnotesize,
+% linenos,
+breaklines=true,
+tabsize=4,
+autogobble
+}
+
+%Don't need expanded margins now, global margin has shrunk
+\newminted{cpp}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{cuda}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{bash}{}
+\newminted{glsl}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{json}{}
+% \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
+% \usepackage{quotewarning}
 
 
 \usepackage{amsmath} %For both in-line and equation mode
@@ -46,6 +75,10 @@
 \def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
 \makeatother
 
+\usepackage[titles]{tocloft}
+\cftsetindents{figure}{0em}{3.5em}
+\cftsetindents{table}{0em}{3.5em}
+
 \usepackage{breqn} % For long equation breaking
 \usepackage{bm}
 
@@ -59,14 +92,22 @@
 \usepackage[hyphens]{url} %Deals with hyphens in urls to make them clickable
 \usepackage{xcolor} %Great if you want coloured text
 \usepackage{tabularx}
-\usepackage{siunitx}
+\usepackage[binary-units=true,per-mode=symbol]{siunitx}
+\DeclareSIUnit\op{op}
+\sisetup{detect-all}
 \usepackage[justification=centering]{caption} 
 \usepackage{subcaption}
 
 % BibLaTeX
-\usepackage{turnipcite}
-\addbibresource{mendeley_references.bib}
-\addbibresource{typ_FinalReport.bib}
+\usepackage{csquotes}
+\usepackage[british]{babel}
+\usepackage[backend=biber,dateabbrev=false,style=numeric]{biblatex} % style=numeric
+\usepackage[notlot,notlof,nottoc]{tocbibind} % For including the bibliography in the TOC
+% \addbibresource{mendeley_references.bib}
+% \addbibresource{typ_FinalReport.bib}
+% \addbibresource{sorted_old_refs.bib}
+% \addbibresource{sorted_new_refs.bib}
+\addbibresource{final_refs.bib}
 
 \usepackage{markdown}
 
@@ -89,57 +130,38 @@
 \usepackage[ampersand]{easylist}
 % \usepackage{labels4easylist}
 
+% Test counter
+\newcounter{testI} % Test counter
+\setcounter{testI}{0}
+% Representation of test counter: T<testI>
+\renewcommand{\thetestI}{T\arabic{testI}}
+\newcommand{\newtest}{%
+    \refstepcounter{testI}% Step hypothesis counter
+    \thetestI% Print hypothesis counter
+}%label{#1}}% Mark with label
+
+
 \usepackage{pgfgantt}
 
 \usepackage{tikz}
 \usetikzlibrary{matrix}
 
-\usepackage[nofootnotes]{turniptodo}
+\usepackage[release]{turniptodo}
+% \usepackage[nofootnotes]{turniptodo}
 
 \usepackage{wrapfig}
 
 % \usepackage{turniphighlighting}
 \usepackage{varwidth}
-\usepackage{minted}
-\usemintedstyle{pastie}%emacs%friendly
-% \usepackage{xpatch,letltxmacro}
-% \LetLtxMacro{\cminted}{\minted}
-% \let\endcminted\endminted
-% \xpretocmd{\cminted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
-\setminted{
-frame=lines,
-baselinestretch=1.2,
-% bgcolor=LightGray,
-fontsize=\footnotesize,
-% linenos,
-breaklines=true,
-tabsize=4,
-autogobble
-}
 
-\newminted{cpp}{xleftmargin=-1.5cm,xrightmargin=-1.5cm}
-\newminted{cuda}{xleftmargin=-1.5cm,xrightmargin=-1.5cm}
-\newminted{bash}{}
-\newminted{glsl}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
-\newminted{json}{}
-% \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
-% \usepackage{quotewarning}
 
-%KEEP THIS ONE LAST it's quite buggy, it allows you to click on links within the pdf and web links without changing the colour. The mouse cursor simply changes its icon to indicate to the user. Great tool - still awkward
-% \usepackage{varioref}
-\usepackage[hidelinks,
-            unicode,
-            pdfauthor={Samuel Stark - u1800081},
-            pdftitle={CS351 Final Report},
-            pdfsubject={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation}]{hyperref}
-\usepackage[capitalize,nameinlink]{cleveref}
-\crefname{reqFi}{Requirement}{Requirements}
-\crefname{reqNFi}{Requirement}{Requirements}
+
 
 \usepackage[header, title]{appendix}
 \usepackage{pdfpages}
 
-\linespread{1.25}
+\linespread{1.4}
+\renewcommand*{\arraystretch}{1.2}
 
 \usepackage{pdflscape}
 \usepackage{rotating}
@@ -163,6 +185,22 @@ autogobble
     \pgfpathlineto{\pgfqpoint{.2pt}{3.2pt}}
     \pgfusepath{stroke}}
 
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\pgfplotsset{
+    ymajorgrids=true,
+    xmajorgrids=true,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!10},
+    major grid style={line width=.2pt, draw=gray!50},
+    minor tick num=5,
+    ticklabel style = {font=\footnotesize},
+    axis x line*=bottom,
+    axis x line=bottom,
+    axis y line=left,
+}
+
+\usetikzlibrary{calc}
 %%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT STARTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newenvironment{figurepage}{
@@ -173,12 +211,53 @@ autogobble
 \pagebreak
 }
 
+\usepackage{listings}
+\lstset{
+    basicstyle=\color{gray!20!black}\ttfamily\itshape
+}
+\lstdefinestyle{inline}{
+    columns=fullflexible,
+    breaklines=false
+}
+% \code{} = Any code-like text that should be formatted in teletype
+\newcommand{\code}[1]{\lstinline[style=inline]!#1!}
+% \shell{} = Any other computer-like text such as file extensions, bash subcommands etc. that are not themselves code but should still be formatted similarly.
+\newcommand{\shell}[1]{\lstinline[style=inline]!#1!}
+
+
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+%KEEP THIS ONE LAST it's quite buggy, it allows you to click on links within the pdf and web links without changing the colour. The mouse cursor simply changes its icon to indicate to the user. Great tool - still awkward
+% \usepackage{varioref}
+\usepackage[colorlinks,%hidelinks,
+            unicode,
+            pdfauthor={Samuel Stark // 1800081},
+            pdftitle={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation},
+            pdfsubject={CS351 Final Report},
+            pdfkeywords={Fluid Simulation, CUDA, Vulkan, GPU, In-Situ, Visualization}]{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\hypersetup{linkcolor=blue!80!black}
+
+\usepackage[capitalize,nameinlink]{cleveref}
+\crefname{reqFi}{Req.}{Reqs.}
+\crefname{reqNFi}{Req.}{Reqs.}
+\crefname{testI}{Test}{Tests}
+
+
 \begin{document}
 
 \newcommand{\chapterwordcount}[1]{#1 & \quickwordcount{#1} \\}
 
 \begin{tabular}{lc}
     Chapter & Word Count \\
+    \hline
     \chapterwordcount{Ch00Preamble/Abstract}
     \chapterwordcount{Ch00Preamble/Acknowledgements}
     \chapterwordcount{Ch10Introduction/Introduction}
@@ -194,6 +273,8 @@ autogobble
     \chapterwordcount{Ch70Conclusion/Conclusion}
 \end{tabular}
 
+
+\vspace{5em}
 Overall Word Count: \quickwordcount{FinalReport_content}
 
 

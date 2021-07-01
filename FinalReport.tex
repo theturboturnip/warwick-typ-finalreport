@@ -155,6 +155,7 @@ autogobble
 \usepackage{varwidth}
 
 
+\usepackage{makecell}
 
 
 \usepackage[header, title]{appendix}
@@ -198,6 +199,14 @@ autogobble
     axis x line*=bottom,
     axis x line=bottom,
     axis y line=left,
+}
+
+\newsavebox{\measuredSize}
+\newcommand{\resizeToWidth}[2]{%
+    \pgfmathsetmacro{\pgfplotswidth}{#2}%
+    \begin{lrbox}{\measuredSize}#1\end{lrbox}%
+    \pgfmathsetmacro{\pgfplotswidth}{2*\pgfplotswidth-\wd\measuredSize}%
+    #1%
 }
 
 \usetikzlibrary{calc}

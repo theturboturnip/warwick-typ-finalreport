@@ -41,6 +41,7 @@ When running at $\npoisson{} = 300$ the speed is close to the CPU speed for $\np
 To determine how the implementations scale with grid resolution, a simple simulation with no obstacle squares was performed for resolutions between 260~x~130 and 4096~x~2048.
 As the amount of work per simulation tick varies with grid size, each tick is multiplied by the number of grid cells and number of Poisson iterations to determine the number of operations (\si{op}s) executed, and giga-operations-per-second (\si{\giga\op\per\second}) is used to measure performance.
 The increasing size is measured in the total amount of memory (in \si{\mega\byte}) required for a full Poisson red/black iteration, equal to three full-size matrices: the pressure matrix, the $\beta$ matrix, and the $rhs$ matrix.
+Each simulation simulated \SI{25}{\second} of simulation time with $\npoisson{} = 1000$.
 \cref{fig:results:throughput_over_size} shows \si{\giga\op\per\second} for CUDA and CPU against the memory required in \si{\mega\byte}.
 
 \input{Ch62Results/figures/poisson_throughput_vs_size}
@@ -50,22 +51,22 @@ The increasing size is measured in the total amount of memory (in \si{\mega\byte
 
 \begin{table}[ht]
     \centering
-    \begin{tabular}{c|ccc}
-        Grid Size & Poisson Data Size (\si{\mega\byte}) & Total Cells & CUDA Threads per Colour Stage \\
+    \begin{tabular}{cc|ccc}
+        Grid Size & \makecell{Physical Size (\si{\metre})} & \makecell{Poisson Data Size (\si{\mega\byte})} & Total Cells & \makecell{CUDA Threads per\\Colour Stage} \\
         \hline
-        260x130 & 0.39 & 33,800 & 16,900 \\
-        380x190 & 0.83 & 72,200 & 36,100 \\
-        460x230 & 1.21 & 105,800 & 52,900 \\
-        520x260 & 1.55 & 135,200 & 67,600 \\
-        600x300 & 2.06 & 180,000 & 90,000 \\
-        640x320 & 2.34 & 204,800 & 102,400 \\
-        700x350 & 2.80 & 245,000 & 122,500 \\
-        740x370 & 3.13 & 273,800 & 136,900 \\
-        840x420 & 4.04 & 352,800 & 176,400 \\
-        1180x590 & 7.97 & 696,200 & 348,100 \\
-        1680x840 & 16.15 & 1,411,200 & 705,600 \\
-        2360x1180 & 31.87 & 2,784,800 & 1,392,400 \\
-        4096x2048 & 96.00 & 8,388,608 & 4,194,304 \\
+        260x130 & 20.0 x 10.0 & 0.39 & 33,800 & 16,900 \\
+        380x190 & 29.2 x 14.6 & 0.83 & 72,200 & 36,100 \\
+        460x230 & 35.4 x 17.7 & 1.21 & 105,800 & 52,900 \\
+        520x260 & 40.0 x 20.0 & 1.55 & 135,200 & 67,600 \\
+        600x300 & 46.2 x 23.1 & 2.06 & 180,000 & 90,000 \\
+        640x320 & 49.2 x 24.6 & 2.34 & 204,800 & 102,400 \\
+        700x350 & 53.8 x 26.9 & 2.80 & 245,000 & 122,500 \\
+        740x370 & 56.9 x 28.5 & 3.13 & 273,800 & 136,900 \\
+        840x420 & 64.6 x 32.3 & 4.04 & 352,800 & 176,400 \\
+        1180x590 & 90.8 x 45.4 & 7.97 & 696,200 & 348,100 \\
+        1680x840 & 129.2 x 64.6 & 16.15 & 1,411,200 & 705,600 \\
+        2360x1180 & 181.5 x 90.8 & 31.87 & 2,784,800 & 1,392,400 \\
+        4096x2048 & 315.0 x 157.5 & 96.00 & 8,388,608 & 4,194,304 \\
     \end{tabular}
     \caption{Throughput Measurement Points}
     \label{tab:results:speeddata}

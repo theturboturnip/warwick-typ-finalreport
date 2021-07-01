@@ -7,6 +7,7 @@
 
 \begin{figure}
     \centering
+    \resizebox{\linewidth}{!}{%
     \begin{tikzpicture}
     \begin{axis}[
         % title={Simulation Tick Speed},
@@ -29,11 +30,12 @@
     
     \addplot[fill=red] table [x=iters, y=cuda_speed, col sep=semicolon, ignore chars={\,}] {Ch62Results/figures/data/ticks_per_second.csv};
     \addlegendentry{CUDA};
-
     
     % \addplot[mark=none, black] {1.0};
     \end{axis}
     \end{tikzpicture}
+    }
+    
     \caption{Simulation Tick Speed vs. Poisson Iterations}
     \label{fig:results:ticks_per_second_bar_aca}
 \end{figure}

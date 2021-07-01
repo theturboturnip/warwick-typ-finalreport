@@ -1,5 +1,6 @@
 \begin{figure}
     \centering
+    \resizebox{\linewidth}{!}{%
     \begin{tikzpicture}
     \begin{axis}[
         title={Throughput vs. Poisson Data Size (N = 1000)},
@@ -36,6 +37,7 @@
     
     \end{axis}
     \end{tikzpicture}
+    }
     \caption{Simulation Throughput for CUDA, split into stages}
     \label{fig:results:throughput_over_size_stages}
 \end{figure}
