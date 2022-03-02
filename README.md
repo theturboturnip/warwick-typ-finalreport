@@ -1,5 +1,10 @@
 # warwick-typ-finalreport
 
+Compiled with XeLaTeX 2020, but *should* be compatible with pdfLaTeX?
+
+Based on the Warwick Report template on Overleaf:
+[https://www.overleaf.com/latex/templates/university-of-warwick-report-template/kfpfvcbkdcdk](https://www.overleaf.com/latex/templates/university-of-warwick-report-template/kfpfvcbkdcdk)
+
 Important pages:
 - `FinalReport.tex`, which includes all the other chapters
 - `final_refs.bib`, the actual bibliography
@@ -11,3 +16,4 @@ The figures for each chapter are included in that chapter's folder, for example 
 
 Some pages have draft versions, e.g. `Ch10Introduction/Introduction_d1.tex` is the first draft of the introduction.
 The latest version doesn't have a draft number, e.g. `Ch10Introduction/Introduction.tex`.
+
