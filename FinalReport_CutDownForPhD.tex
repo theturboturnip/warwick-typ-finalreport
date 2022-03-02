@@ -1,0 +1,341 @@
+\documentclass[12pt,a4paper,oneside]{report}
+%Can change the pt, papersize etc.
+
+\usepackage[margin=2cm]{geometry}
+
+
+\usepackage{morewrites}
+
+% (1) choose a font that is available as T1
+% for example:
+\usepackage{lmodern}
+% (2) specify encoding
+% Blatantly stolen from ACM style
+\usepackage[T1]{fontenc}
+% Note that the order in which packages are loaded matters,
+% and the correct order depends on the LaTeX engine used.
+% See https://github.com/borisveytsman/acmart/issues/402
+% and https://github.com/borisveytsman/acmart/issues/410
+\usepackage{bera}% optional: just to have a nice mono-spaced font
+\usepackage[libertine]{newtxmath}
+% Mathematic Double-Stroke font
+\usepackage{dsfont}
+% \usepackage{newtxmath}
+\usepackage[tt=false]{libertine}
+\setmonofont[StylisticSet=3]{inconsolata}
+% (3) load symbol definitions
+\usepackage{textcomp}
+
+\usepackage{minted}
+\usemintedstyle{pastie}%emacs%friendly
+% \usepackage{xpatch,letltxmacro}
+% \LetLtxMacro{\cminted}{\minted}
+% \let\endcminted\endminted
+% \xpretocmd{\cminted}{\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}}{}{}
+\setminted{
+frame=lines,
+baselinestretch=1.2,
+% bgcolor=LightGray,
+fontsize=\footnotesize,
+% linenos,
+breaklines=true,
+tabsize=4,
+autogobble
+}
+
+%Don't need expanded margins now, global margin has shrunk
+\newminted{cpp}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{cuda}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{bash}{}
+\newminted{glsl}{}%xleftmargin=-1.5cm,xrightmargin=-1.5cm}
+\newminted{json}{}
+% \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
+% \usepackage{quotewarning}
+
+
+\usepackage{amsmath} %For both in-line and equation mode
+\usepackage{mathtools}
+\numberwithin{equation}{section} %Numbering of our equations per section
+% % Better forall spacing
+\let\oldforall\forall
+\let\forall\undefined
+\DeclareMathOperator{\forall}{\oldforall}
+% Abs value and normalize symbols. https://tex.stackexchange.com/a/43009
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+%
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+\usepackage[titles]{tocloft}
+\cftsetindents{figure}{0em}{3.5em}
+\cftsetindents{table}{0em}{3.5em}
+
+\usepackage{breqn} % For long equation breaking
+\usepackage{bm}
+
+\usepackage{algorithm}
+\usepackage{algorithmic} %Algorithm styles, need to be nested for the example shown
+\usepackage{fancyhdr} %For our headers
+\usepackage{graphicx} %Inserting images
+\usepackage{lipsum}  %Blank text fill, delete me when finished
+\usepackage{setspace} %Spacing on the front page for crest and titles
+\usepackage[Sonny]{fncychap} % Styles can be Sonny, Lenny, Glenn, Conny, Rejne, Bjarne and Bjornstrup
+\usepackage[hyphens]{url} %Deals with hyphens in urls to make them clickable
+\usepackage{xcolor} %Great if you want coloured text
+\usepackage{tabularx}
+\usepackage[binary-units=true,per-mode=symbol]{siunitx}
+\DeclareSIUnit\op{op}
+\sisetup{detect-all}
+\usepackage[justification=centering]{caption} 
+\usepackage{subcaption}
+
+% BibLaTeX
+\usepackage{csquotes}
+\usepackage[british]{babel}
+\usepackage[backend=biber,dateabbrev=false,style=numeric]{biblatex} % style=numeric
+\usepackage[notlot,notlof,nottoc]{tocbibind} % For including the bibliography in the TOC
+% \addbibresource{mendeley_references.bib}
+% \addbibresource{typ_FinalReport.bib}
+% \addbibresource{sorted_old_refs.bib}
+% \addbibresource{sorted_new_refs.bib}
+\addbibresource{final_refs.bib}
+
+\usepackage{markdown}
+
+%This will tell the compiler to do the header style, page and spacing between the header and text
+\fancyhf{}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.2pt}
+
+
+% Used for customized list prefixes i.e. F-1 for functional requirement 1
+\usepackage{enumitem}
+% Define F-requirements list, where items are listed and referenced as Fi or Fi.j
+\newlist{reqF}{enumerate}{2}
+\setlist[reqF,1]{label=\textbf{F\arabic*},ref={F\arabic*}}
+\setlist[reqF,2]{label*=\textbf{.\arabic*},ref={F\arabic{reqFi}.\arabic*}}
+% Define NF-requirements list in same fashion
+\newlist{reqNF}{enumerate}{2}
+\setlist[reqNF,1]{label=\textbf{NF\arabic*},ref={NF\arabic*}}
+\setlist[reqNF,2]{label*=\textbf{.\arabic*},ref={NF\arabic{reqNFi}.\arabic*}}
+\usepackage[ampersand]{easylist}
+% \usepackage{labels4easylist}
+
+% Test counter
+\newcounter{testI} % Test counter
+\setcounter{testI}{0}
+% Representation of test counter: T<testI>
+\renewcommand{\thetestI}{T\arabic{testI}}
+\newcommand{\newtest}{%
+    \refstepcounter{testI}% Step hypothesis counter
+    \thetestI% Print hypothesis counter
+}%label{#1}}% Mark with label
+
+
+\usepackage{pgfgantt}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\usepackage[release]{turniptodo}
+% \usepackage[nofootnotes]{turniptodo}
+
+\usepackage{wrapfig}
+
+% \usepackage{turniphighlighting}
+\usepackage{varwidth}
+
+
+\usepackage{makecell}
+
+
+\usepackage[header, title]{appendix}
+\usepackage{pdfpages}
+
+\linespread{1.4}
+\renewcommand*{\arraystretch}{1.2}
+
+\usepackage{pdflscape}
+\usepackage{rotating}
+
+\usepackage{tikz}
+\usetikzlibrary{angles,quotes}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{fadings}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{patterns}
+\pgfdeclarepatternformonly{south west lines}{\pgfqpoint{-0pt}{-0pt}}{\pgfqpoint{3pt}{3pt}}{\pgfqpoint{3pt}{3pt}}{
+    \pgfsetlinewidth{0.4pt}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{3pt}{3pt}}
+    \pgfpathmoveto{\pgfqpoint{2.8pt}{-.2pt}}
+    \pgfpathlineto{\pgfqpoint{3.2pt}{.2pt}}
+    \pgfpathmoveto{\pgfqpoint{-.2pt}{2.8pt}}
+    \pgfpathlineto{\pgfqpoint{.2pt}{3.2pt}}
+    \pgfusepath{stroke}}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\pgfplotsset{
+    ymajorgrids=true,
+    xmajorgrids=true,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!10},
+    major grid style={line width=.2pt, draw=gray!50},
+    minor tick num=5,
+    ticklabel style = {font=\footnotesize},
+    axis x line*=bottom,
+    axis x line=bottom,
+    axis y line=left,
+}
+
+\newsavebox{\measuredSize}
+\newcommand{\resizeToWidth}[2]{%
+    \pgfmathsetmacro{\pgfplotswidth}{#2}%
+    \begin{lrbox}{\measuredSize}#1\end{lrbox}%
+    \pgfmathsetmacro{\pgfplotswidth}{2*\pgfplotswidth-\wd\measuredSize}%
+    #1%
+}
+
+\usetikzlibrary{calc}
+%%%%%%%%%%%%%%%%%%%%%%%%%% DOCUMENT STARTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{figurepage}{
+\pagebreak
+\newgeometry{margin=2cm}
+}{
+\restoregeometry
+\pagebreak
+}
+
+\usepackage{listings}
+\lstset{
+    basicstyle=\color{gray!20!black}\ttfamily\itshape
+}
+\lstdefinestyle{inline}{
+    columns=fullflexible,
+    breaklines=false
+}
+% \code{} = Any code-like text that should be formatted in teletype
+\newcommand{\code}[1]{\lstinline[style=inline]!#1!}
+% \shell{} = Any other computer-like text such as file extensions, bash subcommands etc. that are not themselves code but should still be formatted similarly.
+\newcommand{\shell}[1]{\lstinline[style=inline]!#1!}
+
+
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+%KEEP THIS ONE LAST it's quite buggy, it allows you to click on links within the pdf and web links without changing the colour. The mouse cursor simply changes its icon to indicate to the user. Great tool - still awkward
+% \usepackage{varioref}
+\usepackage[colorlinks,%hidelinks,
+            unicode,
+            pdfauthor={Samuel Stark // 1800081},
+            pdftitle={Performance Optimisation and Visualisation for a Fluid Dynamics Simulation},
+            pdfsubject={CS351 Final Report},
+            pdfkeywords={Fluid Simulation, CUDA, Vulkan, GPU, In-Situ, Visualization}]{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+\hypersetup{linkcolor=blue!80!black}
+
+\usepackage[capitalize,nameinlink]{cleveref}
+\crefname{reqFi}{Req.}{Reqs.}
+\crefname{reqNFi}{Req.}{Reqs.}
+\crefname{testI}{Test}{Tests}
+
+%Lets begin the document, some chapters have examples in to give you an idea 
+\begin{document}
+
+\thispagestyle{empty}
+\begin{figurepage}
+\begin{spacing}{2}
+	\begin{center}
+		\includegraphics[scale = 0.45]{Ch00Preamble/WarwickCrest.pdf}
+		%Two images here for University of Warwick students, the colour crest and the black and white crest. Replace as appropriate!
+	\end{center}
+	\vspace{5mm}
+	\begin{center}
+		\textbf{\begin{LARGE}
+		Performance Optimization and Visualization\\
+		for a Fluid Dynamics Simulation
+		\end{LARGE}}
+		\vspace{5mm}
+	\end{center}
+	\begin{center}
+	    \textbf{\large Samuel Stark - CS351 Final Report}\\
+	    {\large Supervisor: Dr. Matt Leeke}\\
+		{\large Department of Computer Science}\\
+		{\large University of Warwick}\\
+		{\large May 2021\\}
+	\end{center}
+\end{spacing}
+% \begin{minipage}{1.5\linewidth}
+\begin{center}
+    {\large{This is the first two chapters of my third-year dissertation.\\The full text can be found at \\\small \url{ https://github.com/theturboturnip/warwick-typ/blob/master/CS351\_Final\_Report\_ForPrinting.pdf}}}
+	\vspace{20mm}
+\end{center}
+% \end{minipage}
+\end{figurepage}
+
+% \include{Ch00Preamble/Frontpage}
+\include{Ch00Preamble/Abstract}
+% \include{Ch00Preamble/Acknowledgements}
+% %\include{Ch00Preamble/Abbreviations}
+% \include{Ch00Preamble/Contents}
+% \include{Ch00Preamble/Lists}
+% \include{Ch00Preamble/ChapterMods}
+
+
+\include{Ch10Introduction/Introduction}
+\include{Ch20Research/Research}
+% \include{Ch30EthicalSocialLegal/EthicalSocialLegal}
+% \include{Ch40Reqs/Requirements}
+% \include{Ch42Design/Design}
+% \include{Ch48Implementation/Implementation}
+% \include{Ch50ProjectManagement/ProjectManagement}
+% \include{Ch60Testing/Testing}
+% \include{Ch62Results/Results}
+% \include{Ch65Evaluation/Evaluation}
+% \include{Ch70Conclusion/Conclusion}
+
+% Bibliography
+% \turnipbib{\todomark{Need to order these in a different order than alphabetical - thinking articles/inproceedings/presentations etc. first, then any official documentation, then other online sources.}}
+% \begingroup
+% \raggedright
+% \printbibliography[type=book,title={Books}]
+
+% \printbibliography[type=article,title={Articles}]
+
+% \printbibliography[nottype=book,nottype=article,title={Miscellaneous}]
+% \endgroup%
+
+\pagebreak
+\setcounter{secnumdepth}{0} % Remove numbering for bib
+\begingroup
+\raggedright
+\printbibheading[heading=bibnumbered]
+\printbibliography[heading=none]
+\endgroup%
+\setcounter{secnumdepth}{3} % Restore numbering in case needed
+
+% Appendices
+% \pagebreak
+% \input{Ch99Appendices/Appendices}
+
+\end{document}
